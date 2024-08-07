@@ -1,0 +1,40 @@
+.randomText, .usertext {
+    width: 70rem;
+    height: 10rem;
+    /* background-color: #f9fafb; */
+    background-color: #eaeff5;
+    /* color: #BD96B3; */
+    margin-top: 1px;
+}
+.usertext textarea{
+    width: 100%;
+    height: 100%;
+    border: none;
+    /* color: #704264; */
+    border: groove;
+}
+.submitBtn{
+    width: 10rem;
+    height: 3.5rem;
+    font-size: 1.5rem;
+    background-color: #FFFFFF;
+    border: none;
+    color: #704264;
+    box-shadow: 3px 3px #704264;
+}
+.timer {
+    width: 87px;
+    height: 39px;
+    background-color: #BD96B3;
+    color: #FFFFFF;
+    font-size: 24px;
+    box-shadow: 3px 3px #FFFFFF;
+    position: absolute;
+    top: 116px;
+    right: 57px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-end-start-radius: 20px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}

@@ -1,0 +1,317 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+:root {
+    font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    /* Add your CSS styles here */
+}
+
+a {
+    font-weight: 500;
+    color: #646cff;
+    text-decoration: inherit;
+    font-size: 14px;
+}
+
+a:hover {
+    color: #535bf2;
+}
+
+
+
+h1 {
+    font-size: 3.2em;
+    line-height: 1.1;
+}
+
+/* button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+} */
+button:focus,
+button:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        color: #213547;
+        background-color: #ffffff;
+    }
+
+    a:hover {
+        color: #747bff;
+    }
+
+    button {
+        background-color: #f9f9f9;
+    }
+}
+
+.form-label.labelstyle {
+    text-align: left;
+    font-size: 14px;
+
+}
+
+.form-label.labelstyle {
+    text-align: left;
+    font-weight: 500 !important;
+    font-size: 14px;
+}
+
+.row.rowalign {
+    margin-top: 16px;
+}
+
+
+
+.modal.fade.modalstyle {
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+}
+
+.modal-header {
+    padding: 0rem 1rem;
+}
+
+.navbutton {
+    border: 1px solid #000000;
+    background-color: #ffffff;
+    border-radius: 50%;
+    font-size: 14px;
+}
+
+/* Login */
+
+.card-header.header_align {
+    background-color: transparent;
+    border-bottom: 0px;
+}
+
+.card-footer.footer_align {
+    background-color: transparent;
+    border-top: 0px;
+}
+
+/* button.btn.btn-primary.buttonstyle{
+  background-image: linear-gradient(to right, #e0accc  0%, #61045F  51%, #AA076B  100%);
+  padding: 10px 40px;
+  text-align: center;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;            
+  border-radius: 10px;
+  border: 1px linear-gradient(to right, #e0accc 0%, #61045F 51%, #AA076B 100%);;
+ 
+} */
+
+
+
+.btn-grad:hover {
+    background-position: right center;
+    /* change the direction of the change here */
+    color: #fff;
+    text-decoration: none;
+}
+
+button.btn.btn-primary.buttonstyle {
+    color: #ffffff;
+    background-color: #674578e0;
+    border: 1px solid #674578e0;
+    font-size: 14px;
+
+}
+
+.btn.btn-primary.buttonstyle {
+    color: #ffffff;
+    background-color: #674578e0;
+    border: 1px solid #674578e0;
+    font-size: 14px;
+
+}
+
+.button.navbuttona {
+    border-radius: 4px 0px 0px 4px;
+    color: #000000;
+    background-color: #D9D9D9;
+    font-size: 14px;
+}
+
+.button.navbuttonb {
+    border-radius: 0px 4px 4px 0px;
+    color: #000000;
+    background-color: #D9D9D9;
+    font-size: 14px;
+}
+
+.nav-pills .nav-link.active,
+.nav-pills .show>.nav-link {
+
+    color: #ffffff;
+    background-color: #674578e0;
+    font-size: 14px;
+}
+
+.card.card_align {
+    margin-left: 36%;
+    margin-top: 38%;
+    width: 24rem;
+    /* Adjust card width for better appearance */
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+.material-textfield {
+    position: relative;
+    margin-bottom: 1.5rem;
+    /* Add margin to separate the fields */
+}
+
+.material-textfield label {
+    position: absolute;
+    font-size: 1rem;
+    left: 1rem;
+    /* Adjust left position for better alignment */
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: white;
+    color: gray;
+    padding: 0 0.3rem;
+    transition: 0.1s ease-out;
+    transform-origin: left top;
+    pointer-events: none;
+}
+
+input.login_input {
+    font-size: 1rem;
+    outline: none;
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 8px 0.7rem;
+    color: gray;
+    transition: 0.1s ease-out;
+    box-shadow: none;
+    font-size: 14px;
+}
+
+input.login_input:focus {
+    border-color: #000000;
+    box-shadow: none;
+}
+
+input.login_input:focus+label {
+    color: #000000;
+    top: 0;
+    transform: translateY(-50%) scale(0.9);
+}
+
+input.login_input:not(:placeholder-shown)+label {
+    top: 0;
+    transform: translateY(-50%) scale(0.9);
+    box-shadow: none;
+}
+
+.form-check {
+    display: flex;
+    align-items: center;
+}
+
+.form-check-input {
+    margin-right: 0.5rem;
+}
+
+.form-check-label {
+    margin-bottom: 0;
+}
+
+h5 span.login-font {
+    color: rgba(95, 142, 185, 1);
+}
+
+/* button.btn.btn-primary.btn-color {
+  background-color: rgba(95, 142, 185, 1);
+  border: rgba(95, 142, 185, 1);
+} */
+/* span a{
+  color: #331B3F;
+ } */
+
+a {
+    font-weight: 400;
+    color: #aeb2f4;
+    text-decoration: inherit;
+}
+
+button.btn.btn-primary.buttonstyle.sendButton {
+    padding: 8px;
+}
+
+/* Update Candidate Details */
+
+.nav-underline .nav-link.active,
+.nav-underline .show>.nav-link {
+    font-weight: 500;
+    color: var(--bs-nav-underline-link-active-color);
+    border-bottom-color: #785b87;
+}
+
+.button.navbuttona {
+    border-radius: 0px;
+    color: #000000;
+    background-color: transparent;
+    font-size: 16px;
+}
+
+.button.navbuttonb {
+    border-radius: 0px;
+    color: #000000;
+    background-color: transparent;
+    font-size: 16px;
+
+}
+
+label.label_style {
+    color: #000000;
+    font-weight: 500;
+}
+
+button.btn.btn-primary.buttonstyle.btn_width {
+    width: 100px;
+}
+
+.card.cardmain_align {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 22px 55px 24px 55px;
+    margin-top: 102px;
+}
+
+form.form-align {
+    margin-top: 10px;
+}
