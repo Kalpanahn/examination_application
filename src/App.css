@@ -186,3 +186,11 @@ thead.MuiTableHead-root.tss-1937jnc-MUIDataTableHead-main.css-15wwp11-MuiTableHe
   border-top-right-radius: 20px;
 }
 
+.slot.selected {
+  background-color: #7dafe7; /* Change this to your desired color */
+  color: white;
+}
+
+.card.card_align1 {
+  width: 100%;
+}

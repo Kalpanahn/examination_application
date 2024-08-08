@@ -2,7 +2,7 @@ import "../styles/Sidebar.css"
 import { Link } from 'react-router-dom';
 import React, { useState } from 'react';
 
-export default function Sidebar () {
+export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
 
   const handleToggle = () => {

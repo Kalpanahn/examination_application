@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react';
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Navbar from "./Navbar";
 import "../styles/Test.css"
@@ -8,6 +8,24 @@ import Result from '../pages/Result';
 import Guidelines from '../pages/Guidelines';
 
 function Dashboard() {
+    useEffect(() => {
+        // Initialize Bootstrap Tabs
+        const tabs = document.querySelectorAll('button[data-bs-toggle="tab"]');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active')); // Remove 'active' class from all tabs
+                const tabId = tab.getAttribute('data-bs-target');
+                document.querySelectorAll('.tab-pane').forEach(pane => {
+                    pane.classList.remove('show', 'active'); // Hide all tab panes
+                });
+                document.querySelector(tabId).classList.add('show', 'active'); // Show the selected tab pane
+            });
+        });
+
+        return () => {
+            tabs.forEach(tab => tab.removeEventListener('click', () => {}));
+        };
+    }, []);
     return (
         <div>
             <div className="container-fluid mt-4">

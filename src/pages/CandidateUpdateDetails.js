@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import Webcam from "react-webcam";
 import * as CandidateUpdateDetailsAction from '../actions/CandidateUpdateDetailsAction'
 import { connect } from 'react-redux';
 import swal from 'sweetalert';
@@ -8,9 +7,6 @@ import logo from '../Images/loadingdots2.gif'
 
 function CandidateUpdateDetails(props) {
     const [preview, setPreview] = useState(null);
-    const [capturedImage, setCapturedImage] = useState(null);
-    const [useCamera, setUseCamera] = useState(false);
-    const webcamRef = useRef(null);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -22,7 +18,6 @@ function CandidateUpdateDetails(props) {
     const [adress, setAdress] = useState("");
     const [experience, setExperience] = useState("");
     const [gender, setGender] = useState("");
-    const [districtId, setDistrictId] = useState("");
     const [date, setDate] = useState("");
     const imageURL = logo;
     const [resumeFile, setResumeFile] = useState("");
@@ -60,37 +55,28 @@ function CandidateUpdateDetails(props) {
         }
     };
 
-
-
-
     const handleUserUpdateProfile = (e) => {
         e.preventDefault();
-
         const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
-        if (phone === '') {
+        if (password === '') {
             swal({
-                title: "Please Enter phoneNumber!",
+                title: "Please Enter Password",
                 icon: "error",
                 button: "OK",
                 closeOnClickOutside: false
             });
-        } else if (dob === '') {
+        }
+        else if (confirmPassword === '') {
             swal({
-                title: "Please Enter Dateofbirth",
+                title: "Please Enter Confirm Password",
                 icon: "error",
                 button: "OK",
                 closeOnClickOutside: false
             });
-        } else if (password === '' || confirmPassword === '') {
+        }
+        else if (password !== confirmPassword) {
             swal({
-                title: "Password fields cannot be empty",
-                icon: "error",
-                button: "OK",
-                closeOnClickOutside: false
-            });
-        } else if (password !== confirmPassword) {
-            swal({
-                title: "Passwords do not match",
+                title: "Password Do Not Match",
                 icon: "error",
                 button: "OK",
                 closeOnClickOutside: false
@@ -102,70 +88,87 @@ function CandidateUpdateDetails(props) {
                 button: "OK",
                 closeOnClickOutside: false
             });
-        } else if (adress === '') {
+        }
+        else if (phone === '') {
             swal({
-                title: "Please Enter adress",
+                title: "Please Enter PhoneNumber!",
                 icon: "error",
                 button: "OK",
                 closeOnClickOutside: false
             });
-        } else if (designation === '') {
+        } else if (dob === '') {
             swal({
-                title: "Please Enter designation",
+                title: "Please Select Date Of Birth",
                 icon: "error",
                 button: "OK",
                 closeOnClickOutside: false
             });
         } else if (company === '') {
             swal({
-                title: "Please Enter companyName",
+                title: "Please Enter Company Name",
+                icon: "error",
+                button: "OK",
+                closeOnClickOutside: false
+            });
+        } else if (designation === '') {
+            swal({
+                title: "Please Enter Designation",
+                icon: "error",
+                button: "OK",
+                closeOnClickOutside: false
+            });
+        }
+        else if (adress === '') {
+            swal({
+                title: "Please Enter Address",
                 icon: "error",
                 button: "OK",
                 closeOnClickOutside: false
             });
         } else if (experience === '') {
             swal({
-                title: "Please Enter Experience",
+                title: "Please Select Experience",
                 icon: "error",
                 button: "OK",
                 closeOnClickOutside: false
             });
         } else if (gender === '') {
             swal({
-                title: "Please Enter Gender",
+                title: "Please Select Gender",
+                icon: "error",
+                button: "OK",
+                closeOnClickOutside: false
+            });
+        }
+        else if (!imageFile) {
+            swal({
+                title: "Please Upload Image",
+                icon: "error",
+                button: "OK",
+                closeOnClickOutside: false
+            });
+        }
+        else if (!signatureFile) {
+            swal({
+                title: "Please Upload Signature",
                 icon: "error",
                 button: "OK",
                 closeOnClickOutside: false
             });
         } else if (!resumeFile) {
             swal({
-                title: "Please upload your resume",
-                icon: "error",
-                button: "OK",
-                closeOnClickOutside: false
-            });
-        } else if (!imageFile) {
-            swal({
-                title: "Please upload your image",
-                icon: "error",
-                button: "OK",
-                closeOnClickOutside: false
-            });
-        } else if (!signatureFile) {
-            swal({
-                title: "Please upload your signature",
+                title: "Please Upload Resume",
                 icon: "error",
                 button: "OK",
                 closeOnClickOutside: false
             });
         } else {
             const formData = new FormData();
-
             // Append text fields
             formData.append("phone", phone);
             formData.append("dob", dob);
             formData.append("name", window.localStorage.getItem("name"));
-            formData.append("email", window.localStorage.getItem("email"),);
+            formData.append("email", window.localStorage.getItem("email"));
             formData.append("password", password);
             formData.append("confirmPassword", confirmPassword);
             formData.append("address", adress);
@@ -173,7 +176,6 @@ function CandidateUpdateDetails(props) {
             formData.append("currentCompany", company);
             formData.append("experience", experience);
             formData.append("gender", gender);
-
             // Append files
             if (imageFile) {
                 formData.append("profilepic", imageFile);
@@ -207,7 +209,6 @@ function CandidateUpdateDetails(props) {
         setSignatureFile("")
         setResumeFile("")
     }
-
 
     useEffect(() => {
         if (props.isUserprofileSuccess) {
@@ -302,8 +303,6 @@ function CandidateUpdateDetails(props) {
         }
     }
 
-    const handleCapture = () => { }
-
     return (
         <div className="card cardmain_align">
             <div className="row mt-3">
@@ -340,7 +339,7 @@ function CandidateUpdateDetails(props) {
                     <div className="col-3 form-group">
                         <label className="label_style">Confirm Password</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
                         <div className="material-textfield">
-                            <input type="tel" placeholder="Please Enter Confirm Password" className="form-control login_input"
+                            <input type="password" placeholder="Please Enter Confirm Password" className="form-control login_input"
                                 value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
                         </div>
                     </div>
@@ -350,9 +349,10 @@ function CandidateUpdateDetails(props) {
                     <div className="col-3 form-group">
                         <label className="label_style">Phone Number</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
                         <div className="material-textfield">
-                            <input placeholder="Please Enter Phone Number" type="tel" className="form-control login_input"
-                                value={phone} onChange={(e) => setPhone(e.target.value)} maxLength={10}
-                            />
+                            <input placeholder="Please Enter Phone Number" type="text" className="form-control login_input"
+                                value={phone} onChange={(e) => setPhone(e.target.value)} maxLength={10} pattern="\d*"
+                                inputMode="numeric" onInput={(e) => {e.target.value = e.target.value.replace(/\D/g, '');
+                                    setPhone(e.target.value)}}/>
                         </div>
                     </div>
 
@@ -449,25 +449,6 @@ function CandidateUpdateDetails(props) {
                             </div>
                         </div>
                     )}
-                </div>
-
-                <div className="row rowalign">
-                    <div className="col-12 form-group">
-                        <button type="button" className="btn btn-secondary" onClick={() => setUseCamera(!useCamera)}>
-                            {useCamera ? "Cancel Camera" : "Capture Photo"}
-                        </button>
-                        {useCamera && (
-                            <div className="form-group mt-3">
-                                <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" className="img-thumbnail" />
-                                <button type="button" className="btn btn-primary mt-2" onClick={handleCapture}> Capture </button>
-                            </div>
-                        )}
-                        {capturedImage && (
-                            <div className="form-group mt-3">
-                                <img src={capturedImage} alt="Captured" className="img-thumbnail" />
-                            </div>
-                        )}
-                    </div>
                 </div>
 
                 <div className="row rowalign">

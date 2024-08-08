@@ -2,23 +2,18 @@ import React, { useState, useRef, useEffect } from "react";
 import swal from 'sweetalert';
 import * as SlotBookingAction from '../actions/SlotBookingAction'
 import { connect } from 'react-redux';
-
 import moment from 'moment';
-
-import { useDispatch, useSelector } from 'react-redux';
-
 
 function SlotBooking(props) {
     const [districtId, setDistrictId] = useState("");
-    const [date, setDate] = useState(moment().format('YYYY-MM-DD'));
-    const [selectedSlot, setSelectedSlot] = useState("");
-
+    const [date, setDate] = useState("")
+    const [selectedSlot, setSelectedSlot] = useState(null);
 
     const handlebookslot = (e) => {
         e.preventDefault();
         if (districtId === '') {
             swal({
-                title: "Please Enter Districtname !",
+                title: "Please Select District Name !",
                 icon: "error",
                 button: "OK",
             });
@@ -32,7 +27,7 @@ function SlotBooking(props) {
         }
         else if (!selectedSlot) {
             swal({
-                title: "Please Select a Time Slot! !",
+                title: "Please Select Time Slot!",
                 icon: "error",
                 button: "OK",
             });
@@ -43,9 +38,7 @@ function SlotBooking(props) {
                 date: date,
                 time: selectedSlot.time,
                 user_id: selectedSlot._id
-
             }
-            console.log("user bookslot", fields)
             props.bookSlot(fields)
         }
     }
@@ -62,74 +55,29 @@ function SlotBooking(props) {
         }
     }, [date]);
 
-
-
-
     const handleTimeSlotClick = (slot) => {
         if (slot.bookings < 3) {
-            setSelectedSlot(slot);
+            setSelectedSlot(slot._id);
         }
     };
-console.log("BookSlotModel",props.BookSlotModel)
-
 
     useEffect(() => {
-        if (props.isBookSlotSuccess) {
+        if (props.isBookSlotSuccess && props.BookSlotStatus === 200) {
             props.setbookSlotSuccess();
-            if (props.BookSlotStatus === 200) {
-                swal({
-                    title: "Slot booked successfully",
-                    icon: "success",
-                    button: "OK",
-                    closeOnClickOutside: false
-                }).then(okay => {
-                    if (okay) {
-                        window.location.href = "dasboard";
-                    }
-                });
-            } else if (props.BookSlotStatus === 404) {
-                swal({
-                    title: "Time slot not found or user can book only one slot",
-                    icon: "error",
-                    button: "OK",
-                    closeOnClickOutside: false
-                }).then(okay => {
-                    if (okay) {
-                        window.location.reload();
-                    }
-                });
-            } else if (props.BookSlotStatus === 400) {
-                swal({
-                    title: "Slot is full",
-                    icon: "error",
-                    button: "OK",
-                    closeOnClickOutside: false
-                }).then(okay => {
-                    if (okay) {
-                        window.location.reload();
-                    }
-                });
-            } else if (props.BookSlotStatus === 500) {
-                swal({
-                    title: "Failed to book slot",
-                    icon: "error",
-                    button: "OK",
-                    closeOnClickOutside: false
-                }).then(okay => {
-                    if (okay) {
-                        window.location.reload();
-                    }
-                });
-            }
-        }
-    }, [props.isBookSlotSuccess, props.BookSlotStatus]);
-
-    useEffect(() => {
-        if (props.BookSlotError) {
+            swal({
+                title: "Slot booked successfully",
+                icon: "success",
+                button: "OK",
+                closeOnClickOutside: false
+            }).then(okay => {
+                if (okay) {
+                    window.location.href = "dasboard";
+                }
+            })
+        } else if (props.BookSlotError) {
             const errorMessage = typeof props.BookSlotError === 'object'
                 ? (props.BookSlotError.error || "An unknown error occurred")
                 : props.BookSlotError;
-
             swal({
                 title: errorMessage,
                 icon: "error",
@@ -137,12 +85,13 @@ console.log("BookSlotModel",props.BookSlotModel)
                 closeOnClickOutside: false
             }).then(okay => {
                 if (okay) {
-                    props.setbookSlotError();
+                    handlecancel();
                 }
+                props.setbookSlotError();
             });
         }
-    }, [props.BookSlotError]);
 
+    }, [props.isBookSlotSuccess, props.BookSlotStatus, props.BookSlotError]);
     const handlecancel = () => {
         setDistrictId("")
         setDate("")
@@ -179,36 +128,36 @@ console.log("BookSlotModel",props.BookSlotModel)
                         </div>
                     </div>
 
-
                     <div className="col-3 form-group">
                         <label className="label_style">Timing Slots</label> :&nbsp;
-
                         <div className="timing-slots">
                             {props.GetTimeSlotModel && props.GetTimeSlotModel.slots && props.GetTimeSlotModel.slots.length > 0 ? (
                                 props.GetTimeSlotModel.slots.map((slot) => (
                                     <div
                                         key={slot._id}
-                                        className="slot"
-                                        onClick={() => slot.bookings < 3 && handleTimeSlotClick(slot)}
-                                    >
+                                        className={`slot ${selectedSlot === slot._id ? 'selected' : ''}`}
+                                        onClick={() => handleTimeSlotClick(slot)}
+                                        style={{ color: slot.bookings >= 3 ? 'gray' : 'black' }}>
                                         {slot.time} {slot.bookings >= 3 ? '(Full)' : ''}
                                     </div>
                                 ))
                             ) : (
-                                <div>No slots available</div>
+                                <div>No Slots Available</div>
                             )}
                         </div>
-
-
-
                     </div>
                 </div>
 
                 <div className="row rowalign">
-                    <div className="col-12 form-group">
+                    <div className="nav nav-underline justify-content-center">
                         <button type="button" className="btn btn-primary buttonstyle btn_width submitUser"
-                            onClick={handlebookslot}>Submit</button>&nbsp;&nbsp;
-                        <button type="submit" className="btn btn-primary buttonstyle btn_width submitUser" onClick={handlecancel}> Cancel</button>&nbsp;&nbsp;
+                            onClick={handlebookslot}>
+                            Submit
+                        </button>&nbsp;&nbsp;
+                        <button type="submit" className="btn btn-primary buttonstyle btn_width submitUser"
+                            onClick={handlecancel}>
+                            Cancel
+                        </button>&nbsp;&nbsp;
                     </div>
                 </div>
             </form>
@@ -229,13 +178,10 @@ const mapToProps = function (state) {
         BookSlotError: state.slotBooking.BookSlotError,
         BookSlotStatus: state.slotBooking.BookSlotStatus,
 
-
         GetTimeSlotModel: state.slotBooking.GetTimeSlotModel,
         isGetTimeSlotIn: state.slotBooking.isGetTimeSlotIn,
         isGetTimeSlotSuccess: state.slotBooking.isGetTimeSlotSuccess,
         GetTimeSlotError: state.slotBooking.GetTimeSlotError,
-
-
     }
 }
 
@@ -248,7 +194,6 @@ const mapDispatchToProps = function (dispatch) {
         bookSlot: (fields) => dispatch(SlotBookingAction.bookSlot(fields)),
         setbookSlotSuccess: () => dispatch(SlotBookingAction.setbookSlotSuccess()),
         setbookSlotError: () => dispatch(SlotBookingAction.setbookSlotError()),
-
 
         getTimeSlots: (fields) => dispatch(SlotBookingAction.getTimeSlots(fields)),
         setgetTimeSlotsSuccess: () => dispatch(SlotBookingAction.setgetTimeSlotsSuccess()),

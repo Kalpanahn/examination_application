@@ -11,7 +11,7 @@ function QuestionsPage(props) {
   const [selectedNumber, setSelectedNumber] = useState(1);
   const [questionData, setQuestionData] = useState(null);
   const [selectedOptions, setSelectedOptions] = useState({});
-  const [time, setTime] = useState(20 * 60); // 20 minutes in seconds
+  const [time, setTime] = useState(20 * 60);
   const [isTestCompleted, setIsTestCompleted] = useState(false);
   const [totalTimeTaken, setTotalTimeTaken] = useState(0);
   const [isTimerStopped, setIsTimerStopped] = useState(false);
@@ -19,7 +19,6 @@ function QuestionsPage(props) {
   useEffect(() => {
     props.getQuestions();
   }, []);
-  console.log("props.QuestionsModel", props.QuestionsModel)
 
   useEffect(() => {
     if (props.QuestionsModel) {
@@ -88,15 +87,10 @@ function QuestionsPage(props) {
     return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // const calculateAccuracy = () => {
-  //   const correctAnswers = questions.filter(q => selectedOptions[q.id] === q.correctOption).length;
-  //   return (correctAnswers / questions.length) * 100;
-  // };
-
   const handleSubmit = () => {
     setIsTestCompleted(true);
     setIsTimerStopped(true);
-    setTotalTimeTaken(20 * 60 - time); // Total time taken
+    setTotalTimeTaken(20 * 60 - time);
   };
 
   return (
@@ -107,14 +101,13 @@ function QuestionsPage(props) {
           {isTimerStopped ? formatTime(totalTimeTaken) : formatTime(time)}
         </div>
       </div>
-      <div className="card cardmain_align">
+      <div className="card cardmain_align1">
         <ToastContainer />
         {time <= 300 && time > 0 && (
           <h4 className="blink-txt" style={{ color: 'red', fontWeight: '600', textAlign: 'center', padding: '5px' }}>
             Your test will be ended automatically in {time <= 60 ? formatTime(time) : '5 minutes'}
           </h4>
         )}
-
         <div className="card mb-3">
           <div className="row rowalign">
             <div className="nav nav-underline justify-content-end">

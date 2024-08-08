@@ -58,7 +58,6 @@ export default function AdminResultPage() {
     ];
 
     return (
-        <div className='employee-details-section mt-5'>
             <Card className='employee-master-card'>
                 <CardHeader>
                     <h2 className="Candidate Results-cardHeader">View Candidate Results</h2>
@@ -83,6 +82,5 @@ export default function AdminResultPage() {
                     />
                 </ThemeProvider>
             </Card>
-        </div>
     );
 }

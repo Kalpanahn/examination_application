@@ -1,14 +1,32 @@
-import React from 'react'
+import React, { useEffect } from 'react';
 import UserDetails from './UserDetails'
 import AddQuestions from './AddQuestions';
 import AdminResultPage from './AdminResultPage';
 import Navbar from '../components/Navbar';
 
 export default function Admin() {
-  return (
-    <div>
+    useEffect(() => {
+        // Initialize Bootstrap Tabs
+        const tabs = document.querySelectorAll('button[data-bs-toggle="tab"]');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active')); 
+                const tabId = tab.getAttribute('data-bs-target');
+                document.querySelectorAll('.tab-pane').forEach(pane => {
+                    pane.classList.remove('show', 'active'); 
+                });
+                document.querySelector(tabId).classList.add('show', 'active'); 
+            });
+        });
+
+        return () => {
+            tabs.forEach(tab => tab.removeEventListener('click', () => {}));
+        };
+    }, []);
+    return (
+        <div>
             <div className="container-fluid mt-4">
-            <Navbar />
+                <Navbar />
                 <div className="row">
                     <div className="col-12">&nbsp;
                         <ul className="nav nav-underline justify-content-end" id="myTab" role="tablist">
@@ -31,7 +49,7 @@ export default function Admin() {
 
                         <div className="tab-content" id="myTabContent">
                             <div className="tab-pane fade show active" id="form" role="tabpanel" aria-labelledby="form-tab">
-                            <UserDetails />
+                                <UserDetails />
                             </div>
 
                             <div className="tab-pane fade" id="booking" role="tabpanel" aria-labelledby="booking-tab">
@@ -42,10 +60,10 @@ export default function Admin() {
                                 <AdminResultPage />
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
         </div>
-  )
+    )
 }

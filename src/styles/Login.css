@@ -305,11 +305,16 @@ button.btn.btn-primary.buttonstyle.btn_width {
     width: 100px;
 }
 
+.card.cardmain_align1 {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 22px 55px 24px 55px;
+    margin-top: 6%;
+}
 .card.cardmain_align {
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 22px 55px 24px 55px;
-    margin-top: 102px;
 }
 
 form.form-align {

@@ -3,7 +3,7 @@ const loginState = {
   isRegistrationIn: false,
   isRegistrationSuccess: false,
   RegistrationError: '',
-  RegitrationStatus:[],
+  RegistrationStatus:[],
 
   SendotpModel: [],
   isSendotpIn: false,
@@ -15,12 +15,6 @@ const loginState = {
   isLoginSuccess: false,
   LoginError: '',
   Loginstatus: [],
-
-  VerifyotpModel: [],
-  isVerifyotpIn: false,
-  isVerifyotpSuccess: false,
-  VerifyotpError: '',
-  VerifyStatus: []
 }
 
 export const login = function (state = loginState, action) {
@@ -28,12 +22,13 @@ export const login = function (state = loginState, action) {
     case 'REGISTRATION_START':
       return Object.assign({}, state, { isRegistrationIn: true, isRegistrationSuccess: false })
     case 'REGISTRATION_SUCCESS':
-      return Object.assign({}, state, { RegistrationModel: action.payload, isRegistrationIn: false, isRegistrationSuccess: true ,RegitrationStatus:action.RegitrationStatus})
+      return Object.assign({}, state, { RegistrationModel: action.payload, isRegistrationIn: false, isRegistrationSuccess: true ,RegistrationStatus:action.RegistrationStatus})
     case 'REGISTRATION_FAILURE':
-      return Object.assign({}, state, { RegistrationError: action.payload, isRegistrationIn: false, isRegistrationSuccess: false,RegitrationStatus:action.RegitrationStatus })
-    case 'SET_IS_REGISTRATION_SUCCESS':
+    return Object.assign({}, state, { RegistrationError: action.payload, isRegistrationIn: false, isRegistrationSuccess: false,RegistrationStatus:action.RegistrationStatus })
+      case 'SET_IS_REGISTRATION_SUCCESS':
       return Object.assign({}, state, { isRegistrationSuccess: false })
     case 'SET_IS_REGISTRATION_ERROR':
+      
       return Object.assign({}, state, { RegistrationError: '' })
 
     case 'SENDOTP_START':
@@ -53,25 +48,12 @@ export const login = function (state = loginState, action) {
       return Object.assign({}, state, { LoginModel: action.payload, isLoginIn: false, isLoginSuccess: true, Loginstatus: action.Loginstatus })
 
     case 'LOGIN_FAILURE':
-      console.log('Login failure:', action.payload);
-      return Object.assign({}, state, { LoginError: action.payload, isLoginIn: false, isLoginSuccess: false, Loginstatus: action.Loginstatus })
+   return Object.assign({}, state, { LoginError: action.payload, isLoginIn: false, isLoginSuccess: false, Loginstatus: action.Loginstatus })
     case 'SET_IS_LOGIN_SUCCESS':
       return Object.assign({}, state, { isLoginSuccess: false })
     case 'SET_IS_LOGIN_ERROR':
       return Object.assign({}, state, { LoginError: '' })
-
-    case 'VERIFYOTP_START':
-      return Object.assign({}, state, { isVerifyotpIn: true, isVerifyotpSuccess: false })
-    case 'VERIFY_SUCCESS':
-      return Object.assign({}, state, { VerifyotpModel: action.payload, isVerifyotpIn: false, isVerifyotpSuccess: true, VerifyStatus: action.VerifyStatus })
-    case 'VERIFY_FAILURE':
-      return Object.assign({}, state, { VerifyotpError: action.payload, isVerifyotpIn: false, isVerifyotpSuccess: false, VerifyStatus: action.VerifyStatus })
-    case 'SET_IS_VERIFY_SUCCESS':
-      return Object.assign({}, state, { isVerifyotpSuccess: false })
-    case 'SET_IS_VERIFY_ERROR':
-      return Object.assign({}, state, { VerifyotpError: '' })
-
-    default:
+       default:
       return state;
   }
 };

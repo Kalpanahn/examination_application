@@ -3,7 +3,6 @@ const questionsState = {
     isQuestionsSuccess: false,
     QuestionsModel: [],
     QuestionsError: '',
-   
 }
 
 export const questionsPage = (state = questionsState, action) => {

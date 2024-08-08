@@ -14,9 +14,8 @@ const slotBookingState = {
     isGetTimeSlotIn: false,
     isGetTimeSlotSuccess: false,
     GetTimeSlotError: '',
-
-
 }
+
 export const slotBooking = (state = slotBookingState, action) => {
     switch (action.type) {
         case 'GET_DISTRICT_LIST_START':
@@ -41,7 +40,6 @@ export const slotBooking = (state = slotBookingState, action) => {
         case 'SET_BOOKSLOT_LIST_FAILURE':
             return Object.assign({}, state, { BookSlotError: '' })
 
-
         case 'GETTIMESLOTS_LIST_START':
             return Object.assign({}, state, { isGetTimeSlotIn: true, isGetTimeSlotSuccess: false, })
         case 'GETTIMESLOTS_LIST_SUCCESS':
@@ -52,7 +50,6 @@ export const slotBooking = (state = slotBookingState, action) => {
             return Object.assign({}, state, { isGetTimeSlotSuccess: false })
         case 'SET_GETTIMESLOTS_LIST_FAILURE':
             return Object.assign({}, state, { GetTimeSlotError: '' })
-
 
         default:
             return state;

@@ -31,8 +31,6 @@ export const bookSlot = (fields) => {
     return (dispatch, getState) => {
         dispatch({ type: 'BOOKSLOT_LIST_START' })
         const token = window.localStorage.getItem("token");
-        console.log("token", typeof token)
-
         axios.post(APIs + '/insertBook', fields, {
             headers: {
                 'token': token
@@ -41,9 +39,7 @@ export const bookSlot = (fields) => {
             .then(function (response) {
                 dispatch({ type: 'BOOKSLOT_LIST_SUCCESS', payload: response.data, BookSlotStatus: response.status })
             })
-
             .catch(error => {
-                console.error('Error occurred:', error);
                 const errorMessage = error.response ? error.response.data : error.message;
                 const errorStatus = error.response ? error.response.status : 500;
                 dispatch({ type: 'BOOKSLOT_LIST_FAILURE', payload: errorMessage, BookSlotStatus: errorStatus });
@@ -72,7 +68,6 @@ export const getTimeSlots = (fields) => {
         axios.post(APIs + '/getTimeSlot', fields)
             .then(function (response) {
                 dispatch({ type: 'GETTIMESLOTS_LIST_SUCCESS', payload: response.data })
-                console.log("response", response.data)
             })
             .catch(function (error) {
                 dispatch({ type: 'GETTIMESLOTS_LIST_FAILURE', payload: error })

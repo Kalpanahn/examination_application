@@ -55,7 +55,7 @@ function TypingTest() {
         <div className='container-fluid mt-4'>
             <Navbar />
             <div className='timer d-flex justify-content-center align-bottom'>{formatTime(time)}</div>
-            <div className="card cardmain_align">
+            <div className="card cardmain_align1">
                 <div className='h-100'>
                     <div className='d-grid justify-content-center align-items-end h-100'>
                         <div className="randomText d-grid align-items-center justify-content-around p-3">
@@ -75,9 +75,10 @@ function TypingTest() {
 
                         {accuracy !== null && (
                             <div className='result d-flex justify-content-center align-items-center mt-3'>
-                                <p>Total Time Taken: {formatTime(time)}</p>
+                                <p>Total Time Taken: {formatTime(time)}</p>&nbsp;&nbsp;
                                 <p>Accuracy: {accuracy.toFixed(2)}%</p>
                             </div>
+                            
                         )}
                     </div>&nbsp;
                 </div>

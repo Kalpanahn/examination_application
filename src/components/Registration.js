@@ -5,10 +5,10 @@ import * as LoginAction from '../actions/LoginAction'
 import { connect } from 'react-redux';
 import swal from 'sweetalert';
 import logo from '../Images/loadingdots2.gif'
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function Registration(props) {
   const navigate = useNavigate();
-  const [kgidNumber, setKgidNumber] = useState("");
   const [dob, setDob] = useState("");
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
@@ -19,11 +19,11 @@ function Registration(props) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const imageURL = logo;
-  const [otpVerified, setOtpVerified] = useState(false);
+  const [otpSent, setOtpSent] = useState("");
+
 
   const validateEmail = (mailId) => {
     const regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-
     if (regex.test(mailId)) {
       return true
     }
@@ -46,26 +46,25 @@ function Registration(props) {
       let fields = {
         email: email.toString()
       };
-      console.log("email", fields);
       props.sendOTP(fields);
     }
   };
 
   useEffect(() => {
     if (props.isSendotpSuccess) {
+      setOtpSent(props.SendotpModel.otp)
       if (props.SendotpModel) {
         swal({
-          title: "OTP Sent Successfully.",
+          title: `OTP Sent Successfully:${props.SendotpModel.otp}`,
           icon: "success",
           button: "OK",
           closeOnClickOutside: false
         }).then(okay => {
           if (okay) {
-            props.setsendOTPSuccess()
+            props.setsendOTPSuccess();
           }
         });
-      }
-      else {
+      } else {
         swal({
           title: "Please enter correct email",
           icon: "error",
@@ -73,12 +72,12 @@ function Registration(props) {
           closeOnClickOutside: false
         }).then(okay => {
           if (okay) {
-            props.setsendOTPSuccess()
+            props.setsendOTPSuccess();
           }
         });
       }
     }
-  }, [props.isSendotpSuccess, props.SendotpModel])
+  }, [props.isSendotpSuccess, props.SendotpModel]);
 
 
   const handleNonKGIDRegistration = (e) => {
@@ -99,9 +98,17 @@ function Registration(props) {
         closeOnClickOutside: false
       });
     }
-    else if (!otpVerified) {
+    else if (otp === "") {
       swal({
-        title: "Please verify OTP before registering!",
+        title: "Please Enter OTP",
+        icon: "error",
+        button: "OK",
+        closeOnClickOutside: false
+      });
+    }
+    else if (otpSent !== otp) {
+      swal({
+        title: "OTP Does Not Match",
         icon: "error",
         button: "OK",
         closeOnClickOutside: false
@@ -133,7 +140,7 @@ function Registration(props) {
     }
     else if (password !== confirmPassword) {
       swal({
-        title: "Passwords do not match.",
+        title: "Password Does Not Match",
         icon: "error",
         button: "OK",
         closeOnClickOutside: false
@@ -141,151 +148,62 @@ function Registration(props) {
     }
     else if (!passwordRegex.test(password)) {
       swal({
-          title: "Password should be at least 6 characters long and should contain at least one number, one lowercase, and one uppercase letter",
-          icon: "error",
-          button: "OK",
-          closeOnClickOutside: false
+        title: "Password should be at least 6 characters long and should contain at least one number, one lowercase, and one uppercase letter",
+        icon: "error",
+        button: "OK",
+        closeOnClickOutside: false
       });
-  }
+    }
     else {
       let fields = {
         name: name,
         email: email,
-        otp: otpVerified,
+        phone: phoneNumber,
         dob: dob,
         password: password,
         confirmPassword: confirmPassword,
       }
-      console.log("fields",fields)
       props.userRegistration(fields)
     }
   }
 
   useEffect(() => {
-    if (props.RegistrationError) {
+    if (props.isRegistrationSuccess && props.RegistrationStatus === 200) {
+      props.setRegistrationSuccess();
+      swal({
+        title: "Candidate Registered Successfully.",
+        icon: "success",
+        button: "OK",
+        closeOnClickOutside: false
+      }).then(okay => {
+        if (okay) {
+          window.location.href = "/";
+        }
+      });
+    } else if (props.RegistrationError) {
       swal({
         title: props.RegistrationError,
         icon: "error",
         button: "OK",
         closeOnClickOutside: false
+      }).then(okay => {
+        if (okay) {
+          handleClear();
+        }
       });
       props.setRegistrationError();
     }
-  }, [props.RegistrationError]);
+  }, [props.isRegistrationSuccess, props.RegistrationStatus, props.RegistrationError]);
 
-  useEffect(() => {
-    console.log("Registration status:", props.RegitrationStatus);
-    console.log("Registration success:", props.isRegistrationSuccess);
-
-    if (props.isRegistrationSuccess) {
-        props.setRegistrationSuccess(); 
-
-        if (props.RegitrationStatus === 200) {
-            swal({
-                title: "Candidate Registered Successfully.",
-                icon: "success",
-                button: "OK",
-                closeOnClickOutside: false
-            }).then(okay => {
-                if (okay) {
-                    window.location.href = "/";
-                }
-            });
-        } else if (props.RegitrationStatus === 400) {
-            swal({
-                title: "Email Already Exists",
-                icon: "error",
-                button: "OK",
-                closeOnClickOutside: false
-            });
-        } 
-      //   else if (props.RegitrationStatus === 401) {
-      //     swal({
-      //         title: "Name,Email,Phone and Dob fields cannot be empty",
-      //         icon: "error",
-      //         button: "OK",
-      //         closeOnClickOutside: false
-      //     });
-      // } 
-      
-        else {
-            swal({
-                title: "Error adding candidate",
-                icon: "error",
-                button: "OK",
-                closeOnClickOutside: false
-            }).then(okay => {
-                if (okay) {
-                    props.setLoginError();
-                }
-            });
-        }
-    }
-}, [props.isRegistrationSuccess, props.RegitrationStatus]);
-
-  const verifyOTP = (event) => {
-    event.preventDefault();
-    if (!otp) {
-      swal({
-        title: "Please Enter Valid OTP",
-        icon: "error",
-        button: "OK",
-        closeOnClickOutside: false
-      });
-    } else {
-      let fields = {
-        otp: otp.toString()
-      };
-      props.verifyOTP(fields);
-    }
-  };
-
-  useEffect(() => {
-    if (props.isVerifyotpSuccess) {
-      props.verifyOTPSuccess();
-      if (props.VerifyStatus === 200) {
-        setOtpVerified(true);
-        swal({
-          title: "OTP Verified Successfully.",
-          icon: "success",
-          button: "OK",
-          closeOnClickOutside: false
-        }).then(okay => {
-          if (okay) {
-            props.verifyOTPSuccess();
-          }
-        });
-      } else if (props.VerifyStatus === 401) {
-        setOtpVerified(false);
-        swal({
-          title: "Incorrect OTP",
-          icon: "error",
-          button: "OK",
-          closeOnClickOutside: false
-        });
-      }
-      else if (props.VerifyStatus === 500) {
-        swal({
-          title: "Error verifying OTP",
-          icon: "error",
-          button: "OK",
-          closeOnClickOutside: false
-        });
-      }
-    }
-  }, [props.isVerifyotpSuccess, props.VerifyStatus]);
-
-  useEffect(() => {
-    if (props.VerifyotpError) {
-      swal({
-        title: props.VerifyotpError,
-        icon: "error",
-        button: "OK",
-        closeOnClickOutside: false
-      });
-      props.verifyOTPError();
-    }
-  }, [props.VerifyotpError]);
+  const handleClear = () => {
+    setName("")
+    setEmail("")
+    setDob("")
+    setOtp("")
+    setPassword("")
+    setPhoneNumber("")
+    setConfirmPassword("")
+  }
 
   return (
     <div>
@@ -298,55 +216,8 @@ function Registration(props) {
             <div className="card-body">
               <div className="row rowalign" >
                 <div className="col-12">
-                  <ul className="nav nav-pills nav-fill" id="myTab" role="tablist">
-                    <li className="nav-item" role="presentation">
-                      <button className="btn btn-primary buttonstyle sendButton" id="form-tab" data-bs-toggle="tab" data-bs-target="#form"
-                        type="button" role="tab" aria-controls="form" aria-selected="true">KGID
-                      </button>
-                    </li>
-                    <li className="nav-item" role="presentation">
-                      <button className="btn btn-primary buttonstyle sendButton" id="card-tab" data-bs-toggle="tab" data-bs-target="#card"
-                        type="button" role="tab" aria-controls="card" aria-selected="false">NON-KGID
-                      </button>
-                    </li>
-                  </ul>
                   <div className="tab-content" id="myTabContent">
                     <div className="tab-pane fade show active" id="form" role="tabpanel" aria-labelledby="form-tab">
-                      <form>
-                        <div className="row rowalign">
-                          <div className="col-12 form-group">
-                            <div className="material-textfield">
-                              <input type="text" className="form-control login_input" placeholder="" value={kgidNumber}
-                                onChange={(e) => setKgidNumber(e.target.value)} />
-                              <label>KGID Number</label>
-                            </div>
-                          </div>
-                          <div className="form-group">
-                            <div className="material-textfield">
-                              <input type="date" className="form-control login_input" placeholder="" value={dob}
-                                onChange={(e) => setDob(e.target.value)} />
-                              <label>Date of Birth</label>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="row rowalign">
-                          <div className="col-12">
-                            <button className="btn btn-primary buttonstyle submitUser w-100" placeholder="">
-                              Submit
-                            </button>
-                          </div>
-                        </div>
-                        <div className="row mt-3">
-                          <div className="col-12 text-center">
-                            Already have an account?
-                            <span>
-                              <NavLink to="/">Login</NavLink>
-                            </span>
-                          </div>
-                        </div>
-                      </form>
-                    </div>
-                    <div className="tab-pane fade" id="card" role="tabpanel" aria-labelledby="card-tab">
                       <form onSubmit={handleNonKGIDRegistration}>
                         <div className="row rowalign">
                           <div className="col-12 form-group">
@@ -381,19 +252,18 @@ function Registration(props) {
                               <label>OTP<span style={{ "color": "red" }}>*</span></label>
                             </div>
                           </div>
-                          <div className="col-4 text-center">
-                            <button type="button" className="btn btn-primary buttonstyle sendButton"
-                              onClick={verifyOTP} style={{ marginTop: '-28px' }}>
-                              Verify OTP
-                            </button>
-                          </div>
+
 
                         </div>
                         <div className="row rowalign">
                           <div className="col-12 form-group">
                             <div className="material-textfield">
-                              <input type="tel" className="form-control login_input" placeholder="" value={phoneNumber}
-                                onChange={(e) => setPhoneNumber(e.target.value)} />
+                              <input placeholder="Please Enter Phone Number" type="text" className="form-control login_input"
+                                value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} maxLength={10} pattern="\d*"
+                                inputMode="numeric" onInput={(e) => {
+                                  e.target.value = e.target.value.replace(/\D/g, '');
+                                  setPhoneNumber(e.target.value)
+                                }} />
                               <label>Phone Number<span style={{ "color": "red" }}>*</span></label>
                             </div>
                           </div>
@@ -465,21 +335,14 @@ const mapToProps = function (state) {
     isRegistrationIn: state.login.isRegistrationIn,
     isRegistrationSuccess: state.login.isRegistrationSuccess,
     RegistrationError: state.login.RegistrationError,
-    RegitrationStatus:state.login.RegitrationStatus,
+    RegistrationStatus: state.login.RegistrationStatus,
 
     SendotpModel: state.login.SendotpModel,
     isSendotpIn: state.login.isSendotpIn,
     isSendotpSuccess: state.login.isSendotpSuccess,
     SendotpError: state.login.SendotpError,
-
-    VerifyotpModel: state.login.VerifyotpModel,
-    isVerifyotpIn: state.login.isVerifyotpIn,
-    isVerifyotpSuccess: state.login.isVerifyotpSuccess,
-    VerifyotpError: state.login.VerifyotpError,
-    VerifyStatus: state.login.VerifyStatus,
   }
 }
-
 const mapDispatchToProps = function (dispatch) {
   return {
     userRegistration: (fields) => dispatch(LoginAction.userRegistration(fields)),
@@ -489,11 +352,6 @@ const mapDispatchToProps = function (dispatch) {
     sendOTP: (fields) => dispatch(LoginAction.sendOTP(fields)),
     setsendOTPSuccess: () => dispatch(LoginAction.setsendOTPSuccess()),
     setsendOTPError: () => dispatch(LoginAction.setsendOTPError()),
-
-    verifyOTP: (fields) => dispatch(LoginAction.verifyOTP(fields)),
-    verifyOTPSuccess: () => dispatch(LoginAction.verifyOTPSuccess()),
-    verifyOTPError: () => dispatch(LoginAction.verifyOTPError()),
-
   }
 }
 

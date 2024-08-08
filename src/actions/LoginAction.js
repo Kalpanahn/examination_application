@@ -6,10 +6,10 @@ export const userRegistration = (fields) => {
         dispatch({ type: 'REGISTRATION_START' })
         axios.post(APIs + '/registerCandidate', fields)
             .then(function (response) {
-                dispatch({ type: 'REGISTRATION_SUCCESS', payload: response.data, RegitrationStatus: response.status })
+                dispatch({ type: 'REGISTRATION_SUCCESS', payload: response.data, RegistrationStatus: response.status })
             })
-            .catch(function (error) {
-                const errorMessage = error.response && error.response.data && error.response.data.error
+        .catch(function (error) {
+           const errorMessage = error.response && error.response.data && error.response.data.error
                     ? error.response.data.error
                     : error.message;
                 dispatch({
@@ -90,31 +90,3 @@ export const setLoginError = () => {
     };
 };
 
-//verift otp
-export const verifyOTP = (fields) => {
-    return (dispatch, getState) => {
-        dispatch({ type: 'VERIFYOTP_START' })
-        axios.post(APIs + '/verifyOTP', fields)
-            .then(function (response) {
-
-                dispatch({ type: 'VERIFY_SUCCESS', payload: response.data, VerifyStatus: response.status })
-            })
-            .catch(error => {
-                const errorMessage = error.response ? error.response.data : error.message;
-                const errorStatus = error.response ? error.response.status : 500;
-                dispatch({ type: 'VERIFY_FAILURE', payload: errorMessage, VerifyStatus: errorStatus })
-            })
-    }
-}
-
-export const verifyOTPSuccess = () => {
-    return (dispatch, getState) => {
-        dispatch({ type: 'SET_IS_VERIFY_SUCCESS' })
-    }
-}
-
-export const verifyOTPError = () => {
-    return (dispatch, getState) => {
-        dispatch({ type: 'SET_IS_VERIFY_ERROR' })
-    }
-}

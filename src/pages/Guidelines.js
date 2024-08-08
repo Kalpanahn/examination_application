@@ -24,23 +24,21 @@ function Guidelines() {
                                 <input id="inputVacationPercentage" type="checkbox" checked={isChecked} onChange={handleCheckboxChange} />&nbsp;
                                 <label for="inputVacationPercentage" class="switch switch-default">I agree with the above guidelines and hereby I give my consent to follow the guidelines.</label>
                             </div>
-                
+
                             <div className="row rowalign">
                                 <div className="nav nav-underline justify-content-center">
-                                {isChecked && (
-                                    <a href='/QuestionsPage'>
-                                    <button type="button" className="btn btn-info"
-                                        >
-                                        Start Test
-                                    </button></a>
-                                     )}&nbsp;&nbsp;
-                                     {isChecked && (
-                                        <a href='/TypingTest'> 
-                                    <button type="submit" className="btn btn-info"
-                                      >
-                                       Start Typing
-                                    </button>
-                                    </a>)}&nbsp;&nbsp;
+                                    {isChecked && (
+                                        <a href='/QuestionsPage'>
+                                            <button type="button" className="btn btn-info">
+                                                Start Test
+                                            </button></a>
+                                    )}&nbsp;&nbsp;
+                                    {isChecked && (
+                                        <a href='/TypingTest'>
+                                            <button type="submit" className="btn btn-info">
+                                                Start Typing
+                                            </button>
+                                        </a>)}&nbsp;&nbsp;
                                 </div>
                             </div>
                             <hr />
