@@ -9,8 +9,6 @@ function UserDetails() {
                 </div>
             </div>
             <div className="card cardmain_align">
-
-
                 <form className="form-align">
                     <div className="row rowalign">
                         <div className="col-3 form-group">

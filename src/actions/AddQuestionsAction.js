@@ -1,6 +1,7 @@
 import axios from "axios";
 import { APIs } from '../constants/API_Constant';
 
+//addQuestions
 export const AddQuestion = (fields) => {
   return (dispatch, getState) => {
     dispatch({ type: 'ADD_QUESTION_START' })

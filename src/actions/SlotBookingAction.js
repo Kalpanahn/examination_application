@@ -1,6 +1,7 @@
 import axios from "axios";
 import { APIs } from '../constants/API_Constant';
 
+//get District
 export const getDistrictList = () => {
     return (dispatch, getState) => {
         dispatch({ type: 'GET_DISTRICT_LIST_START' })
@@ -35,15 +36,13 @@ export const bookSlot = (fields) => {
             headers: {
                 'token': token
             }
-        })
-            .then(function (response) {
-                dispatch({ type: 'BOOKSLOT_LIST_SUCCESS', payload: response.data, BookSlotStatus: response.status })
-            })
-            .catch(error => {
-                const errorMessage = error.response ? error.response.data : error.message;
-                const errorStatus = error.response ? error.response.status : 500;
-                dispatch({ type: 'BOOKSLOT_LIST_FAILURE', payload: errorMessage, BookSlotStatus: errorStatus });
-            });
+        }).then(function (response) {
+            dispatch({ type: 'BOOKSLOT_LIST_SUCCESS', payload: response.data, BookSlotStatus: response.status })
+        }).catch(error => {
+            const errorMessage = error.response ? error.response.data : error.message;
+            const errorStatus = error.response ? error.response.status : 500;
+            dispatch({ type: 'BOOKSLOT_LIST_FAILURE', payload: errorMessage, BookSlotStatus: errorStatus });
+        });
     }
 }
 
@@ -61,7 +60,6 @@ export const setbookSlotError = () => {
 
 
 // //api to fectch the time slots
-
 export const getTimeSlots = (fields) => {
     return (dispatch, getState) => {
         dispatch({ type: 'GETTIMESLOTS_LIST_START' })

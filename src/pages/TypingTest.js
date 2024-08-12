@@ -78,7 +78,7 @@ function TypingTest() {
                                 <p>Total Time Taken: {formatTime(time)}</p>&nbsp;&nbsp;
                                 <p>Accuracy: {accuracy.toFixed(2)}%</p>
                             </div>
-                            
+
                         )}
                     </div>&nbsp;
                 </div>

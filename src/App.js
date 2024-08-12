@@ -7,10 +7,12 @@ import LoginPage from './components/LoginPage';
 import Registration from './components/Registration'
 import Dashboard from './components/Dashboard';
 import "bootstrap/dist/css/bootstrap.min.css";
-import Admin from './pages/Admin';
+import CenterAdmin from './pages/CenterAdmin';
 import Guidelines from './pages/Guidelines';
-import QuestionsPage from './pages/QuestionsPage';
+import TestPage from './pages/TestPage';
 import TypingTest from './pages/TypingTest';
+import KgidDashboard from './components/KgidDashboard';
+import DepartmentAdmin from './pages/DepartmentAdmin';
 
 function App() {
   return (
@@ -25,10 +27,12 @@ function App() {
               <Route path="/" element={<LoginPage />} />
               <Route path="/Registration" element={<Registration />} />
               <Route path="/Dashboard" element={<Dashboard />} />
-              <Route path="/admin" element={<Admin />} />
+              <Route path="/CenterAdmin" element={<CenterAdmin />} />
               <Route path="/Guidelines" element={<Guidelines />} />
-              <Route path="/QuestionsPage" element={<QuestionsPage />} />
+              <Route path="/TestPage" element={<TestPage />} />
               <Route path="/TypingTest" element={<TypingTest />} />
+              <Route path="/KgidDashboard" element={<KgidDashboard />} />
+              <Route path="/DepartmentAdmin" element={<DepartmentAdmin />} />
             </Routes>
           </Router>
 

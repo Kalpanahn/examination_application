@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Navbar from '../components/Navbar';
-import * as QuestionsAction from '../actions/QuestionsAction';
+import * as TestPageAction from '../actions/TestPageAction';
 import { connect } from 'react-redux';
 
-function QuestionsPage(props) {
+function TestPage(props) {
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedNumber, setSelectedNumber] = useState(1);
@@ -15,10 +15,6 @@ function QuestionsPage(props) {
   const [isTestCompleted, setIsTestCompleted] = useState(false);
   const [totalTimeTaken, setTotalTimeTaken] = useState(0);
   const [isTimerStopped, setIsTimerStopped] = useState(false);
-
-  useEffect(() => {
-    props.getQuestions();
-  }, []);
 
   useEffect(() => {
     if (props.QuestionsModel) {
@@ -93,6 +89,10 @@ function QuestionsPage(props) {
     setTotalTimeTaken(20 * 60 - time);
   };
 
+  useEffect(() => {
+    props.getQuestions();
+  }, []);
+
   return (
     <div className='container-fluid mt-4'>
       <Navbar />
@@ -116,8 +116,9 @@ function QuestionsPage(props) {
               </button>
             </div>
           </div>
-
+          <b><h5 style={{ color: 'red', fontWeight: '600', textAlign: 'start', padding: '5px' }}>Questions:</h5></b>
           <div className="card-body" style={{ display: 'flex', padding: '10px', flexWrap: 'wrap' }}>
+
             {questions.map((question, index) => (
               <div key={index}>
                 <div
@@ -145,7 +146,7 @@ function QuestionsPage(props) {
 
         {questionData && (
           <div className="card">
-            <div className="card-header bg-white font-weight-bold" style={{ fontSize: '20px', fontWeight: 'bold' }}>
+            <div className="card-header bg-white font-weight-bold" style={{ fontSize: '18px', fontWeight: 'bold', color: '#cb2f2f', }}>
               {selectedNumber}. {questionData.text}
             </div>
             <div className="card-body">
@@ -193,15 +194,29 @@ function QuestionsPage(props) {
 }
 
 const mapToProps = (state) => ({
-  QuestionsModel: state.questionsPage.QuestionsModel,
-  isQuestionsIn: state.questionsPage.isQuestionsIn,
-  isQuestionsSuccess: state.questionsPage.isQuestionsSuccess,
-  QuestionsError: state.questionsPage.QuestionsError,
+  //gett questions
+  QuestionsModel: state.testPage.QuestionsModel,
+  isQuestionsIn: state.testPage.isQuestionsIn,
+  isQuestionsSuccess: state.testPage.isQuestionsSuccess,
+  QuestionsError: state.testPage.QuestionsError,
+
+  //submit test answer
+  SubmitAnswersModel: state.testPage.SubmitAnswersModel,
+  isSubmitAnswersIn: state.testPage.isSubmitAnswersIn,
+  isSubmitAnswersSuccess: state.testPage.isSubmitAnswersSuccess,
+  SubmitAnswersError: state.testPage.SubmitAnswersError,
+  SubmitAnswersStatus: state.testPage.SubmitAnswersStatus,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  getQuestions: (fields) => dispatch(QuestionsAction.getQuestions(fields)),
-  setQuestionsSuccess: () => dispatch(QuestionsAction.setQuestionsSuccess()),
+  //get questions
+  getQuestions: (fields) => dispatch(TestPageAction.getQuestions(fields)),
+  setQuestionsSuccess: () => dispatch(TestPageAction.setQuestionsSuccess()),
+
+  //submit test answers
+  SubmitTestAnswer: (fields) => dispatch(TestPageAction.SubmitTestAnswer(fields)),
+  setSubmitTestAnswerSuccess: () => dispatch(TestPageAction.setSubmitTestAnswerSuccess()),
+  setSubmitTestAnswerError: () => dispatch(TestPageAction.setSubmitTestAnswerError()),
 });
 
-export default connect(mapToProps, mapDispatchToProps)(QuestionsPage);
+export default connect(mapToProps, mapDispatchToProps)(TestPage);

@@ -2,13 +2,12 @@ import React, { useEffect } from 'react';
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Navbar from "./Navbar";
 import "../styles/Test.css"
-import CandidateUpdateDetails from '../pages/CandidateUpdateDetails';
+import KgidcandidateUpdateDetails from '../pages/KgidcandidateUpdateDetails';
 import SlotBooking from '../pages/SlotBooking';
 import Result from '../pages/Result';
 import Guidelines from '../pages/Guidelines';
 
-function Dashboard() {
-
+export default function KgidDashboard() {
     useEffect(() => {
         const tabs = document.querySelectorAll('button[data-bs-toggle="tab"]');
         tabs.forEach(tab => {
@@ -56,7 +55,7 @@ function Dashboard() {
 
                         <div className="tab-content" id="myTabContent">
                             <div className="tab-pane fade show active" id="form" role="tabpanel" aria-labelledby="form-tab">
-                                <CandidateUpdateDetails />
+                                <KgidcandidateUpdateDetails />
                             </div>
 
                             <div className="tab-pane fade" id="booking" role="tabpanel" aria-labelledby="booking-tab">
@@ -79,4 +78,5 @@ function Dashboard() {
     )
 }
 
-export default Dashboard
+
+

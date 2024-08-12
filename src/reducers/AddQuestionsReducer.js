@@ -1,4 +1,5 @@
 const addQuestionState = {
+    //add questions
     AddQuestionModel: [],
     isAddQuestionIn: false,
     isAddQuestionSuccess: false,
@@ -8,6 +9,7 @@ const addQuestionState = {
 
 export const addQuestion = (state = addQuestionState, action) => {
     switch (action.type) {
+        //add questions
         case 'ADD_QUESTION_START':
             return Object.assign({}, state, { isAddQuestionIn: true, isAddQuestionSuccess: false })
         case 'ADD_QUESTION_SUCCESS':

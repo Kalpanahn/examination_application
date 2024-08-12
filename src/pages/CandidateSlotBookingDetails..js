@@ -4,7 +4,8 @@ import { Card, CardHeader } from 'reactstrap';
 import MUIDataTable from "mui-datatables";
 import { Button } from 'react-bootstrap';
 
-export default function AdminResultPage() {
+function CandidateSlotBookingDetails() {
+
     const theme = createTheme({
         overrides: {
             MuiDataTableBodyRow: {
@@ -44,22 +45,24 @@ export default function AdminResultPage() {
                 ),
             },
         },
-        { label: <strong className='MUI-dataTable-header'>Candidate Name</strong>, name: "CandidateName" },
-        { label: <strong className='MUI-dataTable-header'>Candidate Email</strong>, name: "CandidateEmail" },
-        { label: <strong className='MUI-dataTable-header'>Test Attended Date</strong>, name: "TestAttendedDate" },
-        { label: <strong className='MUI-dataTable-header'>Score</strong>, name: "Score" },
-        { label: <strong className='MUI-dataTable-header'>Action</strong>, name: "Action" }, // Changed name to "Action"
+        { label: <strong className='MUI-dataTable-header'>Candidate Email</strong>, name: "CandidateName" },
+        { label: <strong className='MUI-dataTable-header'>Destrict</strong>, name: "CandidateEmail" },
+        { label: <strong className='MUI-dataTable-header'>Date</strong>, name: "TestAttendedDate" },
+        { label: <strong className='MUI-dataTable-header'>Slots Timing</strong>, name: "Score" },
+        { label: <strong className='MUI-dataTable-header'>Approve</strong>, name: "Action" }, // Changed name to "Action"
+        { label: <strong className='MUI-dataTable-header'>Reject</strong>, name: "Action" },
     ];
 
     const data = [
-        [1, "Suma", "suma@gmail.com", "05-08-2024", "20", <Button>Display</Button>],
-        [2, "Kalpana", "kalpana@gmail.com", "05-08-2024", "20", <Button>Display</Button>],
+        [1, "suma@gmail.com", "mandya", "20-08-2024", "10-11 AM", <Button className="btn btn-success">Approve</Button>, <Button className="btn btn-danger">Reject</Button>],
+        [2, "kalpana@gmail.com", "tumukur", "20-08-2024", "11-12 AM", <Button className="btn btn-success">Approve</Button>, <Button className="btn btn-danger">Reject</Button>],
     ];
 
     return (
+
         <Card className='employee-master-card'>
             <CardHeader>
-                <h2 className="Candidate Results-cardHeader">View Candidate Results</h2>
+                <h2 className="Candidate Results-cardHeader">Candidate Slot Booking Details</h2>
             </CardHeader>
             <ThemeProvider theme={theme}>
                 <MUIDataTable
@@ -81,5 +84,7 @@ export default function AdminResultPage() {
                 />
             </ThemeProvider>
         </Card>
-    );
+    )
 }
+
+export default CandidateSlotBookingDetails

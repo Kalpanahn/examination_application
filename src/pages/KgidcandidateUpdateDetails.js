@@ -4,8 +4,9 @@ import * as CandidateUpdateDetailsAction from '../actions/CandidateUpdateDetails
 import { connect } from 'react-redux';
 import swal from 'sweetalert';
 import logo from '../Images/loadingdots2.gif'
+import * as SlotBookingAction from '../actions/SlotBookingAction'
 
-function CandidateUpdateDetails(props) {
+function KgidcandidateUpdateDetails(props) {
     const [preview, setPreview] = useState(null);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -15,7 +16,7 @@ function CandidateUpdateDetails(props) {
     const [otp, setOtp] = useState("");
     const [company, setCompany] = useState("");
     const [designation, setDesignation] = useState("");
-    const [adress, setAdress] = useState("");
+    const [address, setAddress] = useState("");
     const [experience, setExperience] = useState("");
     const [gender, setGender] = useState("");
     const [date, setDate] = useState("");
@@ -23,7 +24,9 @@ function CandidateUpdateDetails(props) {
     const [resumeFile, setResumeFile] = useState("");
     const [imageFile, setImageFile] = useState(null);
     const [signatureFile, setSignatureFile] = useState(null);
-    const [confirmPassword, setConfirmPassword] = useState("");
+    const [dateofjoining, setDateOfJoining] = useState("");
+    const [districtId, setDistrictId] = useState("");
+    const [departmentName, setDepartmentName] = useState("");
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -55,41 +58,9 @@ function CandidateUpdateDetails(props) {
         }
     };
 
-    const handleUserUpdateProfile = (e) => {
+    const handleKgidUserUpdateProfile = (e) => {
         e.preventDefault();
-        const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
-        if (password === '') {
-            swal({
-                title: "Please Enter Password",
-                icon: "error",
-                button: "OK",
-                closeOnClickOutside: false
-            });
-        }
-        else if (confirmPassword === '') {
-            swal({
-                title: "Please Enter Confirm Password",
-                icon: "error",
-                button: "OK",
-                closeOnClickOutside: false
-            });
-        }
-        else if (password !== confirmPassword) {
-            swal({
-                title: "Password Do Not Match",
-                icon: "error",
-                button: "OK",
-                closeOnClickOutside: false
-            });
-        } else if (!passwordRegex.test(password)) {
-            swal({
-                title: "Password should be at least 6 characters long and should contain at least one number, one lowercase, and one uppercase letter",
-                icon: "error",
-                button: "OK",
-                closeOnClickOutside: false
-            });
-        }
-        else if (phone === '') {
+        if (phone === '') {
             swal({
                 title: "Please Enter PhoneNumber!",
                 icon: "error",
@@ -118,7 +89,7 @@ function CandidateUpdateDetails(props) {
                 closeOnClickOutside: false
             });
         }
-        else if (adress === '') {
+        else if (address === '') {
             swal({
                 title: "Please Enter Address",
                 icon: "error",
@@ -135,6 +106,30 @@ function CandidateUpdateDetails(props) {
         } else if (gender === '') {
             swal({
                 title: "Please Select Gender",
+                icon: "error",
+                button: "OK",
+                closeOnClickOutside: false
+            });
+        }
+        else if (districtId === '') {
+            swal({
+                title: "Please Select District Name",
+                icon: "error",
+                button: "OK",
+                closeOnClickOutside: false
+            });
+        }
+        else if (departmentName === '') {
+            swal({
+                title: "Please Select Department Name",
+                icon: "error",
+                button: "OK",
+                closeOnClickOutside: false
+            });
+        }
+        else if (dateofjoining === '') {
+            swal({
+                title: "Please Select Dateof Joining",
                 icon: "error",
                 button: "OK",
                 closeOnClickOutside: false
@@ -164,19 +159,20 @@ function CandidateUpdateDetails(props) {
             });
         } else {
             const formData = new FormData();
-            // Append text fields
             formData.append("phone", phone);
             formData.append("dob", dob);
             formData.append("name", window.localStorage.getItem("name"));
             formData.append("email", window.localStorage.getItem("email"));
-            formData.append("password", password);
-            formData.append("confirmPassword", confirmPassword);
-            formData.append("address", adress);
+            formData.append("KGID", window.localStorage.getItem("KGID"));
+            formData.append("address", address);
             formData.append("role", designation);
             formData.append("currentCompany", company);
             formData.append("experience", experience);
             formData.append("gender", gender);
-            // Append files
+            formData.append("doj", dateofjoining);
+            formData.append("district", districtId);
+            formData.append("department", departmentName);
+
             if (imageFile) {
                 formData.append("profilepic", imageFile);
             }
@@ -186,86 +182,61 @@ function CandidateUpdateDetails(props) {
             if (resumeFile) {
                 formData.append("resume", resumeFile);
             }
-            props.updateUserProfile(formData)
+            props.kgidUpdateUserProfile(formData)
         }
-    }
-    const candidatename = window.localStorage.getItem("name");
-    const candidateemail = window.localStorage.getItem("email");
-
-    const handleClear = () => {
-        setName("")
-        setEmail("")
-        setPassword("")
-        setConfirmPassword("")
-        setPhone("")
-        setDob("")
-        setDate("")
-        setCompany("")
-        setDesignation("")
-        setAdress("")
-        setExperience("")
-        setGender("")
-        setImageFile("")
-        setSignatureFile("")
-        setResumeFile("")
     }
 
     useEffect(() => {
-        if (props.isUserprofileSuccess) {
-            props.setupdateUserProfileSuccess();
-            if (props.UserprofileStatus === 200) {
-                swal({
-                    title: "Candidate Details Updated Successfully.",
-                    icon: "success",
-                    button: "OK",
-                    closeOnClickOutside: false
-                }).then(okay => {
-                    if (okay) {
-                        window.location.href = "/";
-                    }
-                });
-            } else if (props.UserprofileStatus === 404) {
-                swal({
-                    title: "Candidate not found",
-                    icon: "error",
-                    button: "OK",
-                    closeOnClickOutside: false
-                }).then(okay => {
-                    if (okay) {
-                        window.location.reload();
-                    }
-                });
-            }
-            else if (props.UserprofileStatus === 500) {
-                swal({
-                    title: "Error updating candidate:",
-                    icon: "error",
-                    button: "OK",
-                    closeOnClickOutside: false
-                }).then(okay => {
-                    if (okay) {
-                        window.location.reload();
-                    }
-                });
-            }
-        }
-    }, [props.isUserprofileSuccess, props.UserprofileStatus]);
-
-    useEffect(() => {
-        if (props.UserprofileError) {
+        if (props.isKgidUserprofileSuccess && props.KgidUserprofileStatus === 200) {
+            props.setKgidUpdateUserProfileSuccess();
             swal({
-                title: props.UserprofileError,
+                title: "Candidate updated successfully",
+                icon: "success",
+                button: "OK",
+                closeOnClickOutside: false
+            }).then(okay => {
+                if (okay) {
+                    window.location.href = "KgidDashboard";
+                }
+            });
+        } else if (props.KgidUserprofileError) {
+            swal({
+                title: props.KgidUserprofileError,
                 icon: "error",
                 button: "OK",
                 closeOnClickOutside: false
             }).then(okay => {
                 if (okay) {
-                    window.location.reload();
+                    handleClear();
                 }
             });
-            props.setupdateUserProfileError();
+            props.setKgidUpdateUserProfileError();
         }
-    }, [props.UserprofileError]);
+    }, [props.KgidUserprofileStatus, props.isKgidUserprofileSuccess, props.KgidUserprofileError]);
+
+    const handleClear = () => {
+        setName("")
+        setEmail("")
+        setPassword("")
+        setDistrictId("")
+        setPhone("")
+        setDob("")
+        setDate("")
+        setCompany("")
+        setDesignation("")
+        setAddress("")
+        setExperience("")
+        setGender("")
+        setImageFile("")
+        setSignatureFile("")
+        setResumeFile("")
+        setDateOfJoining("")
+        setDepartmentName("")
+    }
+
+    useEffect(() => {
+        props.getDistrictList();
+    }, []);
 
     const resumeUpload = (e) => {
         let id = e.target.id;
@@ -302,6 +273,10 @@ function CandidateUpdateDetails(props) {
         }
     }
 
+    const candidatename = window.localStorage.getItem("name");
+    const candidateemail = window.localStorage.getItem("email");
+    const kgidNumber = window.localStorage.getItem("KGID")
+
     return (
         <div className="card cardmain_align">
             <div className="row mt-3">
@@ -309,7 +284,7 @@ function CandidateUpdateDetails(props) {
                     <h5>Candidate Update Details</h5>
                 </div>
             </div>
-            <form className="form-align">
+            <form className="form-align" >
                 <div className="row rowalign">
                     <div className="col-3 form-group">
                         <label className="label_style">Name</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
@@ -328,28 +303,18 @@ function CandidateUpdateDetails(props) {
                     </div>
 
                     <div className="col-3 form-group">
-                        <label className="label_style">Password</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
+                        <label className="label_style">KGID Number</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
                         <div className="material-textfield">
-                            <input placeholder="Please Enter Password" className="form-control login_input"
-                                type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                            <input className="form-control login_input"
+                                type="text" value={kgidNumber} disabled />
                         </div>
                     </div>
 
-                    <div className="col-3 form-group">
-                        <label className="label_style">Confirm Password</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
-                        <div className="material-textfield">
-                            <input type="password" placeholder="Please Enter Confirm Password" className="form-control login_input"
-                                value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
-                        </div>
-                    </div>
-                </div>
-
-                <div className="row rowalign">
                     <div className="col-3 form-group">
                         <label className="label_style">Phone Number</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
                         <div className="material-textfield">
                             <input placeholder="Please Enter Phone Number" type="text" className="form-control login_input"
-                                value={phone} onChange={(e) => setPhone(e.target.value)} maxLength={10} pattern="\d*"
+                                onChange={(e) => setPhone(e.target.value)} maxLength={10} pattern="\d*"
                                 inputMode="numeric" onInput={(e) => {
                                     e.target.value = e.target.value.replace(/\D/g, '');
                                     setPhone(e.target.value)
@@ -357,11 +322,15 @@ function CandidateUpdateDetails(props) {
                         </div>
                     </div>
 
+
+                </div>
+
+                <div className="row rowalign">
                     <div className="col-3 form-group">
                         <label className="label_style">Date of Birth</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
                         <div className="material-textfield">
                             <input type="date" placeholder="Please Select Date Of Birth" className="form-control login_input"
-                                value={dob} onChange={(e) => setDob(e.target.value)}
+                                onChange={(e) => setDob(e.target.value)}
                             />
                         </div>
                     </div>
@@ -370,7 +339,7 @@ function CandidateUpdateDetails(props) {
                         <label className="label_style">Current Company</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
                         <div className="material-textfield">
                             <input placeholder="Please Enter Current Company Name" type="text" minLength={6} className="form-control login_input"
-                                value={company} onChange={(e) => setCompany(e.target.value)}
+                                onChange={(e) => setCompany(e.target.value)}
                             />
                         </div>
                     </div>
@@ -379,7 +348,16 @@ function CandidateUpdateDetails(props) {
                         <label className="label_style">Current Designation/Role</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
                         <div className="material-textfield">
                             <input placeholder="Please Enter Current Designation/Role" type="text" className="form-control login_input"
-                                value={designation} onChange={(e) => setDesignation(e.target.value)}
+                                onChange={(e) => setDesignation(e.target.value)}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="col-3 form-group">
+                        <label className="label_style">Date of Joining</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
+                        <div className="material-textfield">
+                            <input type="date" placeholder="Please Select Date Of Birth" className="form-control login_input"
+                                onChange={(e) => setDateOfJoining(e.target.value)}
                             />
                         </div>
                     </div>
@@ -387,18 +365,10 @@ function CandidateUpdateDetails(props) {
 
                 <div className="row rowalign">
                     <div className="col-3 form-group">
-                        <label className="label_style">Address Line</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
-                        <div className="material-textfield">
-                            <input placeholder="Please Enter Address" type="text" className="form-control login_input"
-                                value={adress} onChange={(e) => setAdress(e.target.value)} />
-                        </div>
-                    </div>
-
-                    <div className="col-3 form-group">
                         <label className="label_style">Experience</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
                         <div className="material-textfield">
                             <select class="form-select" aria-label="Default select example"
-                                value={experience} onChange={(e) => setExperience(e.target.value)}>
+                                onChange={(e) => setExperience(e.target.value)}>
                                 <option selected>Select</option>
                                 <option value="1">One</option>
                                 <option value="2">Two</option>
@@ -406,7 +376,6 @@ function CandidateUpdateDetails(props) {
                             </select>
                         </div>
                     </div>
-
                     <div className="col-3 form-group">
                         <label className="label_style">Gender</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
                         <div class="form-check form-check-inline">
@@ -422,18 +391,43 @@ function CandidateUpdateDetails(props) {
                     </div>
 
                     <div className="col-3 form-group">
+                        <label className="label_style">Address Line</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
+                        <div className="material-textfield">
+                            <input placeholder="Please Enter Address" type="text" className="form-control login_input"
+                                onChange={(e) => setAddress(e.target.value)} />
+                        </div>
+                    </div>
+
+
+                    <div className="col-3 form-group">
+                        <label className="label_style">District</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
+                        <div className="material-textfield">
+                            <select class="form-select" aria-label="Default select example" value={districtId} onChange={(e) => setDistrictId(e.target.value)}
+                            >
+                                <option selected>Select</option>
+                                {props.getDistrictModel && Array.isArray(props.getDistrictModel) &&
+                                    props.getDistrictModel.map((district) => (
+                                        <option key={district.districtcode} value={district.districtcode}>
+                                            {district.districtname}
+                                        </option>
+                                    ))}
+
+                            </select>
+                        </div>
+                    </div>
+                    <div className="col-3 form-group">
                         <label className="label_style">Upload Image</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
                         <div className="material-textfield">
-                            <input type="file" className="form-control login_input" accept=".png, .jpg"
-                                onChange={e => handleImageChange(e)}
+                            <input type="file" className="form-control login_input" accept=".png, .jpg" onChange={e => handleImageChange(e)}
+
                             />
                         </div>
                     </div>
                     <div className="col-3 form-group">
                         <label className="label_style">Upload Signature</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
                         <div className="material-textfield">
-                            <input type="file" className="form-control login_input" accept=".png, .jpg"
-                                onChange={e => handleSignatureChange(e)} />
+                            <input type="file" className="form-control login_input" accept=".png, .jpg" onChange={e => handleSignatureChange(e)}
+                            />
                         </div>
                     </div>
                     <div className="col-3 form-group">
@@ -441,6 +435,14 @@ function CandidateUpdateDetails(props) {
                         <div className="material-textfield">
                             <input type="file" id="file" onChange={e => resumeUpload(e)} required accept='.pdf'
                                 className="form-control login_input" />
+                        </div>
+                    </div>
+
+                    <div className="col-3 form-group">
+                        <label className="label_style">Department Name</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
+                        <div className="material-textfield">
+                            <textarea placeholder="Please Enter Name" type="text" className="form-control login_input" onChange={(e) => setDepartmentName(e.target.value)}
+                            />
                         </div>
                     </div>
                     {preview && (
@@ -455,7 +457,7 @@ function CandidateUpdateDetails(props) {
                 <div className="row rowalign">
                     <div className="nav nav-underline justify-content-center">
                         <button type="button" className="btn btn-primary buttonstyle btn_width submitUser"
-                            onClick={handleUserUpdateProfile}>
+                            onClick={handleKgidUserUpdateProfile}>
                             Submit
                         </button>&nbsp;&nbsp;
                         <button type="submit" className="btn btn-primary buttonstyle btn_width submitUser"
@@ -469,24 +471,37 @@ function CandidateUpdateDetails(props) {
     )
 }
 
+
 const mapToProps = function (state) {
     return {
-        //NON-KGID user details update
-        UserprofileModel: state.candidateUpdateDetails.UserprofileModel,
-        isUserprofileIn: state.candidateUpdateDetails.isUserprofileIn,
-        isUserprofileSuccess: state.candidateUpdateDetails.isUserprofileSuccess,
-        UserprofileError: state.candidateUpdateDetails.UserprofileError,
-        UserprofileStatus: state.candidateUpdateDetails.UserprofileStatus,
+        //KGID user profile update
+        KgidUserprofileModel: state.candidateUpdateDetails.KgidUserprofileModel,
+        isKgidUserprofileIn: state.candidateUpdateDetails.isKgidUserprofileIn,
+        isKgidUserprofileSuccess: state.candidateUpdateDetails.isKgidUserprofileSuccess,
+        KgidUserprofileError: state.candidateUpdateDetails.KgidUserprofileError,
+        KgidUserprofileStatus: state.candidateUpdateDetails.KgidUserprofileStatus,
+
+        //get district
+        getDistrictModel: state.slotBooking.getDistrictModel,
+        isGetDistrictIn: state.slotBooking.isGetDistrictIn,
+        isGetDistrictSuccess: state.slotBooking.isGetDistrictSuccess,
+        GetDistrictError: state.slotBooking.GetDistrictError,
     }
 }
 
 const mapDispatchToProps = function (dispatch) {
     return {
-        //NON-KGID user details update
-        updateUserProfile: (fields) => dispatch(CandidateUpdateDetailsAction.updateUserProfile(fields)),
-        setupdateUserProfileSuccess: () => dispatch(CandidateUpdateDetailsAction.setupdateUserProfileSuccess()),
-        setupdateUserProfileError: () => dispatch(CandidateUpdateDetailsAction.setupdateUserProfileError()),
+        //KGID user profile update
+        kgidUpdateUserProfile: (fields) => dispatch(CandidateUpdateDetailsAction.kgidUpdateUserProfile(fields)),
+        setKgidUpdateUserProfileSuccess: () => dispatch(CandidateUpdateDetailsAction.setKgidUpdateUserProfileSuccess()),
+        setKgidUpdateUserProfileError: () => dispatch(CandidateUpdateDetailsAction.setKgidUpdateUserProfileError()),
+
+        //get district
+        getDistrictList: () => dispatch(SlotBookingAction.getDistrictList()),
+        setDistrictListSuccess: () => dispatch(SlotBookingAction.setDistrictListSuccess()),
+        setDistrictListError: () => dispatch(SlotBookingAction.setDistrictListError()),
+
     }
 }
 
-export default connect(mapToProps, mapDispatchToProps)(CandidateUpdateDetails);
+export default connect(mapToProps, mapDispatchToProps)(KgidcandidateUpdateDetails);

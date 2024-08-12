@@ -152,7 +152,7 @@ function AddQuestions(props) {
                         </div>
                     </div>
                     <div className="row rowalign">
-                            <label for="exampleSelect" className="label_style">Question</label>
+                        <label for="exampleSelect" className="label_style">Question</label>
                         <div className='mb-3'>
                             <textarea id="questions" name="questions" placeholder="Enter the Question" class="form-control"
                                 value={question} onChange={(e) => setQuestion(e.target.value)}></textarea>
@@ -280,6 +280,7 @@ function AddQuestions(props) {
 
 const mapToProps = function (state) {
     return {
+        //add Questions
         AddQuestionModel: state.addQuestion.AddQuestionModel,
         isAddQuestionIn: state.addQuestion.isAddQuestionIn,
         isAddQuestionSuccess: state.addQuestion.isAddQuestionSuccess,
@@ -290,6 +291,7 @@ const mapToProps = function (state) {
 
 const mapDispatchToProps = function (dispatch) {
     return {
+        //add Questions
         AddQuestion: (fields) => dispatch(AddQuestionsAction.AddQuestion(fields)),
         setAddQuestionSuccess: () => dispatch(AddQuestionsAction.setAddQuestionSuccess()),
         setAddQuestionError: () => dispatch(AddQuestionsAction.setAddQuestionError()),

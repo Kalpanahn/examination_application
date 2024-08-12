@@ -21,7 +21,6 @@ function Registration(props) {
   const imageURL = logo;
   const [otpSent, setOtpSent] = useState("");
 
-
   const validateEmail = (mailId) => {
     const regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
     if (regex.test(mailId)) {
@@ -78,7 +77,6 @@ function Registration(props) {
       }
     }
   }, [props.isSendotpSuccess, props.SendotpModel]);
-
 
   const handleNonKGIDRegistration = (e) => {
     const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;

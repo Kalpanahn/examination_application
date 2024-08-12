@@ -37,10 +37,6 @@
   color: #888;
 }
 
-/* .align-items-center {
-  align-items: center !important;
-} */
-
 .rowalign {
   display: flex;
   align-items: center;
@@ -67,10 +63,8 @@
 
 .timing-slots {
   display: flex;
-  /* overflow-x: auto; */
   padding: -3px;
   gap: 8px;
-  /* Add gap between slots */
   flex: 1;
 }
 
@@ -84,7 +78,6 @@
   cursor: pointer;
   transition: background-color 0.3s;
   min-width: 100px;
-  /* Adjust the width as needed */
   box-sizing: border-box;
 }
 
@@ -145,7 +138,6 @@
 .blink-txt {
   animation: blink-animation 1s steps(5, start) infinite;
   -webkit-animation: blink-animation 1s steps(5, start) infinite;
-  /* for Safari, Chrome, and other WebKit browsers */
 }
 
 @keyframes blink-animation {
@@ -168,7 +160,6 @@ thead.MuiTableHead-root.tss-1937jnc-MUIDataTableHead-main.css-15wwp11-MuiTableHe
   background-color: lavender;
 }
 
-
 .text-center.mb-3.mt-3 {
   width: 87px;
   height: 39px;
@@ -187,10 +178,7 @@ thead.MuiTableHead-root.tss-1937jnc-MUIDataTableHead-main.css-15wwp11-MuiTableHe
 }
 
 .slot.selected {
-  background-color: #7dafe7; /* Change this to your desired color */
+  background-color: #7dafe7; 
   color: white;
 }
 
-.card.card_align1 {
-  width: 100%;
-}

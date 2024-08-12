@@ -1,7 +1,6 @@
 import React from 'react'
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 
-
 function Header() {
   return (
     <AppBar position="static" sx={{ backgroundColor: '#1c1c1c', padding: 1 }}>

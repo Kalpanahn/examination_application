@@ -7,7 +7,7 @@ import moment from 'moment';
 function SlotBooking(props) {
     const [districtId, setDistrictId] = useState("");
     const [date, setDate] = useState("")
-    const [selectedSlot, setSelectedSlot] = useState(null);
+    const [selectedSlot, setSelectedSlot] = useState("");
 
     const handlebookslot = (e) => {
         e.preventDefault();
@@ -37,7 +37,7 @@ function SlotBooking(props) {
                 district: districtId,
                 date: date,
                 time: selectedSlot.time,
-                user_id: selectedSlot._id
+                email: window.localStorage.getItem("email")
             }
             props.bookSlot(fields)
         }
@@ -57,7 +57,7 @@ function SlotBooking(props) {
 
     const handleTimeSlotClick = (slot) => {
         if (slot.bookings < 3) {
-            setSelectedSlot(slot._id);
+            setSelectedSlot(slot);
         }
     };
 
@@ -71,7 +71,7 @@ function SlotBooking(props) {
                 closeOnClickOutside: false
             }).then(okay => {
                 if (okay) {
-                    window.location.href = "dasboard";
+                    window.location.reload();
                 }
             })
         } else if (props.BookSlotError) {
@@ -135,7 +135,7 @@ function SlotBooking(props) {
                                 props.GetTimeSlotModel.slots.map((slot) => (
                                     <div
                                         key={slot._id}
-                                        className={`slot ${selectedSlot === slot._id ? 'selected' : ''}`}
+                                        className={`slot ${selectedSlot === slot ? 'selected' : ''}`}
                                         onClick={() => handleTimeSlotClick(slot)}
                                         style={{ color: slot.bookings >= 3 ? 'gray' : 'black' }}>
                                         {slot.time} {slot.bookings >= 3 ? '(Full)' : ''}
@@ -167,17 +167,20 @@ function SlotBooking(props) {
 
 const mapToProps = function (state) {
     return {
+        //get Destrict
         getDistrictModel: state.slotBooking.getDistrictModel,
         isGetDistrictIn: state.slotBooking.isGetDistrictIn,
         isGetDistrictSuccess: state.slotBooking.isGetDistrictSuccess,
         GetDistrictError: state.slotBooking.GetDistrictError,
-        //
+
+        //slot booking
         BookSlotModel: state.slotBooking.BookSlotModel,
         isBookSlotIn: state.slotBooking.isBookSlotIn,
         isBookSlotSuccess: state.slotBooking.isBookSlotSuccess,
         BookSlotError: state.slotBooking.BookSlotError,
         BookSlotStatus: state.slotBooking.BookSlotStatus,
 
+        //get time slot
         GetTimeSlotModel: state.slotBooking.GetTimeSlotModel,
         isGetTimeSlotIn: state.slotBooking.isGetTimeSlotIn,
         isGetTimeSlotSuccess: state.slotBooking.isGetTimeSlotSuccess,
@@ -187,14 +190,17 @@ const mapToProps = function (state) {
 
 const mapDispatchToProps = function (dispatch) {
     return {
+        //get Destrict
         getDistrictList: () => dispatch(SlotBookingAction.getDistrictList()),
         setDistrictListSuccess: () => dispatch(SlotBookingAction.setDistrictListSuccess()),
         setDistrictListError: () => dispatch(SlotBookingAction.setDistrictListError()),
 
+        //slot booking
         bookSlot: (fields) => dispatch(SlotBookingAction.bookSlot(fields)),
         setbookSlotSuccess: () => dispatch(SlotBookingAction.setbookSlotSuccess()),
         setbookSlotError: () => dispatch(SlotBookingAction.setbookSlotError()),
 
+        //get time slot
         getTimeSlots: (fields) => dispatch(SlotBookingAction.getTimeSlots(fields)),
         setgetTimeSlotsSuccess: () => dispatch(SlotBookingAction.setgetTimeSlotsSuccess()),
         setgetTimeSlotsError: () => dispatch(SlotBookingAction.setgetTimeSlotsError()),

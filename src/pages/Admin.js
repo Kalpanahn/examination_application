@@ -5,24 +5,24 @@ import AdminResultPage from './AdminResultPage';
 import Navbar from '../components/Navbar';
 
 export default function Admin() {
+
     useEffect(() => {
-        // Initialize Bootstrap Tabs
         const tabs = document.querySelectorAll('button[data-bs-toggle="tab"]');
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
-                tabs.forEach(t => t.classList.remove('active')); 
+                tabs.forEach(t => t.classList.remove('active'));
                 const tabId = tab.getAttribute('data-bs-target');
                 document.querySelectorAll('.tab-pane').forEach(pane => {
-                    pane.classList.remove('show', 'active'); 
+                    pane.classList.remove('show', 'active');
                 });
-                document.querySelector(tabId).classList.add('show', 'active'); 
+                document.querySelector(tabId).classList.add('show', 'active');
             });
         });
-
         return () => {
-            tabs.forEach(tab => tab.removeEventListener('click', () => {}));
+            tabs.forEach(tab => tab.removeEventListener('click', () => { }));
         };
     }, []);
+
     return (
         <div>
             <div className="container-fluid mt-4">

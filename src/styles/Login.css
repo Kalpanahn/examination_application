@@ -17,7 +17,6 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    /* Add your CSS styles here */
 }
 
 a {
@@ -31,27 +30,11 @@ a:hover {
     color: #535bf2;
 }
 
-
-
 h1 {
     font-size: 3.2em;
     line-height: 1.1;
 }
 
-/* button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-} */
 button:focus,
 button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
@@ -88,8 +71,6 @@ button:focus-visible {
     margin-top: 16px;
 }
 
-
-
 .modal.fade.modalstyle {
     box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
 }
@@ -106,7 +87,6 @@ button:focus-visible {
 }
 
 /* Login */
-
 .card-header.header_align {
     background-color: transparent;
     border-bottom: 0px;
@@ -117,23 +97,8 @@ button:focus-visible {
     border-top: 0px;
 }
 
-/* button.btn.btn-primary.buttonstyle{
-  background-image: linear-gradient(to right, #e0accc  0%, #61045F  51%, #AA076B  100%);
-  padding: 10px 40px;
-  text-align: center;
-  transition: 0.5s;
-  background-size: 200% auto;
-  color: white;            
-  border-radius: 10px;
-  border: 1px linear-gradient(to right, #e0accc 0%, #61045F 51%, #AA076B 100%);;
- 
-} */
-
-
-
 .btn-grad:hover {
     background-position: right center;
-    /* change the direction of the change here */
     color: #fff;
     text-decoration: none;
 }
@@ -143,7 +108,6 @@ button.btn.btn-primary.buttonstyle {
     background-color: #674578e0;
     border: 1px solid #674578e0;
     font-size: 14px;
-
 }
 
 .btn.btn-primary.buttonstyle {
@@ -151,7 +115,6 @@ button.btn.btn-primary.buttonstyle {
     background-color: #674578e0;
     border: 1px solid #674578e0;
     font-size: 14px;
-
 }
 
 .button.navbuttona {
@@ -170,7 +133,6 @@ button.btn.btn-primary.buttonstyle {
 
 .nav-pills .nav-link.active,
 .nav-pills .show>.nav-link {
-
     color: #ffffff;
     background-color: #674578e0;
     font-size: 14px;
@@ -178,26 +140,22 @@ button.btn.btn-primary.buttonstyle {
 
 .card.card_align {
     margin-left: 36%;
-    margin-top: 38%;
+    margin-top: 16%;
     width: 24rem;
-    /* Adjust card width for better appearance */
     padding: 1rem;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-
 .material-textfield {
     position: relative;
     margin-bottom: 1.5rem;
-    /* Add margin to separate the fields */
 }
 
 .material-textfield label {
     position: absolute;
     font-size: 1rem;
     left: 1rem;
-    /* Adjust left position for better alignment */
     top: 50%;
     transform: translateY(-50%);
     background-color: white;
@@ -254,14 +212,6 @@ h5 span.login-font {
     color: rgba(95, 142, 185, 1);
 }
 
-/* button.btn.btn-primary.btn-color {
-  background-color: rgba(95, 142, 185, 1);
-  border: rgba(95, 142, 185, 1);
-} */
-/* span a{
-  color: #331B3F;
- } */
-
 a {
     font-weight: 400;
     color: #aeb2f4;
@@ -271,8 +221,6 @@ a {
 button.btn.btn-primary.buttonstyle.sendButton {
     padding: 8px;
 }
-
-/* Update Candidate Details */
 
 .nav-underline .nav-link.active,
 .nav-underline .show>.nav-link {
@@ -293,7 +241,6 @@ button.btn.btn-primary.buttonstyle.sendButton {
     color: #000000;
     background-color: transparent;
     font-size: 16px;
-
 }
 
 label.label_style {
@@ -320,3 +267,4 @@ button.btn.btn-primary.buttonstyle.btn_width {
 form.form-align {
     margin-top: 10px;
 }
+

@@ -1,15 +1,18 @@
 const slotBookingState = {
+    //get Destrict
     getDistrictModel: [],
     isGetDistrictIn: false,
     isGetDistrictSuccess: false,
     GetDistrictError: '',
 
+    //slot booking
     BookSlotModel: [],
     isBookSlotIn: false,
     isBookSlotSuccess: false,
     BookSlotError: '',
     BookSlotStatus: [],
 
+    //get time slot
     GetTimeSlotModel: [],
     isGetTimeSlotIn: false,
     isGetTimeSlotSuccess: false,
@@ -18,6 +21,7 @@ const slotBookingState = {
 
 export const slotBooking = (state = slotBookingState, action) => {
     switch (action.type) {
+        //get Destrict
         case 'GET_DISTRICT_LIST_START':
             return Object.assign({}, state, { isGetDistrictIn: true, isGetDistrictSuccess: false, })
         case 'GET_DISTRICT_LIST_SUCCESS':
@@ -29,6 +33,7 @@ export const slotBooking = (state = slotBookingState, action) => {
         case 'SET_GET_DISTRICT_LIST_FAILURE':
             return Object.assign({}, state, { GetDistrictError: '' })
 
+        //slot booking
         case 'BOOKSLOT_LIST_START':
             return Object.assign({}, state, { isBookSlotIn: true, isBookSlotSuccess: false, })
         case 'BOOKSLOT_LIST_SUCCESS':
@@ -40,6 +45,7 @@ export const slotBooking = (state = slotBookingState, action) => {
         case 'SET_BOOKSLOT_LIST_FAILURE':
             return Object.assign({}, state, { BookSlotError: '' })
 
+        //get time slot
         case 'GETTIMESLOTS_LIST_START':
             return Object.assign({}, state, { isGetTimeSlotIn: true, isGetTimeSlotSuccess: false, })
         case 'GETTIMESLOTS_LIST_SUCCESS':
