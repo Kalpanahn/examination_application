@@ -1,7 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import Navbar from "../components/Navbar";
+import { useNavigate } from 'react-router-dom';
+
 
 function TypingTest() {
+    const navigate = useNavigate();
     const [accuracy, setAccuracy] = useState(null);
     const [isActive, setIsActive] = useState(false);
     const randomText = "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English.";
@@ -27,6 +30,13 @@ function TypingTest() {
         const acc = calculateAccuracy();
         setAccuracy(acc);
     };
+    useEffect(() => {
+        if (accuracy !== null) {
+            window.localStorage.setItem('accuracy', accuracy);
+            window.localStorage.setItem('time', time);
+        }
+    }, [accuracy, time]);
+
     const calculateAccuracy = () => {
         const userWords = userText.trim().split(/\s+/);
         const randomWords = randomText.trim().split(/\s+/);
@@ -51,6 +61,10 @@ function TypingTest() {
         return () => clearInterval(intervalRef.current);
     }, [isActive, time]);
 
+    const handleNext = () => {
+        navigate('/testPage');
+    };
+
     return (
         <div className='container-fluid mt-4'>
             <Navbar />
@@ -70,6 +84,14 @@ function TypingTest() {
                                 className="btn btn-primary buttonstyle btn_width submitUser"
                                 onClick={handleSubmit}>
                                 Submit
+                            </button>
+                            &nbsp;&nbsp;
+                            <button
+                                type="submit"
+                                className="btn btn-primary buttonstyle btn_width submitUser"
+                                onClick={handleNext}
+                            >
+                                Next
                             </button>
                         </div>
 

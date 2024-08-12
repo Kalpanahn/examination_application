@@ -13,6 +13,7 @@ import TestPage from './pages/TestPage';
 import TypingTest from './pages/TypingTest';
 import KgidDashboard from './components/KgidDashboard';
 import DepartmentAdmin from './pages/DepartmentAdmin';
+import Adminloginpage from './components/Adminloginpage';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             {/* <Sidebar/> */}
             <Routes>
               <Route path="/" element={<LoginPage />} />
+              <Route path="/Adminloginpage" element={<Adminloginpage />} />
               <Route path="/Registration" element={<Registration />} />
               <Route path="/Dashboard" element={<Dashboard />} />
               <Route path="/CenterAdmin" element={<CenterAdmin />} />

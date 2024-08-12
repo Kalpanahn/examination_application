@@ -4,6 +4,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import Navbar from '../components/Navbar';
 import * as TestPageAction from '../actions/TestPageAction';
 import { connect } from 'react-redux';
+import swal from "sweetalert";
+import moment from 'moment';
 
 function TestPage(props) {
   const [questions, setQuestions] = useState([]);
@@ -15,6 +17,7 @@ function TestPage(props) {
   const [isTestCompleted, setIsTestCompleted] = useState(false);
   const [totalTimeTaken, setTotalTimeTaken] = useState(0);
   const [isTimerStopped, setIsTimerStopped] = useState(false);
+
 
   useEffect(() => {
     if (props.QuestionsModel) {
@@ -83,16 +86,96 @@ function TestPage(props) {
     return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
 
+
   const handleSubmit = () => {
     setIsTestCompleted(true);
     setIsTimerStopped(true);
     setTotalTimeTaken(20 * 60 - time);
+
+    if (Object.keys(selectedOptions).length === 0) {
+      swal({
+        title: "Please Select options!",
+        icon: "error",
+        button: "OK",
+        closeOnClickOutside: false
+      });
+    } else {
+      const responses = questions.map(question => ({
+        question: question.text,
+        answer: selectedOptions[question.id] || '',
+        correctAnswer: question.correctOption || '',
+      }));
+
+
+      const categories = props.QuestionsModel.map(question => question.category);
+      const uniqueCategories = [...new Set(categories)];
+      const categoriesString = uniqueCategories.join(', ');
+      const localDateTime = new Date().toLocaleString();
+
+      let fields = {
+        email: window.localStorage.getItem("email"),
+        name: window.localStorage.getItem("name"),
+        category: categoriesString,
+        date: moment(localDateTime).format('YYYY-MM-DD'),
+        time: window.localStorage.getItem("time"),
+        accuracy: window.localStorage.getItem("accuracy"),
+        responses: responses,
+      };
+      props.SubmitTestAnswer(fields);
+    }
   };
+
+
+  useEffect(() => {
+    if (props.isSubmitAnswersSuccess && props.SubmitAnswersStatus === 200) {
+      props.setSubmitTestAnswerSuccess();
+      swal({
+        title: "Answers added successfully",
+        icon: "success",
+        button: "OK",
+        closeOnClickOutside: false
+      }).then(okay => {
+        if (okay) {
+          window.location.reload();
+        }
+      });
+    } else if (props.SubmitAnswersError) {
+      swal({
+        title: props.SubmitAnswersError,
+        icon: "error",
+        button: "OK",
+        closeOnClickOutside: false
+      }).then(okay => {
+        if (okay) {
+          window.location.reload();
+        }
+      });
+      props.setSubmitTestAnswerError();
+    }
+  }, [props.isSubmitAnswersSuccess, props.SubmitAnswersStatus, props.setSubmitTestAnswerError]);
 
   useEffect(() => {
     props.getQuestions();
   }, []);
 
+
+  useEffect(() => {
+    if (props.QuestionsModel) {
+      const mappedQuestions = Object.keys(props.QuestionsModel).map(key => {
+        const question = props.QuestionsModel[key];
+        return {
+          id: question._id,
+          text: question.question,
+          options: [question.option1, question.option2, question.option3, question.option4],
+          correctOption: question.answer,
+        };
+      });
+      setQuestions(mappedQuestions);
+      if (mappedQuestions.length > 0) {
+        setQuestionData(mappedQuestions[0]);
+      }
+    }
+  }, [props.QuestionsModel]);
   return (
     <div className='container-fluid mt-4'>
       <Navbar />

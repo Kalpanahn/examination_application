@@ -5,9 +5,11 @@ import{candidateUpdateDetails} from '../reducers/CandidateUpdateDetailsReducer';
 import{slotBooking}from'../reducers/SlotBookingReducer';
 import { addQuestion } from '../reducers/AddQuestionsReducer';
 import {testPage} from '../reducers/TestPageReducer';
+import { adminLogin } from '../reducers/AdminLoginReducer';
 
 const rootReducer = combineReducers({
     login: login,
+    adminLogin:adminLogin,
     candidateUpdateDetails:candidateUpdateDetails,
     slotBooking:slotBooking,
     addQuestion:addQuestion,

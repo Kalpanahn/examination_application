@@ -28,17 +28,11 @@ function Guidelines() {
                             <div className="row rowalign">
                                 <div className="nav nav-underline justify-content-center">
                                     {isChecked && (
-                                        <a href='/testPage'>
-                                            <button type="button" className="btn btn-info">
-                                                Start Test
-                                            </button></a>
-                                    )}&nbsp;&nbsp;
-                                    {isChecked && (
                                         <a href='/TypingTest'>
                                             <button type="submit" className="btn btn-info">
                                                 Start Typing
                                             </button>
-                                        </a>)}&nbsp;&nbsp;
+                                        </a>)}
                                 </div>
                             </div>
                             <hr />

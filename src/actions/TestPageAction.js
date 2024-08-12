@@ -32,11 +32,20 @@ export const SubmitTestAnswer = (fields) => {
     dispatch({ type: 'SUBMIT_ANSWER_START' })
     axios.post(APIs + '/getCandidateResponse', fields, {
     }).then(function (response) {
-      dispatch({ type: 'SUBMIT_ANSWER_SUCCESS', payload: response.data })
+      dispatch({ type: 'SUBMIT_ANSWER_SUCCESS', payload: response.data, SubmitAnswersStatus: response.status  })
     })
       .catch(function (error) {
-        dispatch({ type: 'SUBMIT_ANSWER_FAILURE', payload: error })
-      });
+      
+        const errorMessage = error.response && error.response.data && error.response.data.error
+            ? error.response.data.error
+            : error.message;
+            console.log("msg",errorMessage)
+        dispatch({
+            type: 'SUBMIT_ANSWER_FAILURE',
+            payload: errorMessage,
+            SubmitAnswersStatus: error.response ? error.response.status : 500
+        });
+    });
   }
 }
 
@@ -51,3 +60,4 @@ export const setSubmitTestAnswerError = () => {
     dispatch({ type: 'SET_IS_SUBMIT_ANSWER_ERROR' })
   }
 }
+

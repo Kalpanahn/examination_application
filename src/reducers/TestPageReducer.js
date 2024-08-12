@@ -31,9 +31,9 @@ export const testPage = (state = questionsState, action) => {
         case 'SUBMIT_ANSWER_START':
             return Object.assign({}, state, { isSubmitAnswersIn: true, isSubmitAnswersSuccess: false })
         case 'SUBMIT_ANSWER_SUCCESS':
-            return Object.assign({}, state, { SubmitAnswersModel: action.payload, isSubmitAnswersIn: false, isSubmitAnswersSuccess: true })
+            return Object.assign({}, state, { SubmitAnswersModel: action.payload, isSubmitAnswersIn: false, isSubmitAnswersSuccess: true,SubmitAnswersStatus: action.SubmitAnswersStatus })
         case 'SUBMIT_ANSWER_FAILURE':
-            return Object.assign({}, state, { SubmitAnswersError: action.payload, isSubmitAnswersIn: false, isSubmitAnswersSuccess: false })
+            return Object.assign({}, state, { SubmitAnswersError: action.payload, isSubmitAnswersIn: false, isSubmitAnswersSuccess: false ,SubmitAnswersStatus: action.SubmitAnswersStatus})
         case 'SET_IS_SUBMIT_ANSWER_SUCCESS':
             return Object.assign({}, state, { isSubmitAnswersSuccess: false })
         case 'SET_IS_SUBMIT_ANSWER_ERROR':

@@ -20,6 +20,7 @@ function Registration(props) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const imageURL = logo;
   const [otpSent, setOtpSent] = useState("");
+  
 
   const validateEmail = (mailId) => {
     const regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
