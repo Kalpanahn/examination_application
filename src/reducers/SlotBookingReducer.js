@@ -17,6 +17,20 @@ const slotBookingState = {
     isGetTimeSlotIn: false,
     isGetTimeSlotSuccess: false,
     GetTimeSlotError: '',
+
+    //get BookedCandidateList
+    getBookedCandidateListModel: [],
+    isGetBookedCandidateListIn: false,
+    isGetBookedCandidateListSuccess: false,
+    GetBookedCandidateListError: '',
+
+    //admin approvals
+    AdminApprovalModel: [],
+    isAdminApprovalIn: false,
+    isAdminApprovalSuccess: false,
+    AdminApprovalError: '',
+    AdminApprovalStatus: [],
+
 }
 
 export const slotBooking = (state = slotBookingState, action) => {
@@ -56,6 +70,32 @@ export const slotBooking = (state = slotBookingState, action) => {
             return Object.assign({}, state, { isGetTimeSlotSuccess: false })
         case 'SET_GETTIMESLOTS_LIST_FAILURE':
             return Object.assign({}, state, { GetTimeSlotError: '' })
+
+        // get BookedCandidateList
+        case 'GET_BOOKEDCANDIDATE_LIST_START':
+            return Object.assign({}, state, { isGetBookedCandidateListIn: true, isGetBookedCandidateListSuccess: false, })
+        case 'GET_BOOKEDCANDIDATE_LIST_SUCCESS':
+            return Object.assign({}, state, { getBookedCandidateListModel: action.payload, isGetBookedCandidateListIn: false, isGetBookedCandidateListSuccess: true })
+        case 'GET_BOOKEDCANDIDATE_LIST_FAILURE':
+            return Object.assign({}, state, { GetBookedCandidateListError: action.payload, isGetBookedCandidateListIn: false, isGetBookedCandidateListSuccess: false })
+        case 'SET_IS_GET_BOOKEDCANDIDATE_LIST_SUCCESS':
+            return Object.assign({}, state, { isGetBookedCandidateListSuccess: false })
+        case 'SET_GET_BOOKEDCANDIDATE_LIST_FAILURE':
+            return Object.assign({}, state, { GetBookedCandidateListError: '' })
+
+
+        //admin approvals
+        case 'ADMIN_APPROVALS_START':
+            return Object.assign({}, state, { isAdminApprovalIn: true, isAdminApprovalSuccess: false, })
+        case 'ADMIN_APPROVALS_SUCCESS':
+            return Object.assign({}, state, { AdminApprovalModel: action.payload, isAdminApprovalIn: false, isAdminApprovalSuccess: true, AdminApprovalStatus: action.AdminApprovalStatus })
+        case 'ADMIN_APPROVALS_FAILURE':
+            return Object.assign({}, state, { AdminApprovalError: action.payload, isAdminApprovalIn: false, isAdminApprovalSuccess: false, AdminApprovalStatus: action.AdminApprovalStatus })
+        case 'SET_IS_ADMIN_APPROVALS_SUCCESS':
+            return Object.assign({}, state, { isAdminApprovalSuccess: false })
+        case 'SET_IS_ADMIN_APPROVALS_ERROR':
+            return Object.assign({}, state, { AdminApprovalError: '' })
+
 
         default:
             return state;

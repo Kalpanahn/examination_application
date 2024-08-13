@@ -1,11 +1,17 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Card, CardHeader } from 'reactstrap';
 import MUIDataTable from "mui-datatables";
 import { Button } from 'react-bootstrap';
+import * as SlotBookingAction from '../actions/SlotBookingAction'
+import { connect } from 'react-redux';
+import moment from 'moment';
+import swal from 'sweetalert';
 
-function CandidateSlotBookingDetails() {
 
+function CandidateSlotBookingDetails(props) {
+    const [action, setAction] = useState("");
+    const [selectedEmail, setSelectedEmail] = useState("");
     const theme = createTheme({
         overrides: {
             MuiDataTableBodyRow: {
@@ -53,10 +59,46 @@ function CandidateSlotBookingDetails() {
         { label: <strong className='MUI-dataTable-header'>Reject</strong>, name: "Action" },
     ];
 
-    const data = [
-        [1, "suma@gmail.com", "mandya", "20-08-2024", "10-11 AM", <Button className="btn btn-success">Approve</Button>, <Button className="btn btn-danger">Reject</Button>],
-        [2, "kalpana@gmail.com", "tumukur", "20-08-2024", "11-12 AM", <Button className="btn btn-success">Approve</Button>, <Button className="btn btn-danger">Reject</Button>],
-    ];
+    useEffect(() => {
+        props.getBookedCandidateList();
+    }, []);
+
+
+    const handleClick = (email, actionType) => {
+        const fields = {
+            email: email,
+            action: actionType,
+        };
+        props.AdminApprovals(fields);
+    };
+
+
+    useEffect(() => {
+        if (props.isAdminApprovalSuccess && props.AdminApprovalStatus === 200) {
+            props.setAdminApprovalsSuccess();
+            swal({
+                title: "Approval updated successfully in Candidate",
+                icon: "success",
+                button: "OK",
+                closeOnClickOutside: false
+            }).then(okay => {
+                if (okay) {
+                    window.location.href = "/CenterAdmin";
+                }
+            });
+        } else if (props.AdminApprovalError) {
+            swal({
+                title: props.AdminApprovalError,
+                icon: "error",
+                button: "OK",
+                closeOnClickOutside: false
+            }).then(okay => {
+                if (okay) {
+                }
+            });
+            props.setAdminApprovalsError();
+        }
+    }, [props.isAdminApprovalSuccess, props.AdminApprovalStatus, props.AdminApprovalError]);
 
     return (
 
@@ -80,11 +122,60 @@ function CandidateSlotBookingDetails() {
                         download: false,
                         search: true
                     }}
-                    data={data}
+                    data={props.getBookedCandidateListModel.map((Candidate, index) => {
+                        return [
+                            index + 1,
+                            Candidate.email,
+                            Candidate.district,
+                            moment(Candidate.date).format('DD-MM-yyyy'),
+                            Candidate.time,
+                            <Button className="btn btn-success" onClick={() => handleClick(Candidate.email, 'approve')}>Approve </Button>,
+                            <Button className="btn btn-danger" onClick={() => handleClick(Candidate.email, 'reject')}>Reject</Button>
+                        ]
+                    }
+                    )
+                    }
                 />
             </ThemeProvider>
         </Card>
     )
 }
 
-export default CandidateSlotBookingDetails
+
+
+const mapToProps = function (state) {
+    return {
+
+        //get bookedcandidatelist
+        getBookedCandidateListModel: state.slotBooking.getBookedCandidateListModel,
+        isGetBookedCandidateListIn: state.slotBooking.isGetBookedCandidateListIn,
+        isGetBookedCandidateListSuccess: state.slotBooking.isGetBookedCandidateListSuccess,
+        GetBookedCandidateListError: state.slotBooking.GetBookedCandidateListError,
+
+        //admin approvals
+        AdminApprovalModel: state.slotBooking.AdminApprovalModel,
+        isAdminApprovalIn: state.slotBooking.isAdminApprovalIn,
+        isAdminApprovalSuccess: state.slotBooking.isAdminApprovalSuccess,
+        AdminApprovalError: state.slotBooking.AdminApprovalError,
+        AdminApprovalStatus: state.slotBooking.AdminApprovalStatus,
+    }
+}
+
+const mapDispatchToProps = function (dispatch) {
+    return {
+
+        //get bookedcandidatelist
+        getBookedCandidateList: () => dispatch(SlotBookingAction.getBookedCandidateList()),
+        setBookedCandidateSuccess: () => dispatch(SlotBookingAction.setBookedCandidateSuccess()),
+        setBookedCandidateError: () => dispatch(SlotBookingAction.setBookedCandidateError()),
+
+        //admin approvals
+        AdminApprovals: (fields) => dispatch(SlotBookingAction.AdminApprovals(fields)),
+        setAdminApprovalsSuccess: () => dispatch(SlotBookingAction.setAdminApprovalsSuccess()),
+        setAdminApprovalsError: () => dispatch(SlotBookingAction.setAdminApprovalsError()),
+
+
+    }
+}
+
+export default connect(mapToProps, mapDispatchToProps)(CandidateSlotBookingDetails);

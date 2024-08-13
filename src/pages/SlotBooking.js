@@ -8,6 +8,24 @@ function SlotBooking(props) {
     const [districtId, setDistrictId] = useState("");
     const [date, setDate] = useState("")
     const [selectedSlot, setSelectedSlot] = useState("");
+    const [districtName, setDistrictName] = useState("");
+
+
+    const handleDistrictChange = (e) => {
+        const selectedId = e.target.value;
+        if (selectedId === "select") {
+            setDistrictId("");
+            setDistrictName("");
+            return;
+        }
+        setDistrictId(selectedId);
+        const selectedDistrict = props.getDistrictModel.find(district => district.districtcode.toString() === selectedId);
+        if (selectedDistrict) {
+            setDistrictName(selectedDistrict.districtname);
+        } else {
+        }
+    };
+
 
     const handlebookslot = (e) => {
         e.preventDefault();
@@ -34,7 +52,7 @@ function SlotBooking(props) {
         }
         else {
             let fields = {
-                district: districtId,
+                district: districtName,
                 date: date,
                 time: selectedSlot.time,
                 email: window.localStorage.getItem("email")
@@ -110,7 +128,7 @@ function SlotBooking(props) {
                     <div className="col-3 form-group">
                         <label className="label_style">District</label> :&nbsp;
                         <div className="material-textfield">
-                            <select className="form-select" aria-label="Default select example" value={districtId} onChange={(e) => setDistrictId(e.target.value)}>
+                            <select className="form-select" aria-label="Default select example" value={districtId} onChange={handleDistrictChange}>
                                 <option value="select">Select</option>
                                 {props.getDistrictModel && Array.isArray(props.getDistrictModel) &&
                                     props.getDistrictModel.map((district) => (
