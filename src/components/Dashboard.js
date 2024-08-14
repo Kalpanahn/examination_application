@@ -4,7 +4,7 @@ import Navbar from "./Navbar";
 import "../styles/Test.css"
 import CandidateUpdateDetails from '../pages/CandidateUpdateDetails';
 import SlotBooking from '../pages/SlotBooking';
-import Result from '../pages/Result';
+import ResultPage from '../pages/ResultPage';
 import Guidelines from '../pages/Guidelines';
 
 function Dashboard() {
@@ -68,7 +68,7 @@ function Dashboard() {
                             </div>
 
                             <div className="tab-pane fade" id="result" role="tabpanel" aria-labelledby="result-tab">
-                                <Result />
+                                <ResultPage />
                             </div>
 
                         </div>

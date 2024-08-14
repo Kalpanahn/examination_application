@@ -128,7 +128,7 @@ function AddQuestions(props) {
     return (
         <>
             <div className="card cardmain_align">
-                <div class="col-md-6 col-lg-6"><h3>Add Questions</h3><hr /></div>
+                <div class="col-md-6 col-lg-6"><h3>Add Questions</h3></div>
                 <form className="form-align">
 
                     <div className="row rowalign">
@@ -144,12 +144,12 @@ function AddQuestions(props) {
                                 </select>
                             </div>
                         </div>
-                        <div className="col-3 form-group">
+                        {/* <div className="col-3 form-group">
                             <label className="label_style">Upload Question</label> :&nbsp;
                             <div className="material-textfield">
                                 <input type="file" className="form-control login_input" onChange={handleImageChange} />
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                     <div className="row rowalign">
                         <label for="exampleSelect" className="label_style">Question</label>

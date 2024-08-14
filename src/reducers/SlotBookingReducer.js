@@ -31,6 +31,18 @@ const slotBookingState = {
     AdminApprovalError: '',
     AdminApprovalStatus: [],
 
+    // candidate slot booked status
+    getCandidateSlotStatusModel: [],
+    isGetCandidateSlotStatusIn: false,
+    isGetCandidateSlotStatusSuccess: false,
+    GetCandidateSlotStatusError: '',
+
+ // kgid candidate slot booked status
+    getKgidCandidateSlotStatusModel: [],
+    isGetKgidCandidateSlotStatusIn: false,
+    isGetKgidCandidateSlotStatusSuccess: false,
+    GetKgidCandidateSlotStatusError: '',
+
 }
 
 export const slotBooking = (state = slotBookingState, action) => {
@@ -96,6 +108,29 @@ export const slotBooking = (state = slotBookingState, action) => {
         case 'SET_IS_ADMIN_APPROVALS_ERROR':
             return Object.assign({}, state, { AdminApprovalError: '' })
 
+        // candidate slot booked status
+        case 'CANDIDATE_SLOTSTATUS_START':
+            return Object.assign({}, state, { isGetCandidateSlotStatusIn: true, isGetCandidateSlotStatusSuccess: false, })
+        case 'CANDIDATE_SLOTSTATUS_SUCCESS':
+            return Object.assign({}, state, { getCandidateSlotStatusModel: action.payload, isGetCandidateSlotStatusIn: false, isGetCandidateSlotStatusSuccess: true, })
+        case 'CANDIDATE_SLOTSTATUS_FAILURE':
+            return Object.assign({}, state, { GetCandidateSlotStatusError: action.payload, isGetCandidateSlotStatusIn: false, isGetCandidateSlotStatusSuccess: false })
+        case 'SET_IS_CANDIDATE_SLOTSTATUS_SUCCESS':
+            return Object.assign({}, state, { isGetCandidateSlotStatusSuccess: false })
+        case 'SET_IS_CANDIDATE_SLOTSTATUS_ERROR':
+            return Object.assign({}, state, { GetCandidateSlotStatusError: '' })
+
+        // candidate slot booked status
+        case 'KGID_CANDIDATE_SLOTSTATUS_START':
+            return Object.assign({}, state, { isGetKgidCandidateSlotStatusIn: true, isGetKgidCandidateSlotStatusSuccess: false, })
+        case 'KGID_CANDIDATE_SLOTSTATUS_SUCCESS':
+            return Object.assign({}, state, { getKgidCandidateSlotStatusModel: action.payload, isGetKgidCandidateSlotStatusIn: false, isGetKgidCandidateSlotStatusSuccess: true, })
+        case 'KGID_CANDIDATE_SLOTSTATUS_FAILURE':
+            return Object.assign({}, state, { GetKgidCandidateSlotStatusError: action.payload, isGetKgidCandidateSlotStatusIn: false, isGetKgidCandidateSlotStatusSuccess: false })
+        case 'SET_IS_KGID_CANDIDATE_SLOTSTATUS_SUCCESS':
+            return Object.assign({}, state, { isGetKgidCandidateSlotStatusSuccess: false })
+        case 'SET_IS_KGID_CANDIDATE_SLOTSTATUS_ERROR':
+            return Object.assign({}, state, { GetKgidCandidateSlotStatusError: '' })
 
         default:
             return state;

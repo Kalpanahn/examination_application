@@ -1,6 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import { useNavigate } from 'react-router-dom';
+import swal from "sweetalert";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import { Button } from 'react-bootstrap';
 
 
 function TypingTest() {
@@ -11,6 +17,7 @@ function TypingTest() {
     const [userText, setUserText] = useState('');
     const [time, setTime] = useState(0);
     const intervalRef = useRef(null);
+    const [showModal, setShowModal] = useState(false);
 
     const handleTextareaChange = (e) => {
         setUserText(e.target.value);
@@ -24,11 +31,35 @@ function TypingTest() {
         const secs = seconds % 60;
         return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     };
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     setIsActive(false);
+    //     const acc = calculateAccuracy();
+    //     setAccuracy(acc);
+    // };
     const handleSubmit = (e) => {
         e.preventDefault();
-        setIsActive(false);
+        if (userText === "") {
+            swal({
+                title: "Please Type Text !",
+                icon: "error",
+                button: "OK",
+                closeOnClickOutside: false,
+            });
+            return; // Exit early if validation fails
+        }
+        // Calculate and set accuracy
         const acc = calculateAccuracy();
         setAccuracy(acc);
+
+        const formattedTime = formatTime(time);
+        // Store accuracy and time in localStorage
+        window.localStorage.setItem('accuracy', acc.toFixed(2));
+        window.localStorage.setItem('time', formattedTime);
+        // Set isActive to false
+        setIsActive(false);
+        // Navigate to /testPage
+        navigate('/testPage');
     };
     useEffect(() => {
         if (accuracy !== null) {
@@ -65,6 +96,10 @@ function TypingTest() {
         navigate('/testPage');
     };
 
+    const handleShowModal = () => {
+        setShowModal(true); 
+    }
+
     return (
         <div className='container-fluid mt-4'>
             <Navbar />
@@ -82,17 +117,17 @@ function TypingTest() {
                             <button
                                 type="submit"
                                 className="btn btn-primary buttonstyle btn_width submitUser"
-                                onClick={handleSubmit}>
+                                onClick={handleShowModal}>
                                 Submit
                             </button>
-                            &nbsp;&nbsp;
+                            {/* &nbsp;&nbsp;
                             <button
                                 type="submit"
                                 className="btn btn-primary buttonstyle btn_width submitUser"
                                 onClick={handleNext}
                             >
                                 Next
-                            </button>
+                            </button> */}
                         </div>
 
                         {accuracy !== null && (
@@ -103,6 +138,27 @@ function TypingTest() {
 
                         )}
                     </div>&nbsp;
+
+                    <Dialog className='Modal-DialogBox'
+                open={showModal} 
+                onClose={() => setShowModal(false)}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description">
+
+                <DialogContent className='Dialog-content-box'>
+                    <DialogContentText id="alert-dialog-description">
+                        <h5>Do you want to Submit?</h5>
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <div className='btn-delete'>
+                        <Button className="btn btn-success" onClick={handleSubmit}>Yes</Button>
+                    </div>
+                    <div className='btn-delete'>
+                        <Button className="btn btn-danger" onClick={() => setShowModal(false)}>No</Button>
+                    </div>
+                </DialogActions>
+            </Dialog>
                 </div>
             </div>
         </div>

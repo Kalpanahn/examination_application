@@ -1,6 +1,12 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import * as ResultPageAction from '../actions/ResultPageAction';
+import { connect } from 'react-redux';
 
-function Result() {
+function ResultPage(props) {
+    useEffect(() => {
+        props.getResult();
+    }, []);
+    console.log("ResultModel",props.ResultModel)
     return (
         <div className="card cardmain_align">
             <div className="row mt-3">
@@ -31,5 +37,17 @@ function Result() {
         </div>
     )
 }
+const mapToProps = (state) => ({
+    ResultModel: state.resultPage.ResultModel,
+    isResultIn: state.resultPage.isResultIn,
+    isResultSuccess: state.resultPage.isResultSuccess,
+    ResultError: state.resultPage.ResultError,
+});
 
-export default Result
+const mapDispatchToProps = (dispatch) => ({
+    //getting Result
+    getResult: (fields) => dispatch(ResultPageAction.getResult(fields)),
+    setResultSuccess: () => dispatch(ResultPageAction.setResultSuccess()),
+});
+
+export default connect(mapToProps, mapDispatchToProps)(ResultPage);

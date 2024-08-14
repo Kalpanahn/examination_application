@@ -114,37 +114,97 @@ export const setBookedCandidateError = () => {
 }
 
 //api to fetch admin approvals
-export const AdminApprovals= (fields) => {
+export const AdminApprovals = (fields) => {
     return (dispatch, getState) => {
-      dispatch({ type: 'ADMIN_APPROVALS_START' })
-      axios.post(APIs + '/adminapproval', fields, {
-      }).then(function (response) {
-        dispatch({ type: 'ADMIN_APPROVALS_SUCCESS', payload: response.data, AdminApprovalStatus: response.status  })
-      })
-        .catch(function (error) {
-        
-          const errorMessage = error.response && error.response.data && error.response.data.error
-              ? error.response.data.error
-              : error.message;
-          dispatch({
-              type: 'ADMIN_APPROVALS_FAILURE',
-              payload: errorMessage,
-              AdminApprovalStatus: error.response ? error.response.status : 500
-          });
-      });
+        dispatch({ type: 'ADMIN_APPROVALS_START' })
+        axios.post(APIs + '/adminapproval', fields, {
+        }).then(function (response) {
+            dispatch({ type: 'ADMIN_APPROVALS_SUCCESS', payload: response.data, AdminApprovalStatus: response.status })
+        })
+            .catch(function (error) {
+
+                const errorMessage = error.response && error.response.data && error.response.data.error
+                    ? error.response.data.error
+                    : error.message;
+                dispatch({
+                    type: 'ADMIN_APPROVALS_FAILURE',
+                    payload: errorMessage,
+                    AdminApprovalStatus: error.response ? error.response.status : 500
+                });
+            });
     }
-  }
+}
 
 
-  export const setAdminApprovalsSuccess = () => {
+export const setAdminApprovalsSuccess = () => {
     return (dispatch, getState) => {
-      dispatch({ type: 'SET_IS_ADMIN_APPROVALS_SUCCESS' })
+        dispatch({ type: 'SET_IS_ADMIN_APPROVALS_SUCCESS' })
     }
-  }
-  
-  export const setAdminApprovalsError = () => {
+}
+
+export const setAdminApprovalsError = () => {
     return (dispatch, getState) => {
-      dispatch({ type: 'SET_IS_ADMIN_APPROVALS_ERROR' })
+        dispatch({ type: 'SET_IS_ADMIN_APPROVALS_ERROR' })
     }
-  }
-  
+}
+
+
+//api to fetch candidate slot booked status 
+
+export const CandidateSlotStatus = (fields) => {
+    return (dispatch, getState) => {
+        dispatch({ type: 'CANDIDATE_SLOTSTATUS_START' })
+        axios.post(APIs + '/getSingleCandidate', fields)
+            .then(function (response) {
+                dispatch({ type: 'CANDIDATE_SLOTSTATUS_SUCCESS', payload: response.data })
+
+            })
+            .catch(function (error) {
+                dispatch({ type: 'CANDIDATE_SLOTSTATUS_FAILURE', payload: error })
+
+            })
+    }
+}
+
+
+export const setCandidateSlotStatusSuccess = () => {
+    return (dispatch, getState) => {
+        dispatch({ type: 'SET_IS_CANDIDATE_SLOTSTATUS_SUCCESS' })
+    }
+}
+
+export const setCandidateSlotStatusError = () => {
+    return (dispatch, getState) => {
+        dispatch({ type: 'SET_IS_CANDIDATE_SLOTSTATUS_ERROR' })
+    }
+}
+
+//api for kgid candidate slot booke status
+
+export const KgidCandidateSlotStatus = (fields) => {
+    return (dispatch, getState) => {
+        dispatch({ type: 'KGID_CANDIDATE_SLOTSTATUS_START' })
+        axios.post(APIs + '/singleKGIDCandidateView', fields)
+            .then(function (response) {
+                dispatch({ type: 'KGID_CANDIDATE_SLOTSTATUS_SUCCESS', payload: response.data })
+
+            })
+            .catch(function (error) {
+                dispatch({ type: 'KGID_CANDIDATE_SLOTSTATUS_FAILURE', payload: error })
+
+            })
+    }
+}
+
+
+export const setKgidCandidateSlotSuccess = () => {
+    return (dispatch, getState) => {
+        dispatch({ type: 'SET_IS_KGID_CANDIDATE_SLOTSTATUS_SUCCESS' })
+    }
+}
+
+export const setKgidCandidateSlotError = () => {
+    return (dispatch, getState) => {
+        dispatch({ type: 'SET_IS_KGID_CANDIDATE_SLOTSTATUS_ERROR' })
+    }
+}

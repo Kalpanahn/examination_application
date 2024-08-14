@@ -72,13 +72,15 @@ function LoginPage(props) {
     if (props.isLoginSuccess && props.Loginstatus === 200) {
       props.setLoginSuccess();
       const { candidate, token } = props.LoginModel;
-      const { email, name } = candidate;
+      const {_id, email, name } = candidate;
       window.sessionStorage.setItem("email", email)
       window.localStorage.setItem("email", email)
       window.sessionStorage.setItem("name", name)
       window.localStorage.setItem("name", name)
       window.sessionStorage.setItem("token", token)
       window.localStorage.setItem("token", token)
+      window.sessionStorage.setItem("_id", _id);
+      window.localStorage.setItem("_id", _id); 
       swal({
         title: "Login Successfully.",
         icon: "success",
@@ -140,7 +142,7 @@ function LoginPage(props) {
     if (props.isKgidLoginSuccess && props.KgidLoginstatus === 200) {
       props.setKgidLoginSuccess();
       const { candidate, token } = props.KgidLoginModel;
-      const { email, name, KGID } = candidate;
+      const { _id, email, name, KGID,} = candidate;
       window.sessionStorage.setItem("email", email)
       window.localStorage.setItem("email", email)
       window.sessionStorage.setItem("name", name)
@@ -149,6 +151,8 @@ function LoginPage(props) {
       window.localStorage.setItem("token", token)
       window.sessionStorage.setItem("KGID", KGID)
       window.localStorage.setItem("KGID", KGID)
+      window.sessionStorage.setItem("_id", _id);
+      window.localStorage.setItem("_id", _id); 
       swal({
         title: "Login Successfully.",
         icon: "success",
@@ -299,14 +303,14 @@ function LoginPage(props) {
                               </button>
                             </div>
                           </div>
-                          <div className="row mt-3">
+                          {/* <div className="row mt-3">
                             <div className="col-12 text-center">
                               Don't have an account?{" "}
                               <span>
                                 <NavLink to="/Registration">Register</NavLink>
                               </span>
                             </div>
-                          </div>
+                          </div> */}
                         </form>
                       </div>
                       {error && (

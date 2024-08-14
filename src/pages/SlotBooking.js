@@ -9,6 +9,10 @@ function SlotBooking(props) {
     const [date, setDate] = useState("")
     const [selectedSlot, setSelectedSlot] = useState("");
     const [districtName, setDistrictName] = useState("");
+    const KGIDNumber = window.localStorage.getItem("KGID")
+    // const adminApprovalStatus = KGIDNumber 
+    // ? props.getKgidCandidateSlotStatusModel.adminApproval 
+    // : props.getCandidateSlotStatusModel.adminApproval;
 
 
     const handleDistrictChange = (e) => {
@@ -63,6 +67,20 @@ function SlotBooking(props) {
 
     useEffect(() => {
         props.getDistrictList();
+    }, []);
+
+    useEffect(() => {
+        let fields = {
+            user_id: window.localStorage.getItem("_id")
+        }
+        props.CandidateSlotStatus(fields);
+    }, []);
+
+    useEffect(() => {
+        let fields = {
+            KGID: window.localStorage.getItem("KGID")
+        }
+        props.KgidCandidateSlotStatus(fields);
     }, []);
 
     useEffect(() => {
@@ -123,6 +141,27 @@ function SlotBooking(props) {
                     <h5>Booking Slots</h5>
                 </div>
             </div>
+            <div className="notification" style={{ marginTop: '-56px', padding: '10px', marginLeft: "60rem" }}>
+                <h5>
+                    Status:Your Slot has been {KGIDNumber ? props.getKgidCandidateSlotStatusModel.adminApproval : props.getCandidateSlotStatusModel.adminApproval}
+                </h5>
+            </div>
+            {/* <>
+    {(adminApprovalStatus === "approve" || adminApprovalStatus === "reject") && (
+      <div 
+        className="notification" 
+        style={{ 
+          marginTop: '-56px', 
+          padding: '10px', 
+          marginLeft: "60rem" 
+        }}
+      >
+        <h5>
+          Status: Your Slot has been {adminApprovalStatus}
+        </h5>
+      </div>
+    )}
+  </> */}
             <form className="form-align">
                 <div className="row rowalign">
                     <div className="col-3 form-group">
@@ -203,6 +242,21 @@ const mapToProps = function (state) {
         isGetTimeSlotIn: state.slotBooking.isGetTimeSlotIn,
         isGetTimeSlotSuccess: state.slotBooking.isGetTimeSlotSuccess,
         GetTimeSlotError: state.slotBooking.GetTimeSlotError,
+
+        //get candidate slot status
+        getCandidateSlotStatusModel: state.slotBooking.getCandidateSlotStatusModel,
+        isGetCandidateSlotStatusIn: state.slotBooking.isGetCandidateSlotStatusIn,
+        isGetCandidateSlotStatusSuccess: state.slotBooking.isGetCandidateSlotStatusSuccess,
+        GetCandidateSlotStatusError: state.slotBooking.GetCandidateSlotStatusError,
+
+        //get  kgid candidate slot status
+        getKgidCandidateSlotStatusModel: state.slotBooking.getKgidCandidateSlotStatusModel,
+        isGetKgidCandidateSlotStatusIn: state.slotBooking.isGetKgidCandidateSlotStatusIn,
+        isGetKgidCandidateSlotStatusSuccess: state.slotBooking.isGetKgidCandidateSlotStatusSuccess,
+        GetKgidCandidateSlotStatusError: state.slotBooking.GetKgidCandidateSlotStatusError,
+
+
+
     }
 }
 
@@ -222,6 +276,17 @@ const mapDispatchToProps = function (dispatch) {
         getTimeSlots: (fields) => dispatch(SlotBookingAction.getTimeSlots(fields)),
         setgetTimeSlotsSuccess: () => dispatch(SlotBookingAction.setgetTimeSlotsSuccess()),
         setgetTimeSlotsError: () => dispatch(SlotBookingAction.setgetTimeSlotsError()),
+
+        //get candidate slot status
+        CandidateSlotStatus: (fields) => dispatch(SlotBookingAction.CandidateSlotStatus(fields)),
+        setCandidateSlotStatusSuccess: () => dispatch(SlotBookingAction.setCandidateSlotStatusSuccess()),
+        setCandidateSlotStatusError: () => dispatch(SlotBookingAction.setCandidateSlotStatusError()),
+
+        //get  kgid candidate slot status
+        KgidCandidateSlotStatus: (fields) => dispatch(SlotBookingAction.KgidCandidateSlotStatus(fields)),
+        setKgidCandidateSlotSuccess: () => dispatch(SlotBookingAction.setKgidCandidateSlotSuccess()),
+        setKgidCandidateSlotError: () => dispatch(SlotBookingAction.setKgidCandidateSlotError()),
+
     }
 }
 

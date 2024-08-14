@@ -1,10 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import * as TestPageAction from '../actions/TestPageAction';
 
-function Guidelines() {
+function Guidelines(props) {
     const [isChecked, setIsChecked] = useState(false);
+    const [questionCount, setQuestionCount] = useState(0);
     const handleCheckboxChange = () => {
         setIsChecked(!isChecked);
     };
+
+    useEffect(() => {
+        props.getQuestions();
+      }, []);
+
+      useEffect(() => {
+        if (props.QuestionsModel && props.QuestionsModel.length > 0) {
+          setQuestionCount(props.QuestionsModel.length);
+        }
+      }, [props.QuestionsModel]);
+
     return (
         <div className='container-fluid mt-4'>
             {/* <Navbar /> */}
@@ -15,11 +29,11 @@ function Guidelines() {
                             <div class="guidelines-border"><div class="guidelines-heading"><h4>Guidelines for the Online Test</h4></div></div>
                             <div class="guidelines-list">
                                 <ol>
-                                    <li>There are 20 multiple choice questions with 20 minutes time</li>
+                                   <li>There are {questionCount} multiple choice questions with 20 minutes time</li>
                                     <li>No use of mobile phones </li>
                                     <li style={{ color: 'red' }}>If you try to switch or reload  the tab, test will be ended automatically</li>
-                                    <li>First 10 questions  are aptitude followed by 10 technical questions </li>
-                                    <li>Test will be automatically submitted if you fail to complete the Test</li>
+                                    {/* <li>First 10 questions  are aptitude followed by 10 technical questions </li> */}
+                                    <li>Test will be automatically submitted if you fail to submit the Test</li>
                                 </ol>
                                 <input id="inputVacationPercentage" type="checkbox" checked={isChecked} onChange={handleCheckboxChange} />&nbsp;
                                 <label for="inputVacationPercentage" class="switch switch-default">I agree with the above guidelines and hereby I give my consent to follow the guidelines.</label>
@@ -43,5 +57,21 @@ function Guidelines() {
         </div>
     )
 }
-
-export default Guidelines
+const mapToProps = (state) => ({
+    //gett questions
+    QuestionsModel: state.testPage.QuestionsModel,
+    isQuestionsIn: state.testPage.isQuestionsIn,
+    isQuestionsSuccess: state.testPage.isQuestionsSuccess,
+    QuestionsError: state.testPage.QuestionsError,
+  
+  });
+  
+  const mapDispatchToProps = (dispatch) => ({
+    //get questions
+    getQuestions: (fields) => dispatch(TestPageAction.getQuestions(fields)),
+    setQuestionsSuccess: () => dispatch(TestPageAction.setQuestionsSuccess()),
+  
+  });
+  
+  export default connect(mapToProps, mapDispatchToProps)(Guidelines);
+  

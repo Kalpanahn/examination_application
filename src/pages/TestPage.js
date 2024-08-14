@@ -6,6 +6,7 @@ import * as TestPageAction from '../actions/TestPageAction';
 import { connect } from 'react-redux';
 import swal from "sweetalert";
 import moment from 'moment';
+import { useNavigate } from 'react-router-dom';
 
 function TestPage(props) {
   const [questions, setQuestions] = useState([]);
@@ -17,7 +18,7 @@ function TestPage(props) {
   const [isTestCompleted, setIsTestCompleted] = useState(false);
   const [totalTimeTaken, setTotalTimeTaken] = useState(0);
   const [isTimerStopped, setIsTimerStopped] = useState(false);
-
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (props.QuestionsModel) {
@@ -71,6 +72,7 @@ function TestPage(props) {
       setTime(prevTime => {
         if (prevTime <= 1) {
           clearInterval(timer);
+          handleSubmit();
           return 0;
         }
         return prevTime - 1;
@@ -79,6 +81,21 @@ function TestPage(props) {
 
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    if (time === 0) {
+      // Redirect to login page after time runs out
+      swal({
+        title: "Time's up!",
+        text: "You will be redirected to the login page.",
+        icon: "warning",
+        button: "OK",
+        closeOnClickOutside: false
+      }).then(() => {
+        navigate('/');
+      });
+    }
+  }, [time, navigate]);
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -130,7 +147,7 @@ function TestPage(props) {
     if (props.isSubmitAnswersSuccess && props.SubmitAnswersStatus === 200) {
       props.setSubmitTestAnswerSuccess();
       swal({
-        title: "Answers added successfully",
+        title: "Test Submitted Successfully.",
         icon: "success",
         button: "OK",
         closeOnClickOutside: false
@@ -147,12 +164,12 @@ function TestPage(props) {
         closeOnClickOutside: false
       }).then(okay => {
         if (okay) {
-          window.location.reload();
+          navigate('/');
         }
       });
       props.setSubmitTestAnswerError();
     }
-  }, [props.isSubmitAnswersSuccess, props.SubmitAnswersStatus, props.setSubmitTestAnswerError]);
+  }, [props.isSubmitAnswersSuccess,navigate, props.SubmitAnswersStatus, props.setSubmitTestAnswerError]);
 
   useEffect(() => {
     props.getQuestions();
@@ -186,9 +203,16 @@ function TestPage(props) {
       </div>
       <div className="card cardmain_align1">
         <ToastContainer />
-        {time <= 300 && time > 0 && (
+        {/* {time <= 300 && time > 0 && (
           <h4 className="blink-txt" style={{ color: 'red', fontWeight: '600', textAlign: 'center', padding: '5px' }}>
             Your test will be ended automatically in {time <= 60 ? formatTime(time) : '5 minutes'}
+          </h4>
+        )} */}
+         {time <= 300 && time > 0 && (
+          <h4 className="blink-txt" style={{ color: 'red', fontWeight: '600', textAlign: 'center', padding: '5px' }}>
+            {time <= 60
+              ? `Your test will be ended automatically in ${formatTime(time)}`
+              : `Your test will be ended automatically in ${formatTime(300)} (5 minutes)`}
           </h4>
         )}
         <div className="card mb-3">

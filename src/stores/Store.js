@@ -6,14 +6,17 @@ import{slotBooking}from'../reducers/SlotBookingReducer';
 import { addQuestion } from '../reducers/AddQuestionsReducer';
 import {testPage} from '../reducers/TestPageReducer';
 import { adminLogin } from '../reducers/AdminLoginReducer';
-
+import {adminResultPage} from '../reducers/AdminResultPageReducer';
+import {resultPage} from '../reducers/ResulPageReducer';
 const rootReducer = combineReducers({
     login: login,
     adminLogin:adminLogin,
     candidateUpdateDetails:candidateUpdateDetails,
     slotBooking:slotBooking,
     addQuestion:addQuestion,
-    testPage:testPage
+    testPage:testPage,
+    adminResultPage:adminResultPage,
+    resultPage:resultPage
 });
 
 const store = createStore(rootReducer, applyMiddleware(thunk))
