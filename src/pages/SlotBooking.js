@@ -141,27 +141,21 @@ function SlotBooking(props) {
                     <h5>Booking Slots</h5>
                 </div>
             </div>
-            <div className="notification" style={{ marginTop: '-56px', padding: '10px', marginLeft: "60rem" }}>
-                <h5>
-                    Status:Your Slot has been {KGIDNumber ? props.getKgidCandidateSlotStatusModel.adminApproval : props.getCandidateSlotStatusModel.adminApproval}
-                </h5>
-            </div>
-            {/* <>
-    {(adminApprovalStatus === "approve" || adminApprovalStatus === "reject") && (
-      <div 
-        className="notification" 
-        style={{ 
-          marginTop: '-56px', 
-          padding: '10px', 
-          marginLeft: "60rem" 
-        }}
-      >
-        <h5>
-          Status: Your Slot has been {adminApprovalStatus}
-        </h5>
-      </div>
-    )}
-  </> */}
+           <div className="notification" style={{ marginTop: '-56px', padding: '10px', marginLeft: "60rem" }}>
+  {KGIDNumber ? 
+    (props.getKgidCandidateSlotStatusModel.adminApproval !== "pending" && (
+      <h5>
+        Status: Your Slot has been {props.getKgidCandidateSlotStatusModel.adminApproval}
+      </h5>
+    )) : 
+    (props.getCandidateSlotStatusModel.adminApproval !== "pending" && (
+      <h5>
+        Status: Your Slot has been {props.getCandidateSlotStatusModel.adminApproval}
+      </h5>
+    ))
+  }
+</div>
+
             <form className="form-align">
                 <div className="row rowalign">
                     <div className="col-3 form-group">

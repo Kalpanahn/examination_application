@@ -100,8 +100,6 @@ function CandidateSlotBookingDetails(props) {
         }
     }, [props.isAdminApprovalSuccess, props.AdminApprovalStatus, props.AdminApprovalError]);
 
-    console.log("status",props.getBookedCandidateListModel)
-
     return (
 
         <Card className='employee-master-card'>
@@ -125,6 +123,7 @@ function CandidateSlotBookingDetails(props) {
                         search: true
                     }}
                     data={props.getBookedCandidateListModel.map((Candidate, index) => {
+
                         return [
                             index + 1,
                             Candidate.email,

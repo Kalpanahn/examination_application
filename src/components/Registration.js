@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import swal from 'sweetalert';
 import logo from '../Images/loadingdots2.gif'
 import "bootstrap/dist/css/bootstrap.min.css";
+import Navbar from "./Navbar";
 
 function Registration(props) {
   const navigate = useNavigate();
@@ -205,8 +206,10 @@ function Registration(props) {
   }
 
   return (
-    <div>
+    <>
+    <div >
       <div className="d-flex justify-content-center align-items-center vh-100">
+      {/* <Navbar /> */}
         <div className="container">
           <div className="card card_align">
             <div className="card-header header_align text-center">
@@ -325,6 +328,7 @@ function Registration(props) {
         </div>
       </div>
     </div>
+    </>
   )
 }
 

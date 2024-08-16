@@ -3,11 +3,13 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Card, CardHeader } from 'reactstrap';
 import MUIDataTable from "mui-datatables";
 import { Button } from 'react-bootstrap';
-import * as SlotBookingAction from '../actions/SlotBookingAction'
+import * as CandidateAttendanceAction from '../actions/CandidateAttendanceAction'
 import { connect } from 'react-redux';
 import moment from 'moment';
+import swal from 'sweetalert';
 
 function CandidateAttendance(props) {
+    const [disabledButtons, setDisabledButtons] = useState({});
 
     const theme = createTheme({
         overrides: {
@@ -56,16 +58,65 @@ function CandidateAttendance(props) {
         { label: <strong className='MUI-dataTable-header'>Absent</strong>, name: "Action" },
     ];
 
-   useEffect(() => {
-        props.getBookedCandidateList();
+    useEffect(() => {
+        props.getCandidateAttendence();
     }, []);
+
     const handleClick = (email, actionType) => {
         const fields = {
             email: email,
-            action: actionType,
+            attendence: actionType,
         };
-        props.AdminApprovals(fields);
+        props.CandidatAttendenceStatus(fields);
     };
+    // useEffect(() => {
+    //     const storedState = JSON.parse(localStorage.getItem('disabledButtons'));
+    //     if (storedState) {
+    //         setDisabledButtons(storedState);
+    //     }
+    // }, []);
+    // const handleClick = (email, actionType) => {
+    //     const fields = {
+    //         email: email,
+    //         attendence: actionType,
+    //     };
+    //     props.CandidatAttendenceStatus(fields);
+    //     const updatedState = {
+    //         ...disabledButtons,
+    //         [email]: true
+    //     };
+    //     setDisabledButtons(updatedState);
+    //     localStorage.setItem('disabledButtons', JSON.stringify(updatedState));
+    // };
+
+
+
+    useEffect(() => {
+        console.log(props.CandidateAttendnceStatus)
+        if (props.isCandidateAttendnceStatusSuccess && props.CandidateAttendnceStatus === 200) {
+            props.setCandidatAttendenceStatusSuccess();
+            swal({
+                title: "Attendance updated successfully in Candidate",
+                icon: "success",
+                button: "OK",
+                closeOnClickOutside: false
+            }).then(okay => {
+                if (okay) {
+                   }
+            });
+        } else if (props.CandidateAttendnceStatusError) {
+            swal({
+                title: props.CandidateAttendnceStatusError,
+                icon: "error",
+                button: "OK",
+                closeOnClickOutside: false
+            }).then(okay => {
+                if (okay) {
+                }
+            });
+            props.setCandidatAttendenceStatusError();
+        }
+    }, [props.isCandidateAttendnceStatusSuccess, props.CandidateAttendnceStatus, props.CandidateAttendnceStatusError]);
 
     return (
         <Card className='employee-master-card'>
@@ -88,15 +139,15 @@ function CandidateAttendance(props) {
                         download: false,
                         search: true
                     }}
-                  data={props.getBookedCandidateListModel.map((Candidate, index) => {
+                    data={props.CandidateAttendnceModel.map((Candidate, index) => {
                         return [
                             index + 1,
                             Candidate.email,
-                            Candidate.district,
-                            moment(Candidate.date).format('DD-MM-yyyy'),
-                            Candidate.time,
-                            <Button className="btn btn-success" onClick={() => handleClick(Candidate.email, 'approve')}>Present </Button>,
-                            <Button className="btn btn-danger" onClick={() => handleClick(Candidate.email, 'reject')}>Absent</Button>
+                            Candidate.booking_id.district,
+                            moment(Candidate.booking_id.date).format('DD-MM-yyyy'),
+                            Candidate.booking_id.time,
+                            <Button className="btn btn-success" onClick={() => handleClick(Candidate.email, 'present')}  disabled={disabledButtons[Candidate.email]}>Present </Button>,
+                            <Button className="btn btn-danger" onClick={() => handleClick(Candidate.email, 'absent')}   disabled={disabledButtons[Candidate.email]}>Absent</Button>
                         ]
                     }
                     )
@@ -111,10 +162,17 @@ const mapToProps = function (state) {
     return {
 
         //get bookedcandidatelist
-        getBookedCandidateListModel: state.slotBooking.getBookedCandidateListModel,
-        isGetBookedCandidateListIn: state.slotBooking.isGetBookedCandidateListIn,
-        isGetBookedCandidateListSuccess: state.slotBooking.isGetBookedCandidateListSuccess,
-        GetBookedCandidateListError: state.slotBooking.GetBookedCandidateListError,
+        CandidateAttendnceModel: state.candidateAttendence.CandidateAttendnceModel,
+        isCandidateAttendnceIn: state.candidateAttendence.isCandidateAttendnceIn,
+        isCandidateAttendnceSuccess: state.candidateAttendence.isCandidateAttendnceSuccess,
+        CandidateAttendnceError: state.candidateAttendence.CandidateAttendnceError,
+
+        // candidate attendence status
+        CandidateAttendnceStatusModel: state.candidateAttendence.CandidateAttendnceStatusModel,
+        isCandidateAttendnceStatusIn: state.candidateAttendence.isCandidateAttendnceStatusIn,
+        isCandidateAttendnceStatusSuccess: state.candidateAttendence.isCandidateAttendnceStatusSuccess,
+        CandidateAttendnceStatusError: state.candidateAttendence.CandidateAttendnceStatusError,
+        CandidateAttendnceStatus: state.candidateAttendence.CandidateAttendnceStatus,
 
     }
 }
@@ -123,9 +181,15 @@ const mapDispatchToProps = function (dispatch) {
     return {
 
         //get bookedcandidatelist
-        getBookedCandidateList: () => dispatch(SlotBookingAction.getBookedCandidateList()),
-        setBookedCandidateSuccess: () => dispatch(SlotBookingAction.setBookedCandidateSuccess()),
-        setBookedCandidateError: () => dispatch(SlotBookingAction.setBookedCandidateError()),
+        getCandidateAttendence: () => dispatch(CandidateAttendanceAction.getCandidateAttendence()),
+        setgetCandidateAttendenceSuccess: () => dispatch(CandidateAttendanceAction.setgetCandidateAttendenceSuccess()),
+        setgetCandidateAttendenceError: () => dispatch(CandidateAttendanceAction.setgetCandidateAttendenceError()),
+
+
+        // candidate attendence status
+        CandidatAttendenceStatus: (fields) => dispatch(CandidateAttendanceAction.CandidatAttendenceStatus(fields)),
+        setCandidatAttendenceStatusSuccess: () => dispatch(CandidateAttendanceAction.setCandidatAttendenceStatusSuccess()),
+        setCandidatAttendenceStatusError: () => dispatch(CandidateAttendanceAction.setCandidatAttendenceStatusError()),
     }
 }
 

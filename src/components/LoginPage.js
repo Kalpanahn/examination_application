@@ -64,6 +64,8 @@ function LoginPage(props) {
         email: email,
         password: password,
       };
+      window.localStorage.removeItem("KGID");
+      window.sessionStorage.removeItem("KGID");
       props.userLogin(fields);
     }
   };
@@ -133,8 +135,7 @@ function LoginPage(props) {
         KGID: Number(kgidNumber),
         phone: Number(phoneNumber)
       }
-      console.log("geild", fields)
-      props.kgidLogin(fields)
+    props.kgidLogin(fields)
     }
   }
 
@@ -303,15 +304,7 @@ function LoginPage(props) {
                               </button>
                             </div>
                           </div>
-                          {/* <div className="row mt-3">
-                            <div className="col-12 text-center">
-                              Don't have an account?{" "}
-                              <span>
-                                <NavLink to="/Registration">Register</NavLink>
-                              </span>
-                            </div>
-                          </div> */}
-                        </form>
+                    </form>
                       </div>
                       {error && (
                         <p className="text-danger text-center">{error}</p>

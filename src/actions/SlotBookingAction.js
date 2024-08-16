@@ -179,7 +179,7 @@ export const setCandidateSlotStatusError = () => {
     }
 }
 
-//api for kgid candidate slot booke status
+//api for kgid candidate slot book status
 
 export const KgidCandidateSlotStatus = (fields) => {
     return (dispatch, getState) => {

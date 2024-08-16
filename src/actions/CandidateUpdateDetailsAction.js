@@ -5,7 +5,7 @@ import { APIs } from '../constants/API_Constant';
 export const updateUserProfile = (fields) => {
     return (dispatch, getState) => {
         dispatch({ type: 'UPDATEUSERPROFILE_START' })
-        axios.post(APIs + '/update-candidate', fields, { headers: { 'Content-Type': 'multipart/form-data' } })
+        axios.put(APIs + '/update-candidate', fields, { headers: { 'Content-Type': 'multipart/form-data' } })
             .then(function (response) {
                 dispatch({ type: 'UPDATEUSERPROFILE_SUCCESS', payload: response.data, UserprofileStatus: response.status })
             })

@@ -221,7 +221,7 @@ function CandidateUpdateDetails(props) {
                     closeOnClickOutside: false
                 }).then(okay => {
                     if (okay) {
-                        window.location.href = "/";
+                        window.location.href = "dashboard";
                     }
                 });
             } else if (props.UserprofileStatus === 404) {

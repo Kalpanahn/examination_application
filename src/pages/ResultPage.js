@@ -3,10 +3,15 @@ import * as ResultPageAction from '../actions/ResultPageAction';
 import { connect } from 'react-redux';
 
 function ResultPage(props) {
+
     useEffect(() => {
-        props.getResult();
+        const email = window.localStorage.getItem("email");
+        let fields = { email };
+        props.getResult(fields);
     }, []);
-    console.log("ResultModel",props.ResultModel)
+
+    const result = props.ResultModel && props.ResultModel.length > 0 ? props.ResultModel[0] : null;
+
     return (
         <div className="card cardmain_align">
             <div className="row mt-3">
@@ -15,29 +20,33 @@ function ResultPage(props) {
                 </div>
             </div>
             <form className="form-align">
-                <div className="col-3 form-group">
-                    <label className="label_style">Status</label> :
-                </div>
-                <div className="row rowalign">
-                    <div className="col-3 form-group">
-                        <label className="label_style">Total Number Of Questions</label> :
-                    </div>
-                    <div className="col-3 form-group">
-                        <label className="label_style">Number Of Question Attended </label> :
-                    </div>
-                    <div className="col-3 form-group">
-                        <label className="label_style">Number Of Correct Answered</label> :
-                    </div>
-                    <div className="col-3 form-group">
-                        <label className="label_style">Number Of Wrong Answered</label> :
-                    </div>
 
+                <div className="row rowalign">
+                    {result ? (
+                        <div className="row rowalign">
+                            <div className="col-3 form-group">
+                                <label className="label_style">Total Number Of Questions</label> : <b>{result.totalQuestions}</b>
+                            </div>
+                            <div className="col-3 form-group">
+                                <label className="label_style">Number Of Questions Attended</label> : <b>{result.attendedQuestions}</b>
+                            </div>
+                            <div className="col-3 form-group">
+                                <label className="label_style">Number Of Correctly Answered</label> : <b>{result.score}</b>
+                            </div>
+                            <div className="col-3 form-group">
+                                <label className="label_style">Number Of Wrongly Answered</label> : <b>{result.wrongAnswers}</b>
+                            </div>
+                        </div>
+                    ) : (
+                        <div>Loading...</div>
+                    )}
                 </div>
             </form>
         </div>
     )
 }
 const mapToProps = (state) => ({
+    //getting Result
     ResultModel: state.resultPage.ResultModel,
     isResultIn: state.resultPage.isResultIn,
     isResultSuccess: state.resultPage.isResultSuccess,

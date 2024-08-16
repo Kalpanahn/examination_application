@@ -8,6 +8,7 @@ import {testPage} from '../reducers/TestPageReducer';
 import { adminLogin } from '../reducers/AdminLoginReducer';
 import {adminResultPage} from '../reducers/AdminResultPageReducer';
 import {resultPage} from '../reducers/ResulPageReducer';
+import{candidateAttendence}from'../reducers/CandidateAttendanceReducer';
 const rootReducer = combineReducers({
     login: login,
     adminLogin:adminLogin,
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
     addQuestion:addQuestion,
     testPage:testPage,
     adminResultPage:adminResultPage,
-    resultPage:resultPage
+    resultPage:resultPage,
+    candidateAttendence:candidateAttendence
 });
 
 const store = createStore(rootReducer, applyMiddleware(thunk))

@@ -153,7 +153,7 @@ function TestPage(props) {
         closeOnClickOutside: false
       }).then(okay => {
         if (okay) {
-          window.location.reload();
+          navigate('/');
         }
       });
     } else if (props.SubmitAnswersError) {
@@ -165,6 +165,7 @@ function TestPage(props) {
       }).then(okay => {
         if (okay) {
           navigate('/');
+         
         }
       });
       props.setSubmitTestAnswerError();
