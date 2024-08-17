@@ -9,6 +9,9 @@ import { adminLogin } from '../reducers/AdminLoginReducer';
 import {adminResultPage} from '../reducers/AdminResultPageReducer';
 import {resultPage} from '../reducers/ResulPageReducer';
 import{candidateAttendence}from'../reducers/CandidateAttendanceReducer';
+import{dashboard}from'../reducers/DashboardReducer';
+import{kgiddashboard}from'../reducers/KgidDashboardReducer';
+
 const rootReducer = combineReducers({
     login: login,
     adminLogin:adminLogin,
@@ -18,7 +21,9 @@ const rootReducer = combineReducers({
     testPage:testPage,
     adminResultPage:adminResultPage,
     resultPage:resultPage,
-    candidateAttendence:candidateAttendence
+    candidateAttendence:candidateAttendence,
+    dashboard:dashboard,
+    kgiddashboard:kgiddashboard
 });
 
 const store = createStore(rootReducer, applyMiddleware(thunk))

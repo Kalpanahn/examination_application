@@ -3,13 +3,13 @@ import * as ResultPageAction from '../actions/ResultPageAction';
 import { connect } from 'react-redux';
 
 function ResultPage(props) {
-
+    
     useEffect(() => {
         const email = window.localStorage.getItem("email");
-        let fields = { email };
-        props.getResult(fields);
-    }, []);
+        let fields = { email }; 
+        props.getResult(fields); 
 
+    }, []);
     const result = props.ResultModel && props.ResultModel.length > 0 ? props.ResultModel[0] : null;
 
     return (
@@ -20,21 +20,23 @@ function ResultPage(props) {
                 </div>
             </div>
             <form className="form-align">
-
+                {/* <div className="col-3 form-group">
+        <label className="label_style">Status</label> : {props.ResultModel?.status || 'Loading...'}
+      </div> */}
                 <div className="row rowalign">
                     {result ? (
                         <div className="row rowalign">
                             <div className="col-3 form-group">
-                                <label className="label_style">Total Number Of Questions</label> : <b>{result.totalQuestions}</b>
+                                <label className="label_style">Total Number Of Questions</label> : {result.totalQuestions}
                             </div>
                             <div className="col-3 form-group">
-                                <label className="label_style">Number Of Questions Attended</label> : <b>{result.attendedQuestions}</b>
+                                <label className="label_style">Number Of Questions Attended</label> : {result.attendedQuestions}
                             </div>
                             <div className="col-3 form-group">
-                                <label className="label_style">Number Of Correctly Answered</label> : <b>{result.score}</b>
+                                <label className="label_style">Number Of Correctly Answered</label> : {result.score}
                             </div>
                             <div className="col-3 form-group">
-                                <label className="label_style">Number Of Wrongly Answered</label> : <b>{result.wrongAnswers}</b>
+                                <label className="label_style">Number Of Wrongly Answered</label> : {result.wrongAnswers}
                             </div>
                         </div>
                     ) : (

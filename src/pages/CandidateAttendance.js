@@ -7,9 +7,23 @@ import * as CandidateAttendanceAction from '../actions/CandidateAttendanceAction
 import { connect } from 'react-redux';
 import moment from 'moment';
 import swal from 'sweetalert';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+
 
 function CandidateAttendance(props) {
-    const [disabledButtons, setDisabledButtons] = useState({});
+    const [selectedEmail, setSelectedEmail] = useState("");
+    const [selectedAction, setSelectedAction] = useState("");
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const [attendenceStatus, setAttendenceStatus] = useState(false);
+    const [selectedIndex, setSelectedIndex] = useState(null);
+    const [displayedIndexes, setDisplayedIndexes] = useState(() => {
+        const savedIndexes = localStorage.getItem('displayedIndexes');
+        return savedIndexes ? JSON.parse(savedIndexes) : [];
+    });
+
 
     const theme = createTheme({
         overrides: {
@@ -54,47 +68,40 @@ function CandidateAttendance(props) {
         { label: <strong className='MUI-dataTable-header'>Destrict</strong>, name: "CandidateEmail" },
         { label: <strong className='MUI-dataTable-header'>Date</strong>, name: "TestAttendedDate" },
         { label: <strong className='MUI-dataTable-header'>Slots Timing</strong>, name: "Score" },
-        { label: <strong className='MUI-dataTable-header'>Present</strong>, name: "Action" }, // Changed name to "Action"
-        { label: <strong className='MUI-dataTable-header'>Absent</strong>, name: "Action" },
+        { label: <strong className='MUI-dataTable-header'>Present</strong>, name: "present" },
+        { label: <strong className='MUI-dataTable-header'>Absent</strong>, name: "absent" },
     ];
 
     useEffect(() => {
         props.getCandidateAttendence();
     }, []);
-
     const handleClick = (email, actionType) => {
+        setSelectedEmail(email);
+        setSelectedAction(actionType);
+        setShowConfirmDialog(true);
+    };
+
+    const resultActionSubmit = () => {
         const fields = {
-            email: email,
-            attendence: actionType,
+            email: selectedEmail,
+            attendence: selectedAction,
         };
         props.CandidatAttendenceStatus(fields);
+        setAttendenceStatus(prevStatus => {
+            const updatedStatus = { ...prevStatus, [selectedEmail]: selectedAction };
+            localStorage.setItem('attendenceStatus', JSON.stringify(updatedStatus));
+            return updatedStatus;
+        });
     };
-    // useEffect(() => {
-    //     const storedState = JSON.parse(localStorage.getItem('disabledButtons'));
-    //     if (storedState) {
-    //         setDisabledButtons(storedState);
-    //     }
-    // }, []);
-    // const handleClick = (email, actionType) => {
-    //     const fields = {
-    //         email: email,
-    //         attendence: actionType,
-    //     };
-    //     props.CandidatAttendenceStatus(fields);
-    //     const updatedState = {
-    //         ...disabledButtons,
-    //         [email]: true
-    //     };
-    //     setDisabledButtons(updatedState);
-    //     localStorage.setItem('disabledButtons', JSON.stringify(updatedState));
-    // };
-
-
-
+    useEffect(() => {
+        const savedStatus = localStorage.getItem('attendenceStatus');
+        if (savedStatus) {
+            setAttendenceStatus(JSON.parse(savedStatus));
+        }
+    }, []);
     useEffect(() => {
         console.log(props.CandidateAttendnceStatus)
         if (props.isCandidateAttendnceStatusSuccess && props.CandidateAttendnceStatus === 200) {
-            props.setCandidatAttendenceStatusSuccess();
             swal({
                 title: "Attendance updated successfully in Candidate",
                 icon: "success",
@@ -102,7 +109,15 @@ function CandidateAttendance(props) {
                 closeOnClickOutside: false
             }).then(okay => {
                 if (okay) {
-                   }
+                    if (okay) {
+                        const updatedIndexes = [...displayedIndexes, selectedIndex];
+                        setDisplayedIndexes(updatedIndexes);
+                        localStorage.setItem('displayedIndexes', JSON.stringify(updatedIndexes));
+                    }
+                    setShowConfirmDialog(false);
+                    props.setCandidatAttendenceStatusSuccess(false);
+                    props.setCandidatAttendenceStatusError(null);
+                }
             });
         } else if (props.CandidateAttendnceStatusError) {
             swal({
@@ -113,6 +128,7 @@ function CandidateAttendance(props) {
             }).then(okay => {
                 if (okay) {
                 }
+                setShowConfirmDialog(false);
             });
             props.setCandidatAttendenceStatusError();
         }
@@ -140,20 +156,68 @@ function CandidateAttendance(props) {
                         search: true
                     }}
                     data={props.CandidateAttendnceModel.map((Candidate, index) => {
+                        const status = attendenceStatus[Candidate.email];
+
                         return [
                             index + 1,
                             Candidate.email,
                             Candidate.booking_id.district,
                             moment(Candidate.booking_id.date).format('DD-MM-yyyy'),
                             Candidate.booking_id.time,
-                            <Button className="btn btn-success" onClick={() => handleClick(Candidate.email, 'present')}  disabled={disabledButtons[Candidate.email]}>Present </Button>,
-                            <Button className="btn btn-danger" onClick={() => handleClick(Candidate.email, 'absent')}   disabled={disabledButtons[Candidate.email]}>Absent</Button>
-                        ]
-                    }
-                    )
-                    }
+
+                            status === 'present' ? (
+                                <Button className="btn btn-success" >Present</Button>
+                            ) : (
+                                <Button
+                                    className="btn btn-success"
+                                    onClick={() => handleClick(Candidate.email, 'present')}
+                                    disabled={status === 'absent'}
+                                >  Present
+                                </Button>
+                            ),
+                            status === 'absent' ? (
+                                <Button className="btn btn-danger" >absent</Button>
+                            ) : (
+                                <Button
+                                    className="btn btn-danger"
+                                    onClick={() => handleClick(Candidate.email, 'absent')}
+                                    disabled={status === 'present'}
+                                > absent
+                                </Button>
+                            )
+                        ];
+                    })}
                 />
             </ThemeProvider>
+            <Dialog
+                open={showConfirmDialog}
+                onClose={() => setShowConfirmDialog(false)}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogContent>
+                    <DialogContentText>
+                        <h5>Do you want to  mark the attendence?</h5>
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        className="btn btn-success"
+                        onClick={() => {
+                            resultActionSubmit();
+                            setShowConfirmDialog(false);
+                        }}
+                    >
+                        Yes
+                    </Button>
+                    <Button
+                        className="btn btn-danger"
+                        onClick={() => setShowConfirmDialog(false)}
+                    >
+                        No
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Card>
     )
 }

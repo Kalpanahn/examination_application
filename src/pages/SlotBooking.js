@@ -10,27 +10,33 @@ function SlotBooking(props) {
     const [selectedSlot, setSelectedSlot] = useState("");
     const [districtName, setDistrictName] = useState("");
     const KGIDNumber = window.localStorage.getItem("KGID")
-    // const adminApprovalStatus = KGIDNumber 
-    // ? props.getKgidCandidateSlotStatusModel.adminApproval 
-    // : props.getCandidateSlotStatusModel.adminApproval;
-
 
     const handleDistrictChange = (e) => {
         const selectedId = e.target.value;
+        console.log("Selected ID:", selectedId);
+
+
+        if (!Array.isArray(props.getDistrictModel)) {
+            console.error("getDistrictModel is not an array or is undefined");
+            return;
+        }
         if (selectedId === "select") {
             setDistrictId("");
             setDistrictName("");
             return;
         }
         setDistrictId(selectedId);
-        const selectedDistrict = props.getDistrictModel.find(district => district.districtcode.toString() === selectedId);
+        const selectedDistrict = props.getDistrictModel.find(district =>
+            district.districtcode?.toString() === selectedId
+        );
         if (selectedDistrict) {
+            console.log("Selected District Name:", selectedDistrict.districtname);
             setDistrictName(selectedDistrict.districtname);
         } else {
+            console.error("District not found for the selected ID:", selectedId);
+            setDistrictName("");
         }
     };
-
-
     const handlebookslot = (e) => {
         e.preventDefault();
         if (districtId === '') {
@@ -57,6 +63,7 @@ function SlotBooking(props) {
         else {
             let fields = {
                 district: districtName,
+                //  district:districtId,
                 date: date,
                 time: selectedSlot.time,
                 email: window.localStorage.getItem("email")
@@ -141,20 +148,20 @@ function SlotBooking(props) {
                     <h5>Booking Slots</h5>
                 </div>
             </div>
-           <div className="notification" style={{ marginTop: '-56px', padding: '10px', marginLeft: "60rem" }}>
-  {KGIDNumber ? 
-    (props.getKgidCandidateSlotStatusModel.adminApproval !== "pending" && (
-      <h5>
-        Status: Your Slot has been {props.getKgidCandidateSlotStatusModel.adminApproval}
-      </h5>
-    )) : 
-    (props.getCandidateSlotStatusModel.adminApproval !== "pending" && (
-      <h5>
-        Status: Your Slot has been {props.getCandidateSlotStatusModel.adminApproval}
-      </h5>
-    ))
-  }
-</div>
+            <div className="notification" style={{ marginTop: '-56px', padding: '10px', marginLeft: "60rem" }}>
+                {KGIDNumber ?
+                    (props.getKgidCandidateSlotStatusModel.adminApproval !== "pending" && (
+                        <h5>
+                            Status: Your Slot has been {props.getKgidCandidateSlotStatusModel.adminApproval}
+                        </h5>
+                    )) :
+                    (props.getCandidateSlotStatusModel.adminApproval !== "pending" && (
+                        <h5>
+                            Status: Your Slot has been {props.getCandidateSlotStatusModel.adminApproval}
+                        </h5>
+                    ))
+                }
+            </div>
 
             <form className="form-align">
                 <div className="row rowalign">

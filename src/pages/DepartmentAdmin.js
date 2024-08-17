@@ -1,10 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import AdminResultPage from './AdminResultPage';
 import Navbar from '../components/Navbar';
 import AddQuestions from './AddQuestions';
 
 export default function DepartmentAdmin() {
 
+    const [activeTab, setActiveTab] = useState('form');
+
+    const handleTabClick = (tabId) => {
+        setActiveTab(tabId);
+    };
     useEffect(() => {
         const tabs = document.querySelectorAll('button[data-bs-toggle="tab"]');
         tabs.forEach(tab => {
@@ -32,13 +37,22 @@ export default function DepartmentAdmin() {
                         <ul className="nav nav-underline justify-content-end" id="myTab" role="tablist">
 
                             <li className="nav-item" role="presentation">
-                                <button className="btn btn-primary buttonstyle" id="form-tab" data-bs-toggle="tab" data-bs-target="#form"
-                                    type="button" role="tab" aria-controls="form" aria-selected="true">Add Question</button>
+                                <button
+                                    className={`btn buttonstyle ${activeTab === 'form' ? 'btn-primary' : 'btn btn-outline-secondary'}`}
+                                    id="form-tab" data-bs-toggle="tab" data-bs-target="#form"
+                                    type="button" role="tab" aria-controls="form"
+                                    aria-selected={activeTab === 'form'}
+                                    onClick={() => handleTabClick('form')}
+                                >Add Question</button>
                             </li>
 
                             <li className="nav-item" role="presentation">
-                                <button className="btn btn-primary buttonstyle" id="booking-tab" data-bs-toggle="tab" data-bs-target="#booking"
-                                    type="button" role="tab" aria-controls="booking" aria-selected="false">Result</button>
+                                <button className={`btn buttonstyle ${activeTab === 'booking' ? 'btn-primary' : 'btn btn-outline-secondary'}`}
+                                    id="booking-tab" data-bs-toggle="tab" data-bs-target="#booking"
+                                    type="button" role="tab" aria-controls="booking"
+                                    aria-selected={activeTab === 'booking'}
+                                    onClick={() => handleTabClick('booking')}
+                                >Result</button>
                             </li>
 
                         </ul>&nbsp;

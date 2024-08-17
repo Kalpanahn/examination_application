@@ -7,11 +7,24 @@ import * as SlotBookingAction from '../actions/SlotBookingAction'
 import { connect } from 'react-redux';
 import moment from 'moment';
 import swal from 'sweetalert';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
 
 
 function CandidateSlotBookingDetails(props) {
     const [action, setAction] = useState("");
     const [selectedEmail, setSelectedEmail] = useState("");
+    const [selectedAction, setSelectedAction] = useState("");
+     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const [candidateStatus, setCandidateStatus] = useState(false);
+    const [selectedIndex, setSelectedIndex] = useState(null);
+    const [displayedIndexes, setDisplayedIndexes] = useState(() => {
+        const savedIndexes = localStorage.getItem('displayedIndexes');
+        return savedIndexes ? JSON.parse(savedIndexes) : [];
+    });
+
     const theme = createTheme({
         overrides: {
             MuiDataTableBodyRow: {
@@ -55,8 +68,8 @@ function CandidateSlotBookingDetails(props) {
         { label: <strong className='MUI-dataTable-header'>Destrict</strong>, name: "CandidateEmail" },
         { label: <strong className='MUI-dataTable-header'>Date</strong>, name: "TestAttendedDate" },
         { label: <strong className='MUI-dataTable-header'>Slots Timing</strong>, name: "Score" },
-        { label: <strong className='MUI-dataTable-header'>Approve</strong>, name: "Action" }, // Changed name to "Action"
-        { label: <strong className='MUI-dataTable-header'>Reject</strong>, name: "Action" },
+        { label: <strong className='MUI-dataTable-header'>Approve</strong>, name: "Approve" }, // Changed name to "Action"
+        { label: <strong className='MUI-dataTable-header'>Reject</strong>, name: "Reject" },
     ];
 
     useEffect(() => {
@@ -64,13 +77,32 @@ function CandidateSlotBookingDetails(props) {
     }, []);
 
 
+
     const handleClick = (email, actionType) => {
+        setSelectedEmail(email);
+        setSelectedAction(actionType);
+        setShowConfirmDialog(true);
+    };
+ 
+    const resultActionSubmit = () => {
         const fields = {
-            email: email,
-            action: actionType,
+            email: selectedEmail,
+            action: selectedAction,
         };
         props.AdminApprovals(fields);
+        setCandidateStatus(prevStatus => {
+            const updatedStatus = { ...prevStatus, [selectedEmail]: selectedAction };
+            localStorage.setItem('candidateStatus', JSON.stringify(updatedStatus));
+            return updatedStatus;
+        });
     };
+    useEffect(() => {
+        const savedStatus = localStorage.getItem('candidateStatus');
+        if (savedStatus) {
+            setCandidateStatus(JSON.parse(savedStatus));
+        }
+    }, []);
+
 
 
     useEffect(() => {
@@ -83,8 +115,13 @@ function CandidateSlotBookingDetails(props) {
                 closeOnClickOutside: false
             }).then(okay => {
                 if (okay) {
-                    window.location.href = "/CenterAdmin";
+                    const updatedIndexes = [...displayedIndexes, selectedIndex];
+                    setDisplayedIndexes(updatedIndexes);
+                    localStorage.setItem('displayedIndexes', JSON.stringify(updatedIndexes));
                 }
+                setShowConfirmDialog(false);
+                props.setAdminApprovalsSuccess(false);
+                props.setAdminApprovalsError(null);
             });
         } else if (props.AdminApprovalError) {
             swal({
@@ -96,6 +133,7 @@ function CandidateSlotBookingDetails(props) {
                 if (okay) {
                 }
             });
+            setShowConfirmDialog(false);
             props.setAdminApprovalsError();
         }
     }, [props.isAdminApprovalSuccess, props.AdminApprovalStatus, props.AdminApprovalError]);
@@ -123,6 +161,7 @@ function CandidateSlotBookingDetails(props) {
                         search: true
                     }}
                     data={props.getBookedCandidateListModel.map((Candidate, index) => {
+                        const status = candidateStatus[Candidate.email];
 
                         return [
                             index + 1,
@@ -130,14 +169,60 @@ function CandidateSlotBookingDetails(props) {
                             Candidate.district,
                             moment(Candidate.date).format('DD-MM-yyyy'),
                             Candidate.time,
-                            <Button className="btn btn-success" onClick={() => handleClick(Candidate.email, 'approve')}>Approve </Button>,
-                            <Button className="btn btn-danger" onClick={() => handleClick(Candidate.email, 'reject')}>Reject</Button>
-                        ]
-                    }
-                    )
-                    }
+                            status === 'approve' ? (
+                                <Button className="btn btn-success" >Approved</Button>
+                            ) : (
+                                <Button
+                                    className="btn btn-success"
+                                    onClick={() => handleClick(Candidate.email, 'approve')}
+                                    disabled={status === 'reject'}
+                                >  Approve
+                                </Button>
+                            ),
+                            status === 'reject' ? (
+                                <Button className="btn btn-danger" >Rejected</Button>
+                            ) : (
+                                <Button
+                                    className="btn btn-danger"
+                                    onClick={() => handleClick(Candidate.email, 'reject')}
+                                    disabled={status === 'approve'}
+                                > Reject
+                                </Button>
+                            )
+                        ];
+                    })}
                 />
             </ThemeProvider>
+            <Dialog
+                open={showConfirmDialog}
+                onClose={() => setShowConfirmDialog(false)}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogContent>
+                    <DialogContentText>
+                        <h5>Do you want to {selectedAction === 'approve' ? 'Approve' : 'Reject'} this candidate?</h5>
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button
+                        className="btn btn-success"
+                        onClick={() => {
+                            resultActionSubmit();
+                            setShowConfirmDialog(false);
+                        }}
+                    >
+                        Yes
+                    </Button>
+                    <Button
+                        className="btn btn-danger"
+                        onClick={() => setShowConfirmDialog(false)}
+                    >
+                        No
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
         </Card>
     )
 }

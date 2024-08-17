@@ -207,7 +207,8 @@ function Registration(props) {
 
   return (
     <>
-    <div >
+      <div className="container-fluid mt-4">
+      <Navbar />
       <div className="d-flex justify-content-center align-items-center vh-100">
       {/* <Navbar /> */}
         <div className="container">
@@ -260,7 +261,7 @@ function Registration(props) {
                         <div className="row rowalign">
                           <div className="col-12 form-group">
                             <div className="material-textfield">
-                              <input placeholder="Please Enter Phone Number" type="text" className="form-control login_input"
+                              <input  type="text" className="form-control login_input"
                                 value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} maxLength={10} pattern="\d*"
                                 inputMode="numeric" onInput={(e) => {
                                   e.target.value = e.target.value.replace(/\D/g, '');

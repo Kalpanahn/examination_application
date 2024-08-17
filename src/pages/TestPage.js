@@ -84,7 +84,6 @@ function TestPage(props) {
 
   useEffect(() => {
     if (time === 0) {
-      // Redirect to login page after time runs out
       swal({
         title: "Time's up!",
         text: "You will be redirected to the login page.",
@@ -109,38 +108,32 @@ function TestPage(props) {
     setIsTimerStopped(true);
     setTotalTimeTaken(20 * 60 - time);
 
-    if (Object.keys(selectedOptions).length === 0) {
-      swal({
-        title: "Please Select options!",
-        icon: "error",
-        button: "OK",
-        closeOnClickOutside: false
-      });
-    } else {
-      const responses = questions.map(question => ({
-        question: question.text,
-        answer: selectedOptions[question.id] || '',
-        correctAnswer: question.correctOption || '',
-      }));
+    const responses = questions.map(question => ({
+      question: question.text,
+      answer: selectedOptions[question.id] || '',
+      correctAnswer: question.correctOption || '',
+    }));
 
+    const categories = props.QuestionsModel.map(question => question.category);
+    const uniqueCategories = [...new Set(categories)];
+    const categoriesString = uniqueCategories.join(', ');
 
-      const categories = props.QuestionsModel.map(question => question.category);
-      const uniqueCategories = [...new Set(categories)];
-      const categoriesString = uniqueCategories.join(', ');
-      const localDateTime = new Date().toLocaleString();
+    // Get the current date in ISO format
+    const localDateTime = new Date().toISOString();
 
-      let fields = {
-        email: window.localStorage.getItem("email"),
-        name: window.localStorage.getItem("name"),
-        category: categoriesString,
-        date: moment(localDateTime).format('YYYY-MM-DD'),
-        time: window.localStorage.getItem("time"),
-        accuracy: window.localStorage.getItem("accuracy"),
-        responses: responses,
-      };
-      props.SubmitTestAnswer(fields);
-    }
+    let fields = {
+      email: window.localStorage.getItem("email"),
+      name: window.localStorage.getItem("name"),
+      category: categoriesString,
+      date: localDateTime, // Use ISO format
+      time: window.localStorage.getItem("time"),
+      accuracy: window.localStorage.getItem("accuracy"),
+      responses: responses,
+    };
+
+    props.SubmitTestAnswer(fields);
   };
+
 
 
   useEffect(() => {
@@ -165,7 +158,6 @@ function TestPage(props) {
       }).then(okay => {
         if (okay) {
           navigate('/');
-         
         }
       });
       props.setSubmitTestAnswerError();
@@ -175,7 +167,6 @@ function TestPage(props) {
   useEffect(() => {
     props.getQuestions();
   }, []);
-
 
   useEffect(() => {
     if (props.QuestionsModel) {
@@ -194,6 +185,7 @@ function TestPage(props) {
       }
     }
   }, [props.QuestionsModel]);
+  
   return (
     <div className='container-fluid mt-4'>
       <Navbar />
@@ -204,12 +196,7 @@ function TestPage(props) {
       </div>
       <div className="card cardmain_align1">
         <ToastContainer />
-        {/* {time <= 300 && time > 0 && (
-          <h4 className="blink-txt" style={{ color: 'red', fontWeight: '600', textAlign: 'center', padding: '5px' }}>
-            Your test will be ended automatically in {time <= 60 ? formatTime(time) : '5 minutes'}
-          </h4>
-        )} */}
-         {time <= 300 && time > 0 && (
+        {time <= 300 && time > 0 && (
           <h4 className="blink-txt" style={{ color: 'red', fontWeight: '600', textAlign: 'center', padding: '5px' }}>
             {time <= 60
               ? `Your test will be ended automatically in ${formatTime(time)}`
@@ -274,13 +261,13 @@ function TestPage(props) {
                       marginRight: '5px',
                     }}
                   ></div>
+                  <span style={{ marginRight: '10px' }}>{String.fromCharCode(65 + index)}.</span>
                   {option}
                 </div>
               ))}
             </div>
           </div>
         )}
-
 
         <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '10px' }}>
           <button className="btn btn-info prev-btn" onClick={handlePrevious} disabled={currentQuestionIndex === 0}>
