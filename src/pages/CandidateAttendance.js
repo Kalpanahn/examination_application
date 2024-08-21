@@ -74,7 +74,10 @@ function CandidateAttendance(props) {
 
     useEffect(() => {
         props.getCandidateAttendence();
+        props.getKgidCandidateAttendence()
     }, []);
+  
+   
     const handleClick = (email, actionType) => {
         setSelectedEmail(email);
         setSelectedAction(actionType);
@@ -133,7 +136,13 @@ function CandidateAttendance(props) {
             props.setCandidatAttendenceStatusError();
         }
     }, [props.isCandidateAttendnceStatusSuccess, props.CandidateAttendnceStatus, props.CandidateAttendnceStatusError]);
+    
+    console.log("hhhhhhhh",props.CandidateAttendnceModel)
+   console.log("ssssssssss",props.KgidCandidateAttendnceModel)
+   const combinedModel = [...props.CandidateAttendnceModel, ...props.KgidCandidateAttendnceModel];
+   console.log("kkkkkk",combinedModel)
 
+   
     return (
         <Card className='employee-master-card'>
             <CardHeader>
@@ -155,7 +164,8 @@ function CandidateAttendance(props) {
                         download: false,
                         search: true
                     }}
-                    data={props.CandidateAttendnceModel.map((Candidate, index) => {
+                    
+                    data={combinedModel.map((Candidate, index) => {
                         const status = attendenceStatus[Candidate.email];
 
                         return [
@@ -164,8 +174,7 @@ function CandidateAttendance(props) {
                             Candidate.booking_id.district,
                             moment(Candidate.booking_id.date).format('DD-MM-yyyy'),
                             Candidate.booking_id.time,
-
-                            status === 'present' ? (
+                           status === 'present' ? (
                                 <Button className="btn btn-success" >Present</Button>
                             ) : (
                                 <Button
@@ -225,11 +234,17 @@ function CandidateAttendance(props) {
 const mapToProps = function (state) {
     return {
 
-        //get bookedcandidatelist
+       //get attendence candidate list
         CandidateAttendnceModel: state.candidateAttendence.CandidateAttendnceModel,
         isCandidateAttendnceIn: state.candidateAttendence.isCandidateAttendnceIn,
         isCandidateAttendnceSuccess: state.candidateAttendence.isCandidateAttendnceSuccess,
         CandidateAttendnceError: state.candidateAttendence.CandidateAttendnceError,
+
+         //get attendence kgid candidate list
+         KgidCandidateAttendnceModel: state.candidateAttendence.KgidCandidateAttendnceModel,
+         isKgidCandidateAttendnceIn: state.candidateAttendence.isKgidCandidateAttendnceIn,
+         isKgidCandidateAttendnceSuccess: state.candidateAttendence.isKgidCandidateAttendnceSuccess,
+         KgidCandidateAttendnceError: state.candidateAttendence.KgidCandidateAttendnceError,
 
         // candidate attendence status
         CandidateAttendnceStatusModel: state.candidateAttendence.CandidateAttendnceStatusModel,
@@ -244,10 +259,15 @@ const mapToProps = function (state) {
 const mapDispatchToProps = function (dispatch) {
     return {
 
-        //get bookedcandidatelist
+        //get attendence candidate list
         getCandidateAttendence: () => dispatch(CandidateAttendanceAction.getCandidateAttendence()),
         setgetCandidateAttendenceSuccess: () => dispatch(CandidateAttendanceAction.setgetCandidateAttendenceSuccess()),
         setgetCandidateAttendenceError: () => dispatch(CandidateAttendanceAction.setgetCandidateAttendenceError()),
+
+         //get attendence kgid candidate list
+         getKgidCandidateAttendence: () => dispatch(CandidateAttendanceAction.getKgidCandidateAttendence()),
+         setgetKgidCandidateAttendenceSuccess: () => dispatch(CandidateAttendanceAction.setgetKgidCandidateAttendenceSuccess()),
+         setgetKgidCandidateAttendenceError: () => dispatch(CandidateAttendanceAction.setgetKgidCandidateAttendenceError()),
 
 
         // candidate attendence status

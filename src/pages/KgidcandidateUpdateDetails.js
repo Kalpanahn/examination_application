@@ -121,7 +121,7 @@ function KgidcandidateUpdateDetails(props) {
         }
         else if (departmentName === '') {
             swal({
-                title: "Please Select Department Name",
+                title: "Please Enter Department Name",
                 icon: "error",
                 button: "OK",
                 closeOnClickOutside: false

@@ -208,14 +208,11 @@ function Registration(props) {
   return (
     <>
       <div className="container-fluid mt-4">
-      <Navbar />
+      <Navbar />&nbsp;&nbsp;
       <div className="d-flex justify-content-center align-items-center vh-100">
-      {/* <Navbar /> */}
         <div className="container">
           <div className="card card_align">
-            <div className="card-header header_align text-center">
-              <h4>Registration</h4>
-            </div>
+              <h4 className="card-header header_align text-center">Registration</h4>
             <div className="card-body">
               <div className="row rowalign" >
                 <div className="col-12">
@@ -248,7 +245,7 @@ function Registration(props) {
                         </div>
 
                         <div className="row rowalign">
-                          <div className="col-8 form-group">
+                          <div className="col-12 form-group">
                             <div className="material-textfield">
                               <input type="text" className="form-control login_input" placeholder="" value={otp}
                                 onChange={(e) => setOtp(e.target.value)} />

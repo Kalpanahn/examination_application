@@ -31,7 +31,7 @@ export default function CenterAdmin() {
     return (
         <div>
             <div className="container-fluid mt-4">
-                <Navbar />
+                <Navbar />&nbsp;
                 <div className="row">
                     <div className="col-12">&nbsp;
                         <ul className="nav nav-underline justify-content-end" id="myTab" role="tablist">

@@ -141,6 +141,7 @@ function SlotBooking(props) {
         setSelectedSlot("")
     }
 
+    console.log(KGIDNumber)
     return (
         <div className="card cardmain_align">
             <div className="row mt-3">
@@ -162,7 +163,6 @@ function SlotBooking(props) {
                     ))
                 }
             </div>
-
             <form className="form-align">
                 <div className="row rowalign">
                     <div className="col-3 form-group">

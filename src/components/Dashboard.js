@@ -8,7 +8,9 @@ import ResultPage from '../pages/ResultPage';
 import Guidelines from '../pages/Guidelines';
 import * as DashboardAction from '../actions/DashboardAction';
 import * as ResultPageAction from '../actions/ResultPageAction';
+import * as SlotBookingAction from '../actions/SlotBookingAction'
 import { connect } from 'react-redux';
+
 
 function Dashboard(props) {
     const [activeTab, setActiveTab] = useState('form');
@@ -33,28 +35,34 @@ function Dashboard(props) {
             tabs.forEach(tab => tab.removeEventListener('click', () => { }));
         };
     }, []);
+
     useEffect(() => {
         const userId = window.localStorage.getItem("_id");
         if (userId) {
             props.getAttendanceStatus({ user_id: userId });
         }
-    }, [props.getAttendanceStatus]); 
+    }, [props.getAttendanceStatus]);
+    const { AttendanceStatusModel } = props;
 
     useEffect(() => {
         const email = window.localStorage.getItem("email");
         if (email) {
             props.getResult({ email });
         }
-    }, [props.getResult]); 
+    }, [props.getResult]);
     const ResultModel = props.ResultModel && props.ResultModel.length > 0 ? props.ResultModel[0] : null;
 
-    const { AttendanceStatusModel } = props;
-    console.log("ResultModel",props.ResultModel)
+    useEffect(() => {
+        let fields = {
+            user_id: window.localStorage.getItem("_id")
+        }
+        props.CandidateSlotStatus(fields);
+    }, []);
 
     return (
         <div>
             <div className="container-fluid mt-4">
-                <Navbar />
+                <Navbar />&nbsp;
                 <div className="row">
                     <div className="col-12">&nbsp;
                         <ul className="nav nav-underline justify-content-end" id="myTab" role="tablist">
@@ -89,39 +97,39 @@ function Dashboard(props) {
                                     Booking Slots
                                 </button>
                             </li>
-                            {AttendanceStatusModel?.attendence === 'present' && (
-                            <li className="nav-item" role="presentation">
-                                <button
-                                    className={`btn buttonstyle ${activeTab === 'test' ? 'btn-primary' : 'btn btn-outline-secondary'}`}
-                                    id="test-tab"
-                                    data-bs-toggle="tab"
-                                    data-bs-target="#test"
-                                    type="button"
-                                    role="tab"
-                                    aria-controls="test"
-                                    aria-selected={activeTab === 'test'}
-                                    onClick={() => handleTabClick('test')}
-                                >
-                                    Test
-                                </button>
-                            </li> )}
-                            
+                            {AttendanceStatusModel?.attendence === 'present' && props.getCandidateSlotStatusModel?.adminApproval === 'approve' && (
+                                <li className="nav-item" role="presentation">
+                                    <button
+                                        className={`btn buttonstyle ${activeTab === 'test' ? 'btn-primary' : 'btn btn-outline-secondary'}`}
+                                        id="test-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#test"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="test"
+                                        aria-selected={activeTab === 'test'}
+                                        onClick={() => handleTabClick('test')}
+                                    >
+                                        Test
+                                    </button>
+                                </li>)}
+
                             {ResultModel?.displayResult === 'display' && (
-                            <li className="nav-item" role="presentation">
-                                <button
-                                    className={`btn buttonstyle ${activeTab === 'result' ? 'btn-primary' : 'btn btn-outline-secondary'}`}
-                                    id="result-tab"
-                                    data-bs-toggle="tab"
-                                    data-bs-target="#result"
-                                    type="button"
-                                    role="tab"
-                                    aria-controls="result"
-                                    aria-selected={activeTab === 'result'}
-                                    onClick={() => handleTabClick('result')}
-                                >
-                                    Result
-                                </button>
-                            </li>)}
+                                <li className="nav-item" role="presentation">
+                                    <button
+                                        className={`btn buttonstyle ${activeTab === 'result' ? 'btn-primary' : 'btn btn-outline-secondary'}`}
+                                        id="result-tab"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#result"
+                                        type="button"
+                                        role="tab"
+                                        aria-controls="result"
+                                        aria-selected={activeTab === 'result'}
+                                        onClick={() => handleTabClick('result')}
+                                    >
+                                        Result
+                                    </button>
+                                </li>)}
                         </ul>&nbsp;
 
                         <div className="tab-content" id="myTabContent">
@@ -132,14 +140,14 @@ function Dashboard(props) {
                             <div className={`tab-pane fade ${activeTab === 'booking' ? 'show active' : ''}`} id="booking" role="tabpanel" aria-labelledby="booking-tab">
                                 <SlotBooking />
                             </div>
-                            {AttendanceStatusModel?.attendence === 'present' && (
-                            <div className={`tab-pane fade ${activeTab === 'test' ? 'show active' : ''}`} id="test" role="tabpanel" aria-labelledby="test-tab">
-                                <Guidelines />
-                            </div>)}
+                            {AttendanceStatusModel?.attendence === 'present' && props.getCandidateSlotStatusModel?.adminApproval === 'approve' && (
+                                <div className={`tab-pane fade ${activeTab === 'test' ? 'show active' : ''}`} id="test" role="tabpanel" aria-labelledby="test-tab">
+                                    <Guidelines />
+                                </div>)}
                             {ResultModel?.displayResult === 'display' && (
-                            <div className={`tab-pane fade ${activeTab === 'result' ? 'show active' : ''}`} id="result" role="tabpanel" aria-labelledby="result-tab">
-                                <ResultPage />
-                            </div>)}
+                                <div className={`tab-pane fade ${activeTab === 'result' ? 'show active' : ''}`} id="result" role="tabpanel" aria-labelledby="result-tab">
+                                    <ResultPage />
+                                </div>)}
 
                         </div>
                     </div>
@@ -151,27 +159,38 @@ function Dashboard(props) {
 
 const mapToProps = (state) => ({
     //getting Candidate Attendance Status
-   AttendanceStatusModel: state.dashboard.AttendanceStatusModel,
-   isAttendanceStatusIn: state.dashboard.isAttendanceStatusIn,
-   isAttendanceStatusSuccess: state.dashboard.isAttendanceStatusSuccess,
-   AttendanceStatusError: state.dashboard.AttendanceStatusError,
+    AttendanceStatusModel: state.dashboard.AttendanceStatusModel,
+    isAttendanceStatusIn: state.dashboard.isAttendanceStatusIn,
+    isAttendanceStatusSuccess: state.dashboard.isAttendanceStatusSuccess,
+    AttendanceStatusError: state.dashboard.AttendanceStatusError,
 
-   //getting Result
-   ResultModel: state.resultPage.ResultModel,
-   isResultIn: state.resultPage.isResultIn,
-   isResultSuccess: state.resultPage.isResultSuccess,
-   ResultError: state.resultPage.ResultError,
+    //getting Result
+    ResultModel: state.resultPage.ResultModel,
+    isResultIn: state.resultPage.isResultIn,
+    isResultSuccess: state.resultPage.isResultSuccess,
+    ResultError: state.resultPage.ResultError,
+
+    //get candidate slot status
+    getCandidateSlotStatusModel: state.slotBooking.getCandidateSlotStatusModel,
+    isGetCandidateSlotStatusIn: state.slotBooking.isGetCandidateSlotStatusIn,
+    isGetCandidateSlotStatusSuccess: state.slotBooking.isGetCandidateSlotStatusSuccess,
+    GetCandidateSlotStatusError: state.slotBooking.GetCandidateSlotStatusError,
 });
 
 const mapDispatchToProps = (dispatch) => ({
     //getting Candidate Attendance Status
-   getAttendanceStatus: (fields) => dispatch(DashboardAction.getAttendanceStatus(fields)),
-   setAttendanceStatusSuccess: () => dispatch(DashboardAction.setAttendanceStatusSuccess()),
-   setAttendanceStatusError: () => dispatch(DashboardAction.setAttendanceStatusError()),
+    getAttendanceStatus: (fields) => dispatch(DashboardAction.getAttendanceStatus(fields)),
+    setAttendanceStatusSuccess: () => dispatch(DashboardAction.setAttendanceStatusSuccess()),
+    setAttendanceStatusError: () => dispatch(DashboardAction.setAttendanceStatusError()),
 
-   //getting Result
-   getResult: (fields) => dispatch(ResultPageAction.getResult(fields)),
-   setResultSuccess: () => dispatch(ResultPageAction.setResultSuccess()),
+    //getting Result
+    getResult: (fields) => dispatch(ResultPageAction.getResult(fields)),
+    setResultSuccess: () => dispatch(ResultPageAction.setResultSuccess()),
+
+    //get candidate slot status
+    CandidateSlotStatus: (fields) => dispatch(SlotBookingAction.CandidateSlotStatus(fields)),
+    setCandidateSlotStatusSuccess: () => dispatch(SlotBookingAction.setCandidateSlotStatusSuccess()),
+    setCandidateSlotStatusError: () => dispatch(SlotBookingAction.setCandidateSlotStatusError()),
 });
 
 export default connect(mapToProps, mapDispatchToProps)(Dashboard);

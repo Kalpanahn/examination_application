@@ -31,9 +31,9 @@ function KgidDashboard(props) {
         }
         props.getResult(fields);
     }, []);
-    const { ResultModel } = props;
-    // const ResultModel = props.ResultModel && props.ResultModel.length > 0 ? props.ResultModel[0] : null;
-    console.log("ResultModel",props.ResultModel)
+ 
+    const ResultModel = props.ResultModel && props.ResultModel.length > 0 ? props.ResultModel[0] : null;
+   
     return (
         <div>
             <div className="container-fluid mt-4">

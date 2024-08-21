@@ -62,3 +62,29 @@ export const setCandidatAttendenceStatusError = () => {
         dispatch({ type: 'SET_IS_CANDIDATE_ATTENDENCE_STATUS_ERROR' })
     }
 }
+
+// api to get  kgid candidate attendence 
+export const getKgidCandidateAttendence = () => {
+    return (dispatch, getState) => {
+        dispatch({ type: 'GET_KGID_CANDIDATE_ATTENDENCE_START' })
+        axios.post(APIs + '/singleKGIDCandidateView')
+            .then(function (response) {
+                dispatch({ type: 'GET_KGID_CANDIDATE_ATTENDENCE_SUCCESS', payload: response.data })
+            })
+            .catch(function (error) {
+                dispatch({ type: 'GET_KGID_CANDIDATE_ATTENDENCE_FAILURE', payload: error })
+            })
+    }
+}
+
+export const setgetKgidCandidateAttendenceSuccess = () => {
+    return (dispatch, getState) => {
+        dispatch({ type: 'SET_IS_GET_KGID_CANDIDATE_ATTENDENCE_SUCCESS' })
+    }
+}
+
+export const setgetKgidCandidateAttendenceError = () => {
+    return (dispatch, getState) => {
+        dispatch({ type: 'SET_IS_GET_KGID_CANDIDATE_ATTENDENCE_FAILURE' })
+    }
+}

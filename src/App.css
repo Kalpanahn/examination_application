@@ -98,15 +98,11 @@
   width: 20rem;
 }
 
-.row.sticky-top {
-  background-color: #718dbf;
+.m-auto.navbar.navbar-expand-lg.navbar-light.bg-topNavbar.fixed-top {
   border-start-end-radius: 10px;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
   border-start-start-radius: 10px;
-  margin-top: -23px;
-  width: 103%;
-  margin-left: -24px;
 }
 
 .guidelines-border {
@@ -168,7 +164,7 @@ thead.MuiTableHead-root.tss-1937jnc-MUIDataTableHead-main.css-15wwp11-MuiTableHe
   font-size: 24px;
   box-shadow: 3px 3px #FFFFFF;
   position: absolute;
-  top: 100px;
+  top: 36px;
   right: 57px;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;

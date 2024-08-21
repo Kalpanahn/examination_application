@@ -5,6 +5,12 @@ const candidateAttendenceState = {
     isCandidateAttendnceSuccess: false,
     CandidateAttendnceError: '',
 
+       // kgid candidate attendence 
+       KgidCandidateAttendnceModel: [],
+       isKgidCandidateAttendnceIn: false,
+       isKgidCandidateAttendnceSuccess: false,
+       KgidCandidateAttendnceError: '',
+
     // candidate attendence status
     CandidateAttendnceStatusModel: [],
     isCandidateAttendnceStatusIn: false,
@@ -28,6 +34,18 @@ export const candidateAttendence = (state = candidateAttendenceState, action) =>
             return Object.assign({}, state, { isCandidateAttendnceSuccess: false })
         case 'SET_IS_GETCANDIDATE_ATTENDENCE_FAILURE':
             return Object.assign({}, state, { CandidateAttendnceError: '' })
+
+             //kgid candidate attendence 
+        case 'GET_KGID_CANDIDATE_ATTENDENCE_START':
+            return Object.assign({}, state, { isKgidCandidateAttendnceIn: true, isKgidCandidateAttendnceSuccess: false })
+        case 'GET_KGID_CANDIDATE_ATTENDENCE_SUCCESS':
+            return Object.assign({}, state, { KgidCandidateAttendnceModel: action.payload, isKgidCandidateAttendnceIn: false, isKgidCandidateAttendnceSuccess: true })
+        case 'GET_KGID_CANDIDATE_ATTENDENCE_FAILURE':
+            return Object.assign({}, state, { KgidCandidateAttendnceError: action.payload, isKgidCandidateAttendnceIn: false, isKgidCandidateAttendnceSuccess: false })
+        case 'SET_IS_GET_KGID_CANDIDATE_ATTENDENCE_SUCCESS':
+            return Object.assign({}, state, { isKgidCandidateAttendnceSuccess: false })
+        case 'SET_IS_GET_KGID_CANDIDATE_ATTENDENCE_FAILURE':
+            return Object.assign({}, state, { KgidCandidateAttendnceError: '' })
 
 
         // candidate attendence status
