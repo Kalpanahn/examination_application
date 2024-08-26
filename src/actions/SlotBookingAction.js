@@ -184,7 +184,7 @@ export const setCandidateSlotStatusError = () => {
 export const KgidCandidateSlotStatus = (fields) => {
     return (dispatch, getState) => {
         dispatch({ type: 'KGID_CANDIDATE_SLOTSTATUS_START' })
-        axios.post(APIs + '/singleKGIDCandidateView', fields)
+        axios.post(APIs + '/singleViewKGIDBookedCandidate', fields)
             .then(function (response) {
                 dispatch({ type: 'KGID_CANDIDATE_SLOTSTATUS_SUCCESS', payload: response.data })
 

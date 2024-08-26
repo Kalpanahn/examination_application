@@ -7,6 +7,7 @@ import swal from 'sweetalert';
 import logo from '../Images/loadingdots2.gif'
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "./Navbar";
+import moment from 'moment';
 
 function Registration(props) {
   const navigate = useNavigate();
@@ -33,6 +34,30 @@ function Registration(props) {
       return false
     }
   }
+  const dateofBirth = (e)=>{
+    let p1 = e.target.value
+    let year1 = new Date().toISOString().slice(0, 10)
+    let diff =moment(year1).diff(p1,'days')
+    setDob(p1)
+    if(diff < 6574){
+      swal({
+        title: "Please enter valid birth date!",
+        icon: "error",
+        button: "OK",
+
+      }).then(okay => {
+
+      if (okay) {
+        
+        setDob("")
+    
+       }
+        
+       });
+    }
+  }
+
+  
 
   const getOTP = () => {
     let validEmail = validateEmail(email);
@@ -259,7 +284,8 @@ function Registration(props) {
                           <div className="col-12 form-group">
                             <div className="material-textfield">
                               <input  type="text" className="form-control login_input"
-                                value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} maxLength={10} pattern="\d*"
+                                value={phoneNumber} 
+                                onChange={(e) => setPhoneNumber(e.target.value)}   maxLength={10} pattern="\d*"
                                 inputMode="numeric" onInput={(e) => {
                                   e.target.value = e.target.value.replace(/\D/g, '');
                                   setPhoneNumber(e.target.value)
@@ -272,7 +298,7 @@ function Registration(props) {
                           <div className="col-12 form-group">
                             <div className="material-textfield">
                               <input type="date" className="form-control login_input" placeholder=""
-                                value={dob} onChange={(e) => setDob(e.target.value)} />
+                                value={dob}     onChange={dateofBirth} required/>
                               <label>Date of Birth<span style={{ "color": "red" }}>*</span></label>
                             </div>
                           </div>

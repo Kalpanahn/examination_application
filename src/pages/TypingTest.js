@@ -31,12 +31,7 @@ function TypingTest() {
         const secs = seconds % 60;
         return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     };
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-    //     setIsActive(false);
-    //     const acc = calculateAccuracy();
-    //     setAccuracy(acc);
-    // };
+   
     const handleSubmit = (e) => {
         e.preventDefault();
         if (userText === "") {
@@ -46,19 +41,16 @@ function TypingTest() {
                 button: "OK",
                 closeOnClickOutside: false,
             });
-            return; // Exit early if validation fails
+            return; 
         }
-        // Calculate and set accuracy
+     
         const acc = calculateAccuracy();
         setAccuracy(acc);
-
         const formattedTime = formatTime(time);
-        // Store accuracy and time in localStorage
-        window.localStorage.setItem('accuracy', acc.toFixed(2));
+       window.localStorage.setItem('accuracy', acc.toFixed(2));
         window.localStorage.setItem('time', formattedTime);
-        // Set isActive to false
         setIsActive(false);
-        // Navigate to /testPage
+      
         navigate('/testPage');
     };
     useEffect(() => {
@@ -99,10 +91,13 @@ function TypingTest() {
     const handleShowModal = () => {
         setShowModal(true); 
     }
+    const handleTextareaEvent = (e) => {
+        e.preventDefault();
+    }
 
     return (
         <div className='container-fluid mt-4'>
-            <Navbar />
+            <Navbar />&nbsp;
             <div className='timer d-flex justify-content-center align-bottom'>{formatTime(time)}</div>
             <div className="card cardmain_align1">
                 <div className='h-100'>
@@ -111,7 +106,10 @@ function TypingTest() {
                             {randomText}
                         </div>&nbsp;
                         <div className="usertext">
-                            <textarea className='p-3' value={userText} onChange={handleTextareaChange} placeholder="Please Type Here"></textarea>
+                            <textarea className='p-3' value={userText} onChange={handleTextareaChange} placeholder="Please Type Here"
+                            onCopy={handleTextareaEvent}
+                            onCut={handleTextareaEvent}
+                            onPaste={handleTextareaEvent}></textarea>
                         </div>&nbsp;
                         <div className='d-flex justify-content-center '>
                             <button
@@ -120,14 +118,7 @@ function TypingTest() {
                                 onClick={handleShowModal}>
                                 Submit
                             </button>
-                            {/* &nbsp;&nbsp;
-                            <button
-                                type="submit"
-                                className="btn btn-primary buttonstyle btn_width submitUser"
-                                onClick={handleNext}
-                            >
-                                Next
-                            </button> */}
+                          
                         </div>
 
                         {accuracy !== null && (

@@ -7,6 +7,11 @@ import { connect } from 'react-redux';
 import swal from "sweetalert";
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import { Button } from 'react-bootstrap';
 
 function TestPage(props) {
   const [questions, setQuestions] = useState([]);
@@ -19,6 +24,8 @@ function TestPage(props) {
   const [totalTimeTaken, setTotalTimeTaken] = useState(0);
   const [isTimerStopped, setIsTimerStopped] = useState(false);
   const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
+
 
   useEffect(() => {
     if (props.QuestionsModel) {
@@ -104,6 +111,7 @@ function TestPage(props) {
 
 
   const handleSubmit = () => {
+    setShowModal(false)
     setIsTestCompleted(true);
     setIsTimerStopped(true);
     setTotalTimeTaken(20 * 60 - time);
@@ -119,7 +127,8 @@ function TestPage(props) {
     const categoriesString = uniqueCategories.join(', ');
 
     // Get the current date in ISO format
-    const localDateTime = new Date().toISOString();
+    // const localDateTime = new Date().toISOString();
+    const localDateTime = new Date().toISOString().split('T')[0];
 
     let fields = {
       email: window.localStorage.getItem("email"),
@@ -130,11 +139,13 @@ function TestPage(props) {
       accuracy: window.localStorage.getItem("accuracy"),
       responses: responses,
     };
-
+    console.log(fields)
     props.SubmitTestAnswer(fields);
   };
 
-
+  const handleShowModal = () => {
+    setShowModal(true);
+  }
 
   useEffect(() => {
     if (props.isSubmitAnswersSuccess && props.SubmitAnswersStatus === 200) {
@@ -146,7 +157,15 @@ function TestPage(props) {
         closeOnClickOutside: false
       }).then(okay => {
         if (okay) {
-          navigate('/');
+          swal({
+            title: "Thank You For Taken The Test.",
+            button: "OK",
+            closeOnClickOutside: false
+          }).then(okay => {
+            if (okay) {
+              navigate('/');
+            }
+          });
         }
       });
     } else if (props.SubmitAnswersError) {
@@ -159,10 +178,20 @@ function TestPage(props) {
         if (okay) {
           navigate('/');
         }
-      });
+      })
       props.setSubmitTestAnswerError();
     }
-  }, [props.isSubmitAnswersSuccess,navigate, props.SubmitAnswersStatus, props.setSubmitTestAnswerError]);
+  }, [props.isSubmitAnswersSuccess, navigate, props.SubmitAnswersStatus, props.setSubmitTestAnswerError]);
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    navigate('/');
+    swal({
+      button: "OK",
+      closeOnClickOutside: false
+    })
+  };
+
 
   useEffect(() => {
     props.getQuestions();
@@ -185,10 +214,20 @@ function TestPage(props) {
       }
     }
   }, [props.QuestionsModel]);
-  
+
+  useEffect(() => {
+    if (window.performance) {
+      if (performance.navigation.type === 1) {
+        handleSubmit();
+        navigate('/');
+      }
+    }
+  }, [navigate]);
+
+
   return (
     <div className='container-fluid mt-4'>
-      <Navbar />
+      <Navbar />&nbsp;
       <div>
         <div className="text-center mb-3 mt-3">
           {isTimerStopped ? formatTime(totalTimeTaken) : formatTime(time)}
@@ -200,13 +239,14 @@ function TestPage(props) {
           <h4 className="blink-txt" style={{ color: 'red', fontWeight: '600', textAlign: 'center', padding: '5px' }}>
             {time <= 60
               ? `Your test will be ended automatically in ${formatTime(time)}`
-              : `Your test will be ended automatically in ${formatTime(300)} (5 minutes)`}
+              : `Your test will be ended automatically in ${formatTime(time)}`}
           </h4>
         )}
+
         <div className="card mb-3">
           <div className="row rowalign">
             <div className="nav nav-underline justify-content-end">
-              <button type="button" className="btn btn-success finish-btn float-end" onClick={handleSubmit}>
+              <button type="button" className="btn btn-success finish-btn float-end" onClick={handleShowModal}>
                 Submit
               </button>
             </div>
@@ -283,6 +323,27 @@ function TestPage(props) {
             <p>Total Time Taken: {formatTime(totalTimeTaken)}</p>&nbsp;
           </div>
         )}
+
+        <Dialog className='Modal-DialogBox'
+          open={showModal}
+          onClose={() => setShowModal(false)}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description">
+
+          <DialogContent className='Dialog-content-box'>
+            <DialogContentText id="alert-dialog-description">
+              <h5>Are you sure you want to submit the test ?</h5>
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <div className='btn-delete'>
+              <Button className="btn btn-success" onClick={handleSubmit}>Yes</Button>
+            </div>
+            <div className='btn-delete'>
+              <Button className="btn btn-danger" onClick={() => setShowModal(false)}>No</Button>
+            </div>
+          </DialogActions>
+        </Dialog>
       </div>
     </div>
   );

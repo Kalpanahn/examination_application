@@ -15,12 +15,13 @@ import logo from '../Images/loadingdots2.gif';
 
 function AdminResultPage(props) {
     const imageURL = logo;
-    const [displayResult, setDisplayResult] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(null);
-    const [displayedIndexes, setDisplayedIndexes] = useState(() => {
-        const savedIndexes = localStorage.getItem('displayedIndexes');
-        return savedIndexes ? JSON.parse(savedIndexes) : [];
+    const [displayedEmails, setDisplayedEmails] = useState(() => {
+        const savedEmails = localStorage.getItem('displayedEmails');
+        return savedEmails ? JSON.parse(savedEmails) : [];
     });
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const theme = createTheme({
         overrides: {
@@ -71,20 +72,30 @@ function AdminResultPage(props) {
     useEffect(() => {
         props.getAllUserAnswer();
     }, []);
+    console.log("AllUserAnswersModel", props.AllUserAnswersModel)
 
-    const handleDisplayResult = (index) => {
-        setSelectedIndex(index);
-        setDisplayResult(true); 
-    }
+    const handleDisplayResult = (email) => {
+        setSelectedIndex(email);
+        setShowModal(true);
+    };
 
     const resultDisplaySubmit = () => {
+        setIsSubmitting(true);
         const fields = {
-            email: props.AllUserAnswersModel[selectedIndex].email,
+            email: selectedIndex,
             displayResult: 'display'
         };
-        console.log('Fields before submission:', fields);
         props.viewResultApproval(fields);
-    }
+
+        // Update displayedEmails state and save to localStorage
+        setDisplayedEmails(prev => {
+            const updatedEmails = [...prev, selectedIndex];
+            localStorage.setItem('displayedEmails', JSON.stringify(updatedEmails));
+            return updatedEmails;
+        });
+
+        setShowModal(false);
+    };
 
     useEffect(() => {
         if (props.isViewResultApprovalIn) {
@@ -123,17 +134,11 @@ function AdminResultPage(props) {
                 closeOnClickOutside: false
             }).then(okay => {
                 if (okay) {
-                    const updatedIndexes = [...displayedIndexes, selectedIndex];
-                    setDisplayedIndexes(updatedIndexes);
-                    localStorage.setItem('displayedIndexes', JSON.stringify(updatedIndexes));
-                    setDisplayResult(false);
-                    // Reset the approval status flags
-                    props.setViewResultApprovalSuccess(false);
-                    props.setViewResultApprovalError(null);
+                    setIsSubmitting(false);
                 }
             });
         }
-    }, [props.isViewResultApprovalIn, props.ViewResultApprovalStatus, props.isViewResultApprovalSuccess, selectedIndex, displayedIndexes]);
+    }, [props.isViewResultApprovalIn, props.ViewResultApprovalStatus, props.isViewResultApprovalSuccess]);
 
     return (
         <Card className='employee-master-card'>
@@ -157,26 +162,28 @@ function AdminResultPage(props) {
                         search: true
                     }}
                     data={props.AllUserAnswersModel.map((userAnswer, index) => {
-                        const isDisplayed = displayedIndexes.includes(index);
+                        const isDisplayed = displayedEmails.includes(userAnswer.email);
                         return [
                             index + 1,
                             userAnswer.name,
                             userAnswer.email,
                             moment(userAnswer.date).format("DD-MM-YYYY"),
                             userAnswer.score,
-                            isDisplayed ? (
-                                <Button className="btn btn-secondary" disabled>Displayed</Button>
-                            ) : (
-                                <Button className="btn btn-primary" onClick={() => handleDisplayResult(index)}>Display</Button>
-                            ),
-                        ]
+                            <Button
+                                className={`btn ${isDisplayed ? 'btn-secondary' : 'btn-primary'}`}
+                                onClick={isDisplayed ? null : () => handleDisplayResult(userAnswer.email)}
+                                disabled={isDisplayed}
+                            >
+                                {isDisplayed ? 'Displayed' : 'Display'}
+                            </Button>
+                        ];
                     })}
                 />
             </ThemeProvider>
 
             <Dialog className='Modal-DialogBox'
-                open={displayResult} 
-                onClose={() => setDisplayResult(false)}
+                open={showModal}
+                onClose={() => setShowModal(false)}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description">
 
@@ -187,10 +194,16 @@ function AdminResultPage(props) {
                 </DialogContent>
                 <DialogActions>
                     <div className='btn-delete'>
-                        <Button className="btn btn-success" onClick={resultDisplaySubmit}>Yes</Button>
+                        <Button
+                            className="btn btn-success"
+                            onClick={resultDisplaySubmit}
+                            disabled={isSubmitting}
+                        >
+                            Yes
+                        </Button>
                     </div>
                     <div className='btn-delete'>
-                        <Button className="btn btn-danger" onClick={() => setDisplayResult(false)}>No</Button>
+                        <Button className="btn btn-danger" onClick={() => setShowModal(false)}>No</Button>
                     </div>
                 </DialogActions>
             </Dialog>
@@ -199,11 +212,13 @@ function AdminResultPage(props) {
 }
 
 const mapToProps = (state) => ({
+    //getting All User Answer
     AllUserAnswersModel: state.adminResultPage.AllUserAnswersModel,
     isAllUserAnswersIn: state.adminResultPage.isAllUserAnswersIn,
     isAllUserAnswersSuccess: state.adminResultPage.isAllUserAnswersSuccess,
     AllUserAnswersError: state.adminResultPage.AllUserAnswersError,
 
+    //view Result Approval
     ViewResultApprovalModel: state.adminResultPage.ViewResultApprovalModel,
     isViewResultApprovalIn: state.adminResultPage.isViewResultApprovalIn,
     isViewResultApprovalSuccess: state.adminResultPage.isViewResultApprovalSuccess,
@@ -212,9 +227,11 @@ const mapToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+    //getting All User Answer
     getAllUserAnswer: (fields) => dispatch(AdminResultPageAction.getAllUserAnswer(fields)),
     setAllUserAnswerSuccess: () => dispatch(AdminResultPageAction.setAllUserAnswerSuccess()),
 
+    //view Result Approval
     viewResultApproval: (fields) => dispatch(AdminResultPageAction.viewResultApproval(fields)),
     setViewResultApprovalSuccess: (status) => dispatch(AdminResultPageAction.setViewResultApprovalSuccess(status)),
     setViewResultApprovalError: (error) => dispatch(AdminResultPageAction.setViewResultApprovalError(error)),

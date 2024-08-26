@@ -73,8 +73,11 @@ function LoginPage(props) {
   useEffect(() => {
     if (props.isLoginSuccess && props.Loginstatus === 200) {
       props.setLoginSuccess();
+
       const { candidate, token } = props.LoginModel;
-      const {_id, email, name } = candidate;
+      const { _id, email, name } = candidate;
+      clearLocalStorageForEmail(email);
+      clearAttendanceStatusForEmail(email);
       window.sessionStorage.setItem("email", email)
       window.localStorage.setItem("email", email)
       window.sessionStorage.setItem("name", name)
@@ -82,7 +85,7 @@ function LoginPage(props) {
       window.sessionStorage.setItem("token", token)
       window.localStorage.setItem("token", token)
       window.sessionStorage.setItem("_id", _id);
-      window.localStorage.setItem("_id", _id); 
+      window.localStorage.setItem("_id", _id);
       swal({
         title: "Login Successfully.",
         icon: "success",
@@ -135,15 +138,18 @@ function LoginPage(props) {
         KGID: Number(kgidNumber),
         phone: Number(phoneNumber)
       }
-    props.kgidLogin(fields)
+      props.kgidLogin(fields)
     }
   }
 
   useEffect(() => {
     if (props.isKgidLoginSuccess && props.KgidLoginstatus === 200) {
       props.setKgidLoginSuccess();
+
       const { candidate, token } = props.KgidLoginModel;
-      const { _id, email, name, KGID,} = candidate;
+      const { _id, email, name, KGID, } = candidate;
+      clearLocalStorageForEmail(email);
+      clearAttendanceStatusForEmail(email);
       window.sessionStorage.setItem("email", email)
       window.localStorage.setItem("email", email)
       window.sessionStorage.setItem("name", name)
@@ -153,7 +159,7 @@ function LoginPage(props) {
       window.sessionStorage.setItem("KGID", KGID)
       window.localStorage.setItem("KGID", KGID)
       window.sessionStorage.setItem("_id", _id);
-      window.localStorage.setItem("_id", _id); 
+      window.localStorage.setItem("_id", _id);
       swal({
         title: "Login Successfully.",
         icon: "success",
@@ -183,6 +189,31 @@ function LoginPage(props) {
     setkgidNumber("")
     setPhoneNumber("")
   }
+
+
+  // Function to clear local storage for a specific email
+  const clearLocalStorageForEmail = (email) => {
+    const savedEmails = localStorage.getItem('approvedEmails');
+    if (savedEmails) {
+      const emailData = JSON.parse(savedEmails);
+      if (email in emailData) {
+        delete emailData[email];
+        localStorage.setItem('approvedEmails', JSON.stringify(emailData));
+      }
+    }
+  };
+
+  const clearAttendanceStatusForEmail = (email) => {
+    const savedAttendanceStatus = localStorage.getItem('attendenceStatus');
+    if (savedAttendanceStatus) {
+      const attendanceData = JSON.parse(savedAttendanceStatus);
+      if (email in attendanceData) {
+        delete attendanceData[email];
+        localStorage.setItem('attendenceStatus', JSON.stringify(attendanceData));
+      }
+    }
+  };
+
 
   return (
     <>
@@ -304,7 +335,7 @@ function LoginPage(props) {
                               </button>
                             </div>
                           </div>
-                    </form>
+                        </form>
                       </div>
                       {error && (
                         <p className="text-danger text-center">{error}</p>

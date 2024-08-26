@@ -14,16 +14,16 @@ import DialogContentText from '@mui/material/DialogContentText';
 
 
 function CandidateSlotBookingDetails(props) {
-    const [action, setAction] = useState("");
-    const [selectedEmail, setSelectedEmail] = useState("");
+    const [selectedEmail, setSelectedEmail] = useState(null);
     const [selectedAction, setSelectedAction] = useState("");
-     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-    const [candidateStatus, setCandidateStatus] = useState(false);
-    const [selectedIndex, setSelectedIndex] = useState(null);
-    const [displayedIndexes, setDisplayedIndexes] = useState(() => {
-        const savedIndexes = localStorage.getItem('displayedIndexes');
-        return savedIndexes ? JSON.parse(savedIndexes) : [];
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+    const [approvedEmails, setApprovedEmails] = useState(() => {
+        const savedEmails = localStorage.getItem('approvedEmails');
+        return savedEmails ? JSON.parse(savedEmails) : [];
     });
+
+
+  
 
     const theme = createTheme({
         overrides: {
@@ -65,7 +65,7 @@ function CandidateSlotBookingDetails(props) {
             },
         },
         { label: <strong className='MUI-dataTable-header'>Candidate Email</strong>, name: "CandidateName" },
-        { label: <strong className='MUI-dataTable-header'>Destrict</strong>, name: "CandidateEmail" },
+        { label: <strong className='MUI-dataTable-header'>District</strong>, name: "CandidateEmail" },
         { label: <strong className='MUI-dataTable-header'>Date</strong>, name: "TestAttendedDate" },
         { label: <strong className='MUI-dataTable-header'>Slots Timing</strong>, name: "Score" },
         { label: <strong className='MUI-dataTable-header'>Approve</strong>, name: "Approve" }, // Changed name to "Action"
@@ -76,34 +76,26 @@ function CandidateSlotBookingDetails(props) {
         props.getBookedCandidateList();
     }, []);
 
-
-
     const handleClick = (email, actionType) => {
         setSelectedEmail(email);
         setSelectedAction(actionType);
         setShowConfirmDialog(true);
     };
- 
+    
+
     const resultActionSubmit = () => {
         const fields = {
             email: selectedEmail,
             action: selectedAction,
         };
         props.AdminApprovals(fields);
-        setCandidateStatus(prevStatus => {
-            const updatedStatus = { ...prevStatus, [selectedEmail]: selectedAction };
-            localStorage.setItem('candidateStatus', JSON.stringify(updatedStatus));
-            return updatedStatus;
+        setApprovedEmails(prevStatus => {
+            const updatedEmails = { ...prevStatus, [selectedEmail]: selectedAction };
+          
+            localStorage.setItem('approvedEmails', JSON.stringify(updatedEmails));
+            return updatedEmails;
         });
-    };
-    useEffect(() => {
-        const savedStatus = localStorage.getItem('candidateStatus');
-        if (savedStatus) {
-            setCandidateStatus(JSON.parse(savedStatus));
-        }
-    }, []);
-
-
+    }
 
     useEffect(() => {
         if (props.isAdminApprovalSuccess && props.AdminApprovalStatus === 200) {
@@ -115,13 +107,8 @@ function CandidateSlotBookingDetails(props) {
                 closeOnClickOutside: false
             }).then(okay => {
                 if (okay) {
-                    const updatedIndexes = [...displayedIndexes, selectedIndex];
-                    setDisplayedIndexes(updatedIndexes);
-                    localStorage.setItem('displayedIndexes', JSON.stringify(updatedIndexes));
                 }
                 setShowConfirmDialog(false);
-                props.setAdminApprovalsSuccess(false);
-                props.setAdminApprovalsError(null);
             });
         } else if (props.AdminApprovalError) {
             swal({
@@ -161,7 +148,9 @@ function CandidateSlotBookingDetails(props) {
                         search: true
                     }}
                     data={props.getBookedCandidateListModel.map((Candidate, index) => {
-                        const status = candidateStatus[Candidate.email];
+                        const email = Candidate.email; // Ensure this is the correct field
+                        const status = approvedEmails[email];
+                        console.log(`Candidate: ${email}, Status: ${status}`);
 
                         return [
                             index + 1,
