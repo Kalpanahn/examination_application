@@ -125,10 +125,7 @@ function TestPage(props) {
     const categories = props.QuestionsModel.map(question => question.category);
     const uniqueCategories = [...new Set(categories)];
     const categoriesString = uniqueCategories.join(', ');
-
-    // Get the current date in ISO format
-    // const localDateTime = new Date().toISOString();
-    const localDateTime = new Date().toISOString().split('T')[0];
+  const localDateTime = new Date().toISOString().split('T')[0];
 
     let fields = {
       email: window.localStorage.getItem("email"),
@@ -139,8 +136,7 @@ function TestPage(props) {
       accuracy: window.localStorage.getItem("accuracy"),
       responses: responses,
     };
-    console.log(fields)
-    props.SubmitTestAnswer(fields);
+   props.SubmitTestAnswer(fields);
   };
 
   const handleShowModal = () => {

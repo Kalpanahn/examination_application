@@ -103,8 +103,7 @@ function CandidateAttendance(props) {
         }
     }, []);
     useEffect(() => {
-        console.log(props.CandidateAttendnceStatus)
-        if (props.isCandidateAttendnceStatusSuccess && props.CandidateAttendnceStatus === 200) {
+      if (props.isCandidateAttendnceStatusSuccess && props.CandidateAttendnceStatus === 200) {
             swal({
                 title: "Attendance updated successfully in Candidate",
                 icon: "success",

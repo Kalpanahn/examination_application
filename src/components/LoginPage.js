@@ -76,9 +76,7 @@ function LoginPage(props) {
 
       const { candidate, token } = props.LoginModel;
       const { _id, email, name } = candidate;
-      clearLocalStorageForEmail(email);
-      clearAttendanceStatusForEmail(email);
-      window.sessionStorage.setItem("email", email)
+     window.sessionStorage.setItem("email", email)
       window.localStorage.setItem("email", email)
       window.sessionStorage.setItem("name", name)
       window.localStorage.setItem("name", name)
@@ -148,9 +146,7 @@ function LoginPage(props) {
 
       const { candidate, token } = props.KgidLoginModel;
       const { _id, email, name, KGID, } = candidate;
-      clearLocalStorageForEmail(email);
-      clearAttendanceStatusForEmail(email);
-      window.sessionStorage.setItem("email", email)
+     window.sessionStorage.setItem("email", email)
       window.localStorage.setItem("email", email)
       window.sessionStorage.setItem("name", name)
       window.localStorage.setItem("name", name)
@@ -192,16 +188,16 @@ function LoginPage(props) {
 
 
   // Function to clear local storage for a specific email
-  const clearLocalStorageForEmail = (email) => {
-    const savedEmails = localStorage.getItem('approvedEmails');
-    if (savedEmails) {
-      const emailData = JSON.parse(savedEmails);
-      if (email in emailData) {
-        delete emailData[email];
-        localStorage.setItem('approvedEmails', JSON.stringify(emailData));
-      }
-    }
-  };
+  // const clearLocalStorageForEmail = (email) => {
+  //   const savedEmails = localStorage.getItem('approvedEmails');
+  //   if (savedEmails) {
+  //     const emailData = JSON.parse(savedEmails);
+  //     if (email in emailData) {
+  //       delete emailData[email];
+  //       localStorage.setItem('approvedEmails', JSON.stringify(emailData));
+  //     }
+  //   }
+  // };
 
   const clearAttendanceStatusForEmail = (email) => {
     const savedAttendanceStatus = localStorage.getItem('attendenceStatus');
