@@ -97,7 +97,7 @@ function KgidDashboard(props) {
                                 </button>
                             </li>
 
-                            {KgidCandidateAttendanceStatusModel?.attendence === 'present' && props.getKgidCandidateSlotStatusModel?.adminApproval === 'approve' && (
+                            {KgidCandidateAttendanceStatusModel?.attendence === 'present' && props.getKgidCandidateSlotStatusModel?.adminApproval === 'approve' && props.ResultModel.length === 0 && (
                                 <li className="nav-item" role="presentation">
                                     <button
                                         className={`btn buttonstyle ${activeTab === 'test' ? 'btn-primary' : 'btn btn-outline-secondary'}`}
@@ -143,7 +143,7 @@ function KgidDashboard(props) {
                             </div>
 
                             {/* Conditionally render the "Test" tab content */}
-                            {KgidCandidateAttendanceStatusModel?.attendence === 'present' && props.getKgidCandidateSlotStatusModel?.adminApproval === 'approve' && (
+                            {KgidCandidateAttendanceStatusModel?.attendence === 'present' && props.getKgidCandidateSlotStatusModel?.adminApproval === 'approve' && props.ResultModel.length === 0 && (
                                 <div className={`tab-pane fade ${activeTab === 'test' ? 'show active' : ''}`} id="test" role="tabpanel" aria-labelledby="test-tab">
                                     <Guidelines />
                                 </div>

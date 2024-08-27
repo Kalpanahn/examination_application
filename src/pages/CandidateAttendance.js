@@ -1,4 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
+
+import React, { useState, useEffect } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Card, CardHeader } from 'reactstrap';
 import MUIDataTable from "mui-datatables";
@@ -12,43 +13,64 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 
-
 function CandidateAttendance(props) {
-    const [selectedEmail, setSelectedEmail] = useState("");
+
     const [selectedAction, setSelectedAction] = useState("");
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-    const [attendenceStatus, setAttendenceStatus] = useState(false);
     const [selectedIndex, setSelectedIndex] = useState(null);
-    const [displayedIndexes, setDisplayedIndexes] = useState(() => {
-        const savedIndexes = localStorage.getItem('displayedIndexes');
+    const [attendenceApproved, setAttendenceApproved] = useState(() => {
+        const savedIndexes = localStorage.getItem('attendenceApproved');
         return savedIndexes ? JSON.parse(savedIndexes) : [];
     });
+    const [attendenceRejectd, setAttendenceRejectd] = useState(() => {
+        const savedEmails = localStorage.getItem('rejectedEmails');
+        return savedEmails ? JSON.parse(savedEmails) : [];
+    });
 
+    const handleApproveClick = (email) => {
+        setSelectedIndex(email);
+        setSelectedAction("present");
+        setShowConfirmDialog(true);
+    };
+
+    const handleRejectClick = (email) => {
+        setSelectedIndex(email);
+        setSelectedAction("absent");
+        setShowConfirmDialog(true);
+    };
 
     const theme = createTheme({
-        overrides: {
+        components: {
             MuiDataTableBodyRow: {
-                root: {
-                    backgroundColor: "#FF0000"
+                styleOverrides: {
+                    root: {
+                        backgroundColor: "#FF0000"
+                    }
                 }
             },
             MuiTableCell: {
-                root: {
-                    borderColor: "#d3d3d3",
-                },
-                head: {
-                    background: "#7FFFD4",
-                    pointerEvents: 'none'
+                styleOverrides: {
+                    root: {
+                        borderColor: "#d3d3d3",
+                    },
+                    head: {
+                        background: "#7FFFD4",
+                        pointerEvents: 'none'
+                    }
                 }
             },
             MuiTableSortLabel: {
-                root: {
-                    alignItems: "flex-start"
+                styleOverrides: {
+                    root: {
+                        alignItems: "flex-start"
+                    }
                 }
             },
             MuiTableBody: {
-                root: {
-                    alignItems: "start",
+                styleOverrides: {
+                    root: {
+                        alignItems: "start",
+                    }
                 }
             },
         }
@@ -65,60 +87,88 @@ function CandidateAttendance(props) {
             },
         },
         { label: <strong className='MUI-dataTable-header'>Candidate Email</strong>, name: "CandidateName" },
-        { label: <strong className='MUI-dataTable-header'>Destrict</strong>, name: "CandidateEmail" },
+        { label: <strong className='MUI-dataTable-header'>District</strong>, name: "CandidateEmail" },
         { label: <strong className='MUI-dataTable-header'>Date</strong>, name: "TestAttendedDate" },
         { label: <strong className='MUI-dataTable-header'>Slots Timing</strong>, name: "Score" },
-        { label: <strong className='MUI-dataTable-header'>Present</strong>, name: "present" },
-        { label: <strong className='MUI-dataTable-header'>Absent</strong>, name: "absent" },
+        {
+            label: <strong className='MUI-dataTable-header'>Present</strong>, name: "present",
+            options: {
+                customBodyRender: (value, tableMeta) => {
+                    const email = tableMeta.rowData[1];
+                    const isPresent = attendenceApproved.includes(email);
+                    const isAbsent = attendenceRejectd.includes(email);
+                    return (
+                        <Button
+                            className="btn btn-success"
+                            onClick={() => handleApproveClick(email)}
+                            disabled={isPresent || isAbsent}
+                        >
+                            {isPresent ? "presented" : "present"}
+                        </Button>
+                    );
+                }
+            }
+
+        },
+        {
+            label: <strong className='MUI-dataTable-header'>Absent</strong>, name: "absent",
+            options: {
+                customBodyRender: (value, tableMeta) => {
+                    const email = tableMeta.rowData[1];
+                    const isAbsent = attendenceRejectd.includes(email);
+                    const isPresent = attendenceApproved.includes(email);
+
+                    return (
+                        <Button
+                            className="btn btn-danger"
+                            onClick={() => handleRejectClick(email)}
+                            disabled={isAbsent || isPresent}
+                        >
+                            {isAbsent ? "Absent" : "Absent"}
+                        </Button>
+                    );
+                }
+            }
+        },
     ];
 
     useEffect(() => {
         props.getCandidateAttendence();
-        props.getKgidCandidateAttendence()
+        props.getKgidCandidateAttendence();
     }, []);
-
-
-    const handleClick = (email, actionType) => {
-        setSelectedEmail(email);
-        setSelectedAction(actionType);
-        setShowConfirmDialog(true);
-    };
 
     const resultActionSubmit = () => {
         const fields = {
-            email: selectedEmail,
+            email: selectedIndex,
             attendence: selectedAction,
         };
         props.CandidatAttendenceStatus(fields);
-        setAttendenceStatus(prevStatus => {
-            const updatedStatus = { ...prevStatus, [selectedEmail]: selectedAction };
-            localStorage.setItem('attendenceStatus', JSON.stringify(updatedStatus));
-            return updatedStatus;
-        });
-    };
-    useEffect(() => {
-        const savedStatus = localStorage.getItem('attendenceStatus');
-        if (savedStatus) {
-            setAttendenceStatus(JSON.parse(savedStatus));
+
+        if (selectedAction === "present") {
+            setAttendenceApproved(prev => {
+                const updatedEmails = [...prev, selectedIndex];
+                localStorage.setItem('attendenceApproved', JSON.stringify(updatedEmails));
+                return updatedEmails;
+            });
+        } else if (selectedAction === "absent") {
+            setAttendenceRejectd(prev => {
+                const updatedEmails = [...prev, selectedIndex];
+                localStorage.setItem('attendenceRejectd', JSON.stringify(updatedEmails));
+                return updatedEmails;
+            });
         }
-    }, []);
+        setShowConfirmDialog(false);
+    };
+
     useEffect(() => {
-      if (props.isCandidateAttendnceStatusSuccess && props.CandidateAttendnceStatus === 200) {
+        if (props.isCandidateAttendnceStatusSuccess && props.CandidateAttendnceStatus === 200) {
             swal({
-                title: "Attendance updated successfully in Candidate",
+                title: "Candidate Attendance Updated Successfully.",
                 icon: "success",
                 button: "OK",
                 closeOnClickOutside: false
             }).then(okay => {
                 if (okay) {
-                    if (okay) {
-                        const updatedIndexes = [...displayedIndexes, selectedIndex];
-                        setDisplayedIndexes(updatedIndexes);
-                        localStorage.setItem('displayedIndexes', JSON.stringify(updatedIndexes));
-                    }
-                    setShowConfirmDialog(false);
-                    props.setCandidatAttendenceStatusSuccess(false);
-                    props.setCandidatAttendenceStatusError(null);
                 }
             });
         } else if (props.CandidateAttendnceStatusError) {
@@ -135,6 +185,7 @@ function CandidateAttendance(props) {
             props.setCandidatAttendenceStatusError();
         }
     }, [props.isCandidateAttendnceStatusSuccess, props.CandidateAttendnceStatus, props.CandidateAttendnceStatusError]);
+
     const combinedModel = [...props.CandidateAttendnceModel, ...props.KgidCandidateAttendnceModel];
     const approvedCandidates = combinedModel.filter(candidate => candidate.adminApproval === "approve");
 
@@ -159,41 +210,17 @@ function CandidateAttendance(props) {
                         download: false,
                         search: true
                     }}
-
                     data={approvedCandidates.map((Candidate, index) => {
-                        const bookingId = Candidate.booking_id || {}; 
-                        const status = attendenceStatus[Candidate.email];
+                        const email = Candidate.email;
+                        const bookingId = Candidate.booking_id || {};
 
                         return [
                             index + 1,
-                            // Candidate.email,
-                            // Candidate.booking_id.district  || 'N/A',
-                            // moment(Candidate.booking_id.date).format('DD-MM-yyyy'),
-                            // Candidate.booking_id.time,
                             Candidate.email,
-                            bookingId.district || 'N/A', 
-                            bookingId.date ? moment(bookingId.date).format('DD-MM-yyyy') : 'N/A', 
+                            bookingId.district || 'N/A',
+                            bookingId.date ? moment(bookingId.date).format('DD-MM-yyyy') : 'N/A',
                             bookingId.time || 'N/A',
-                            status === 'present' ? (
-                                <Button className="btn btn-success" >Present</Button>
-                            ) : (
-                                <Button
-                                    className="btn btn-success"
-                                    onClick={() => handleClick(Candidate.email, 'present')}
-                                    disabled={status === 'absent'}
-                                >  Present
-                                </Button>
-                            ),
-                            status === 'absent' ? (
-                                <Button className="btn btn-danger" >absent</Button>
-                            ) : (
-                                <Button
-                                    className="btn btn-danger"
-                                    onClick={() => handleClick(Candidate.email, 'absent')}
-                                    disabled={status === 'present'}
-                                > absent
-                                </Button>
-                            )
+                          
                         ];
                     })}
                 />
@@ -206,7 +233,7 @@ function CandidateAttendance(props) {
             >
                 <DialogContent>
                     <DialogContentText>
-                        <h5>Do you want to  mark the attendence?</h5>
+                        <h5>Do you want to mark the attendance?</h5>
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -228,9 +255,8 @@ function CandidateAttendance(props) {
                 </DialogActions>
             </Dialog>
         </Card>
-    )
+    );
 }
-
 const mapToProps = function (state) {
     return {
 

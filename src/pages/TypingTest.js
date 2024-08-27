@@ -50,9 +50,9 @@ function TypingTest() {
        window.localStorage.setItem('accuracy', acc.toFixed(2));
         window.localStorage.setItem('time', formattedTime);
         setIsActive(false);
-      
-        navigate('/testPage');
+      navigate('/testPage');
     };
+    
     useEffect(() => {
         if (accuracy !== null) {
             window.localStorage.setItem('accuracy', accuracy);

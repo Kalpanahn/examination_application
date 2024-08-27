@@ -39,7 +39,6 @@ export const SubmitTestAnswer = (fields) => {
         const errorMessage = error.response && error.response.data && error.response.data.error
             ? error.response.data.error
             : error.message;
-            console.log("msg",errorMessage)
         dispatch({
             type: 'SUBMIT_ANSWER_FAILURE',
             payload: errorMessage,

@@ -7,7 +7,6 @@ export const getAttendanceStatus = (fields) => {
     dispatch({ type: 'GET_ATTENDANCE_STATUS_START' })
     axios.post(APIs + '/getSingleCandidate', fields).then(function (response) {
       dispatch({ type: 'GET_ATTENDANCE_STATUS_SUCCESS', payload: response.data })
-      console.log("response.data",response.data)
     })
       .catch(function (error) {
         dispatch({ type: 'GET_ATTENDANCE_STATUS_FAILURE', payload: error })

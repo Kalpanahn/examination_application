@@ -13,11 +13,8 @@ function SlotBooking(props) {
 
     const handleDistrictChange = (e) => {
         const selectedId = e.target.value;
-        console.log("Selected ID:", selectedId);
-
 
         if (!Array.isArray(props.getDistrictModel)) {
-            console.error("getDistrictModel is not an array or is undefined");
             return;
         }
         if (selectedId === "select") {
@@ -30,10 +27,8 @@ function SlotBooking(props) {
             district.districtcode?.toString() === selectedId
         );
         if (selectedDistrict) {
-            console.log("Selected District Name:", selectedDistrict.districtname);
             setDistrictName(selectedDistrict.districtname);
         } else {
-            console.error("District not found for the selected ID:", selectedId);
             setDistrictName("");
         }
     };
@@ -108,7 +103,7 @@ function SlotBooking(props) {
         if (props.isBookSlotSuccess && props.BookSlotStatus === 200) {
             props.setbookSlotSuccess();
             swal({
-                title: "Slot booked successfully",
+                title: "Slot Booked Successfully.",
                 icon: "success",
                 button: "OK",
                 closeOnClickOutside: false
@@ -141,7 +136,6 @@ function SlotBooking(props) {
         setSelectedSlot("")
     }
 
-    console.log(KGIDNumber)
     return (
         <div className="card cardmain_align">
             <div className="row mt-3">

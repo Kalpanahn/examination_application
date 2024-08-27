@@ -7,7 +7,6 @@ export const getKgidCandidateAttendanceStatus = (fields) => {
     dispatch({ type: 'GET_KGID_CANDIDATES_ATTENDANCE_STATUS_START' })
     axios.post(APIs + '/getSingleKGIDBookedCandidate', fields).then(function (response) {
       dispatch({ type: 'GET_KGID_CANDIDATES_ATTENDANCE_STATUS_SUCCESS', payload: response.data })
-      console.log("response.data",response.data)
     })
       .catch(function (error) {
         dispatch({ type: 'GET_KGID_CANDIDATES_ATTENDANCE_STATUS_FAILURE', payload: error })

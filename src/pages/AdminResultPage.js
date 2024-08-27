@@ -72,7 +72,6 @@ function AdminResultPage(props) {
     useEffect(() => {
         props.getAllUserAnswer();
     }, []);
-    console.log("AllUserAnswersModel", props.AllUserAnswersModel)
 
     const handleDisplayResult = (email) => {
         setSelectedIndex(email);
@@ -128,7 +127,7 @@ function AdminResultPage(props) {
             });
         } else if (props.isViewResultApprovalSuccess) {
             swal({
-                title: "View Result Updated Successfully To Candidate.",
+                title: "Result Updated Successfully To Candidate.",
                 icon: "success",
                 button: "OK",
                 closeOnClickOutside: false

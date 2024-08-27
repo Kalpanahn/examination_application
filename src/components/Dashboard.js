@@ -140,7 +140,7 @@ function Dashboard(props) {
                             <div className={`tab-pane fade ${activeTab === 'booking' ? 'show active' : ''}`} id="booking" role="tabpanel" aria-labelledby="booking-tab">
                                 <SlotBooking />
                             </div>
-                            {AttendanceStatusModel?.attendence === 'present' && props.getCandidateSlotStatusModel?.adminApproval === 'approve' && props.ResultModel.length === 0 &&(
+                            {AttendanceStatusModel?.attendence === 'present' && props.getCandidateSlotStatusModel?.adminApproval === 'approve' && props.ResultModel.length === 0 && (
                                 <div className={`tab-pane fade ${activeTab === 'test' ? 'show active' : ''}`} id="test" role="tabpanel" aria-labelledby="test-tab">
                                     <Guidelines />
                                 </div>)}

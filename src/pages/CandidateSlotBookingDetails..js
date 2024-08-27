@@ -12,18 +12,22 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 
-
 function CandidateSlotBookingDetails(props) {
-    const [selectedEmail, setSelectedEmail] = useState(null);
+
+    const [selectedIndex, setSelectedIndex] = useState(null);
     const [selectedAction, setSelectedAction] = useState("");
     const [showConfirmDialog, setShowConfirmDialog] = useState(false);
     const [approvedEmails, setApprovedEmails] = useState(() => {
         const savedEmails = localStorage.getItem('approvedEmails');
         return savedEmails ? JSON.parse(savedEmails) : [];
     });
+    const [rejectedEmails, setRejectedEmails] = useState(() => {
+        const savedEmails = localStorage.getItem('rejectedEmails');
+        return savedEmails ? JSON.parse(savedEmails) : [];
+    });
 
 
-  
+
 
     const theme = createTheme({
         overrides: {
@@ -68,40 +72,98 @@ function CandidateSlotBookingDetails(props) {
         { label: <strong className='MUI-dataTable-header'>District</strong>, name: "CandidateEmail" },
         { label: <strong className='MUI-dataTable-header'>Date</strong>, name: "TestAttendedDate" },
         { label: <strong className='MUI-dataTable-header'>Slots Timing</strong>, name: "Score" },
-        { label: <strong className='MUI-dataTable-header'>Approve</strong>, name: "Approve" }, // Changed name to "Action"
-        { label: <strong className='MUI-dataTable-header'>Reject</strong>, name: "Reject" },
+
+        {
+            label: <strong className='MUI-dataTable-header'>Approve</strong>,
+            name: "Approve",
+            options: {
+                customBodyRender: (value, tableMeta) => {
+                    const email = tableMeta.rowData[1];
+                    const isApproved = approvedEmails.includes(email);
+                    const isRejected = rejectedEmails.includes(email);
+                    return (
+                        <Button
+                            className="btn btn-success"
+                            onClick={() => handleApproveClick(email)}
+                            disabled={isApproved || isRejected}
+                        >
+                            {isApproved ? "Approved" : "Approve"}
+                        </Button>
+                    );
+                }
+            }
+        },
+        {
+            label: <strong className='MUI-dataTable-header'>Reject</strong>,
+            name: "Reject",
+            options: {
+                customBodyRender: (value, tableMeta) => {
+                    const email = tableMeta.rowData[1];
+                    const isRejected = rejectedEmails.includes(email);
+                    const isApproved = approvedEmails.includes(email);
+                    return (
+                        <Button
+                            className="btn btn-danger"
+                            onClick={() => handleRejectClick(email)}
+                            disabled={isRejected || isApproved}
+                        >
+                            {isRejected ? "Rejected" : "Reject"}
+                        </Button>
+                    );
+                }
+            }
+        }
     ];
+
+
+
 
     useEffect(() => {
         props.getBookedCandidateList();
     }, []);
 
-    const handleClick = (email, actionType) => {
-        setSelectedEmail(email);
-        setSelectedAction(actionType);
+
+
+    const handleApproveClick = (email) => {
+        setSelectedIndex(email)
+        setSelectedAction("approve");
         setShowConfirmDialog(true);
     };
-    
+
+    const handleRejectClick = (email) => {
+        setSelectedIndex(email)
+        setSelectedAction("reject");
+        setShowConfirmDialog(true);
+    };
 
     const resultActionSubmit = () => {
         const fields = {
-            email: selectedEmail,
+            email: selectedIndex,
             action: selectedAction,
         };
         props.AdminApprovals(fields);
-        setApprovedEmails(prevStatus => {
-            const updatedEmails = { ...prevStatus, [selectedEmail]: selectedAction };
-          
-            localStorage.setItem('approvedEmails', JSON.stringify(updatedEmails));
-            return updatedEmails;
-        });
-    }
+        if (selectedAction === "approve") {
+            setApprovedEmails(prev => {
+                const updatedEmails = [...prev, selectedIndex];
+                localStorage.setItem('approvedEmails', JSON.stringify(updatedEmails));
+                return updatedEmails;
+            });
+        } else if (selectedAction === "reject") {
+            setRejectedEmails(prev => {
+                const updatedEmails = [...prev, selectedIndex];
+                localStorage.setItem('rejectedEmails', JSON.stringify(updatedEmails));
+                return updatedEmails;
+            });
+        }
+        setShowConfirmDialog(false)
+    };
+
 
     useEffect(() => {
         if (props.isAdminApprovalSuccess && props.AdminApprovalStatus === 200) {
             props.setAdminApprovalsSuccess();
             swal({
-                title: "Approval updated successfully in Candidate",
+                title: "Candidate Slot Book is Approved Successfully.",
                 icon: "success",
                 button: "OK",
                 closeOnClickOutside: false
@@ -148,40 +210,18 @@ function CandidateSlotBookingDetails(props) {
                         search: true
                     }}
                     data={props.getBookedCandidateListModel.map((Candidate, index) => {
-                        const email = Candidate.email; // Ensure this is the correct field
-                        const status = approvedEmails[email];
-                        console.log(`Candidate: ${email}, Status: ${status}`);
-
                         return [
                             index + 1,
                             Candidate.email,
                             Candidate.district,
                             moment(Candidate.date).format('DD-MM-yyyy'),
                             Candidate.time,
-                            status === 'approve' ? (
-                                <Button className="btn btn-success" >Approved</Button>
-                            ) : (
-                                <Button
-                                    className="btn btn-success"
-                                    onClick={() => handleClick(Candidate.email, 'approve')}
-                                    disabled={status === 'reject'}
-                                >  Approve
-                                </Button>
-                            ),
-                            status === 'reject' ? (
-                                <Button className="btn btn-danger" >Rejected</Button>
-                            ) : (
-                                <Button
-                                    className="btn btn-danger"
-                                    onClick={() => handleClick(Candidate.email, 'reject')}
-                                    disabled={status === 'approve'}
-                                > Reject
-                                </Button>
-                            )
+
                         ];
                     })}
                 />
             </ThemeProvider>
+
             <Dialog
                 open={showConfirmDialog}
                 onClose={() => setShowConfirmDialog(false)}
