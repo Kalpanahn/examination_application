@@ -32,6 +32,7 @@ function SlotBooking(props) {
             setDistrictName("");
         }
     };
+    
     const handlebookslot = (e) => {
         e.preventDefault();
         if (districtId === '') {
@@ -61,7 +62,8 @@ function SlotBooking(props) {
                 //  district:districtId,
                 date: date,
                 time: selectedSlot.time,
-                email: window.localStorage.getItem("email")
+                email: window.localStorage.getItem("email"),
+                name:window.localStorage.getItem("name")
             }
             props.bookSlot(fields)
         }
@@ -103,7 +105,8 @@ function SlotBooking(props) {
         if (props.isBookSlotSuccess && props.BookSlotStatus === 200) {
             props.setbookSlotSuccess();
             swal({
-                title: "Slot Booked Successfully.",
+                // title: "Slot Booked Successfully.",
+                title:"Thank You For Submitting Your Exam Request Department Nodal Officer Will Confirm Your Booking Through Mail.",
                 icon: "success",
                 button: "OK",
                 closeOnClickOutside: false
@@ -140,7 +143,8 @@ function SlotBooking(props) {
         <div className="card cardmain_align">
             <div className="row mt-3">
                 <div className="col-12">
-                    <h5>Booking Slots</h5>
+                    {/* <h5>Booking Slots</h5> */}
+                    <h5>Book Your Exam Center Slot</h5>
                 </div>
             </div>
             <div className="notification" style={{ marginTop: '-56px', padding: '10px', marginLeft: "60rem" }}>
@@ -163,7 +167,7 @@ function SlotBooking(props) {
                         <label className="label_style">District</label> :&nbsp;
                         <div className="material-textfield">
                             <select className="form-select" aria-label="Default select example" value={districtId} onChange={handleDistrictChange}>
-                                <option value="select">Select</option>
+                                <option value="select">Select Center</option>
                                 {props.getDistrictModel && Array.isArray(props.getDistrictModel) &&
                                     props.getDistrictModel.map((district) => (
                                         <option key={district.districtcode} value={district.districtcode}>

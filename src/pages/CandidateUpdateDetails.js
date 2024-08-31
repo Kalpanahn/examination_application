@@ -4,6 +4,7 @@ import * as CandidateUpdateDetailsAction from '../actions/CandidateUpdateDetails
 import { connect } from 'react-redux';
 import swal from 'sweetalert';
 import logo from '../Images/loadingdots2.gif'
+import moment from 'moment';
 
 function CandidateUpdateDetails(props) {
     const [preview, setPreview] = useState(null);
@@ -12,8 +13,7 @@ function CandidateUpdateDetails(props) {
     const [password, setPassword] = useState("");
     const [phone, setPhone] = useState("");
     const [dob, setDob] = useState("");
-    const [otp, setOtp] = useState("");
-    const [company, setCompany] = useState("");
+   const [company, setCompany] = useState("");
     const [designation, setDesignation] = useState("");
     const [adress, setAdress] = useState("");
     const [experience, setExperience] = useState("");
@@ -24,6 +24,7 @@ function CandidateUpdateDetails(props) {
     const [imageFile, setImageFile] = useState(null);
     const [signatureFile, setSignatureFile] = useState(null);
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [department,setDepartment]=useState("");
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -54,6 +55,28 @@ function CandidateUpdateDetails(props) {
             e.target.value = null;
         }
     };
+
+    const dateofBirth = (e)=>{
+        let p1 = e.target.value
+        let year1 = new Date().toISOString().slice(0, 10)
+        let diff =moment(year1).diff(p1,'days')
+        setDob(p1)
+        if(diff < 6574){
+          swal({
+            title: "Please enter valid birth date!",
+            icon: "error",
+            button: "OK",
+    
+          }).then(okay => {
+    
+          if (okay) {
+             setDob("")
+        
+           }
+            
+           });
+        }
+      }
 
     const handleUserUpdateProfile = (e) => {
         e.preventDefault();
@@ -140,6 +163,14 @@ function CandidateUpdateDetails(props) {
                 closeOnClickOutside: false
             });
         }
+        else if (department === '') {
+            swal({
+                title: "Please Enter DepartmentName",
+                icon: "error",
+                button: "OK",
+                closeOnClickOutside: false
+            });
+        }
         else if (!imageFile) {
             swal({
                 title: "Please Upload Image",
@@ -164,8 +195,7 @@ function CandidateUpdateDetails(props) {
             });
         } else {
             const formData = new FormData();
-            // Append text fields
-            formData.append("phone", phone);
+           formData.append("phone", phone);
             formData.append("dob", dob);
             formData.append("name", window.localStorage.getItem("name"));
             formData.append("email", window.localStorage.getItem("email"));
@@ -176,8 +206,8 @@ function CandidateUpdateDetails(props) {
             formData.append("currentCompany", company);
             formData.append("experience", experience);
             formData.append("gender", gender);
-            // Append files
-            if (imageFile) {
+            formData.append("department", department);
+          if (imageFile) {
                 formData.append("profilepic", imageFile);
             }
             if (signatureFile) {
@@ -208,6 +238,7 @@ function CandidateUpdateDetails(props) {
         setImageFile("")
         setSignatureFile("")
         setResumeFile("")
+        setDepartment("")
     }
 
     useEffect(() => {
@@ -287,9 +318,9 @@ function CandidateUpdateDetails(props) {
             e.target.value = null;
             return false;
         }
-        else if (file.size >= 2 * 1024 * 1024) {
+        else if (file.size >= 1 * 1024 * 1024) {
             swal({
-                title: "File size must be less than 2MB",
+                title: "File size must be less than 1MB",
                 icon: "error",
                 button: "OK",
                 closeOnClickOutside: false
@@ -302,11 +333,31 @@ function CandidateUpdateDetails(props) {
         }
     }
 
+    const validatePhoneNumber = (e) => {
+        let phoneNumber = e.target.value;
+       phoneNumber = phoneNumber.replace(/\D/g, '');
+       setPhone(phoneNumber);
+        if (phoneNumber.length === 10) {
+            if (!/^[6-9]\d{9}$/.test(phoneNumber)) {
+                swal({
+                    title: "Please enter a valid phone number!",
+                     icon: "error",
+                    button: "OK",
+                }).then(okay => {
+                    if (okay) {
+                        setPhone(""); 
+                    }
+                });
+            }
+        }
+    };
+    
+    
     return (
         <div className="card cardmain_align">
             <div className="row mt-3">
                 <div className="col-12">
-                    <h5>Candidate Update Details</h5>
+                    <h5><b>Personal Information</b></h5>
                 </div>
             </div>
             <form className="form-align">
@@ -348,12 +399,21 @@ function CandidateUpdateDetails(props) {
                     <div className="col-3 form-group">
                         <label className="label_style">Phone Number</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
                         <div className="material-textfield">
-                            <input placeholder="Please Enter Phone Number" type="text" className="form-control login_input"
+                            {/* <input placeholder="Please Enter Phone Number" type="text" className="form-control login_input"
                                 value={phone} onChange={(e) => setPhone(e.target.value)} maxLength={10} pattern="\d*"
                                 inputMode="numeric" onInput={(e) => {
                                     e.target.value = e.target.value.replace(/\D/g, '');
                                     setPhone(e.target.value)
-                                }} />
+                                }} /> */}
+                                <input
+            placeholder="Please Enter Phone Number"
+            type="text"
+            className="form-control login_input"
+            value={phone}
+            onChange={validatePhoneNumber}
+            maxLength={10}
+            inputMode="numeric"
+        />
                         </div>
                     </div>
 
@@ -361,9 +421,46 @@ function CandidateUpdateDetails(props) {
                         <label className="label_style">Date of Birth</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
                         <div className="material-textfield">
                             <input type="date" placeholder="Please Select Date Of Birth" className="form-control login_input"
-                                value={dob} onChange={(e) => setDob(e.target.value)}
+                                value={dob}   onChange={dateofBirth}
                             />
                         </div>
+                    </div>
+
+                    
+                        
+                    <div className="col-3 form-group">
+                        <label className="label_style">Address Line</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
+                        <div className="material-textfield">
+                            <input placeholder="Please Enter Address" type="text" className="form-control login_input"
+                                value={adress} onChange={(e) => setAdress(e.target.value)} />
+                        </div>
+                    </div>
+                    <div className="col-3 form-group">
+                        <label className="label_style">Gender</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="inlineCheckbox1" value="Male"
+                                onChange={e => setGender(e.target.value)} checked={gender === "Male"} />
+                            <label class="form-check-label" for="inlineCheckbox1">Male</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="inlineCheckbox2" value="Female"
+                                onChange={e => setGender(e.target.value)} checked={gender === "Female"} />
+                            <label class="form-check-label" for="inlineCheckbox2">Female</label>
+                        </div>
+                    </div>
+                    <div className="row mt-3">
+                <div className="col-12">
+                    <h5><b>Department Details</b></h5>
+                </div>
+            </div>
+            <div className="col-3 form-group">
+                        <label className="label_style">Experience</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
+                        <div className="material-textfield">
+                        <div className="material-textfield">
+                            <input placeholder="Please Enter Experience" type="text" className="form-control login_input"
+                                value={experience} onChange={(e) => setExperience(e.target.value)} />
+                        </div>
+                       </div>
                     </div>
 
                     <div className="col-3 form-group">
@@ -383,45 +480,24 @@ function CandidateUpdateDetails(props) {
                             />
                         </div>
                     </div>
+
+                    <div className="col-3 form-group">
+                        <label className="label_style">Current Department</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
+                        <div className="material-textfield">
+                            <input placeholder="Please Enter Current Department" type="text" className="form-control login_input"
+                                value={department} onChange={(e) => setDepartment(e.target.value)}
+                            />
+                        </div>
+                    </div>
                 </div>
+                <div className="row mt-3">
+                <div className="col-12">
+                    <h5><b>Additional Support Document</b></h5>
+                </div>
+            </div>
 
                 <div className="row rowalign">
-                    <div className="col-3 form-group">
-                        <label className="label_style">Address Line</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
-                        <div className="material-textfield">
-                            <input placeholder="Please Enter Address" type="text" className="form-control login_input"
-                                value={adress} onChange={(e) => setAdress(e.target.value)} />
-                        </div>
-                    </div>
-
-                    <div className="col-3 form-group">
-                        <label className="label_style">Experience</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
-                        <div className="material-textfield">
-                            <select class="form-select" aria-label="Default select example"
-                                value={experience} onChange={(e) => setExperience(e.target.value)}>
-                                <option selected>Select</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div className="col-3 form-group">
-                        <label className="label_style">Gender</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="inlineCheckbox1" value="Male"
-                                onChange={e => setGender(e.target.value)} checked={gender === "Male"} />
-                            <label class="form-check-label" for="inlineCheckbox1">Male</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" id="inlineCheckbox2" value="Female"
-                                onChange={e => setGender(e.target.value)} checked={gender === "Female"} />
-                            <label class="form-check-label" for="inlineCheckbox2">Female</label>
-                        </div>
-                    </div>
-
-                    <div className="col-3 form-group">
+                   <div className="col-3 form-group">
                         <label className="label_style">Upload Image</label> :<span style={{ "color": "red" }}>*</span>&nbsp;
                         <div className="material-textfield">
                             <input type="file" className="form-control login_input" accept=".png, .jpg"

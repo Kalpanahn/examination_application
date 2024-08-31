@@ -186,7 +186,8 @@ function CandidateSlotBookingDetails(props) {
             props.setAdminApprovalsError();
         }
     }, [props.isAdminApprovalSuccess, props.AdminApprovalStatus, props.AdminApprovalError]);
-
+    console.log("candidtae",props.getBookedCandidateListModel.totalCount)
+    const candidates = props.getBookedCandidateListModel.bookingDetails || [];
     return (
 
         <Card className='employee-master-card'>
@@ -209,7 +210,8 @@ function CandidateSlotBookingDetails(props) {
                         download: false,
                         search: true
                     }}
-                    data={props.getBookedCandidateListModel.map((Candidate, index) => {
+                    
+                    data={candidates.map((Candidate, index) => {
                         return [
                             index + 1,
                             Candidate.email,

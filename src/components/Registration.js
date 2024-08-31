@@ -22,7 +22,7 @@ function Registration(props) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const imageURL = logo;
   const [otpSent, setOtpSent] = useState("");
-  
+
 
   const validateEmail = (mailId) => {
     const regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
@@ -34,12 +34,12 @@ function Registration(props) {
       return false
     }
   }
-  const dateofBirth = (e)=>{
+  const dateofBirth = (e) => {
     let p1 = e.target.value
     let year1 = new Date().toISOString().slice(0, 10)
-    let diff =moment(year1).diff(p1,'days')
+    let diff = moment(year1).diff(p1, 'days')
     setDob(p1)
-    if(diff < 6574){
+    if (diff < 6574) {
       swal({
         title: "Please enter valid birth date!",
         icon: "error",
@@ -47,17 +47,34 @@ function Registration(props) {
 
       }).then(okay => {
 
-      if (okay) {
-        
-        setDob("")
-    
-       }
-        
-       });
+        if (okay) {
+          setDob("")
+        }
+      });
     }
   }
 
-  
+
+
+  const validatePhoneNumber = (e) => {
+    let phone = e.target.value;
+    phone = phone.replace(/\D/g, '');
+    setPhoneNumber(phone);
+    if (phone.length === 10) {
+      if (!/^[6-9]\d{9}$/.test(phone)) {
+        swal({
+          title: "Please enter a valid phone number!",
+          icon: "error",
+          button: "OK",
+        }).then(okay => {
+          if (okay) {
+            setPhoneNumber("");
+          }
+        });
+      }
+    }
+  };
+
 
   const getOTP = () => {
     let validEmail = validateEmail(email);
@@ -233,116 +250,118 @@ function Registration(props) {
   return (
     <>
       <div className="container-fluid mt-4">
-      <Navbar />&nbsp;&nbsp;
-      <div className="d-flex justify-content-center align-items-center vh-100">
-        <div className="container">
-          <div className="card card_align">
+        <Navbar />&nbsp;&nbsp;
+        <div className="d-flex justify-content-center align-items-center vh-100">
+          <div className="container">
+            <div className="card card_align">
               <h4 className="card-header header_align text-center">Registration</h4>
-            <div className="card-body">
-              <div className="row rowalign" >
-                <div className="col-12">
-                  <div className="tab-content" id="myTabContent">
-                    <div className="tab-pane fade show active" id="form" role="tabpanel" aria-labelledby="form-tab">
-                      <form onSubmit={handleNonKGIDRegistration}>
-                        <div className="row rowalign">
-                          <div className="col-12 form-group">
-                            <div className="material-textfield">
-                              <input type="text" className="form-control login_input" placeholder="" value={name}
-                                onChange={(e) => setName(e.target.value)} />
-                              <label>Name<span style={{ "color": "red" }}>*</span></label>
+              <div className="card-body">
+                <div className="row rowalign" >
+                  <div className="col-12">
+                    <div className="tab-content" id="myTabContent">
+                      <div className="tab-pane fade show active" id="form" role="tabpanel" aria-labelledby="form-tab">
+                        <form onSubmit={handleNonKGIDRegistration}>
+                          <div className="row rowalign">
+                            <div className="col-12 form-group">
+                              <div className="material-textfield">
+                                <input type="text" className="form-control login_input" placeholder="" value={name}
+                                  onChange={(e) => setName(e.target.value)} />
+                                <label>Name<span style={{ "color": "red" }}>*</span></label>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="row rowalign">
-                          <div className="col-8 form-group">
-                            <div className="material-textfield">
-                              <input type="email" className="form-control login_input" placeholder="" value={email}
-                                onChange={(e) => setEmail(e.target.value)} />
-                              <label>Email<span style={{ "color": "red" }}>*</span></label>
+                          <div className="row rowalign">
+                            <div className="col-8 form-group">
+                              <div className="material-textfield">
+                                <input type="email" className="form-control login_input" placeholder="" value={email}
+                                  onChange={(e) => setEmail(e.target.value)} />
+                                <label>Email<span style={{ "color": "red" }}>*</span></label>
+                              </div>
                             </div>
-                          </div>
-                          <div className="col-4 text-center">
-                            <button type="button" className="btn btn-primary buttonstyle sendButton"
-                              onClick={getOTP} style={{ marginTop: '-28px' }}>
-                              Send OTP
-                            </button>
-                          </div>
-                        </div>
-
-                        <div className="row rowalign">
-                          <div className="col-12 form-group">
-                            <div className="material-textfield">
-                              <input type="text" className="form-control login_input" placeholder="" value={otp}
-                                onChange={(e) => setOtp(e.target.value)} />
-                              <label>OTP<span style={{ "color": "red" }}>*</span></label>
+                            <div className="col-4 text-center">
+                              <button type="button" className="btn btn-primary buttonstyle sendButton"
+                                onClick={getOTP} style={{ marginTop: '-28px' }}>
+                                Send OTP
+                              </button>
                             </div>
                           </div>
 
+                          <div className="row rowalign">
+                            <div className="col-12 form-group">
+                              <div className="material-textfield">
+                                <input type="text" className="form-control login_input" placeholder="" value={otp}
+                                  onChange={(e) => setOtp(e.target.value)} />
+                                <label>OTP<span style={{ "color": "red" }}>*</span></label>
+                              </div>
+                            </div>
 
-                        </div>
-                        <div className="row rowalign">
-                          <div className="col-12 form-group">
-                            <div className="material-textfield">
-                              <input  type="text" className="form-control login_input"
-                                value={phoneNumber} 
-                                onChange={(e) => setPhoneNumber(e.target.value)}   maxLength={10} pattern="\d*"
-                                inputMode="numeric" onInput={(e) => {
-                                  e.target.value = e.target.value.replace(/\D/g, '');
-                                  setPhoneNumber(e.target.value)
-                                }} />
-                              <label>Phone Number<span style={{ "color": "red" }}>*</span></label>
+
+                          </div>
+                          <div className="row rowalign">
+                            <div className="col-12 form-group">
+                              <div className="material-textfield">
+
+                                <input
+                                  type="text"
+                                  className="form-control login_input"
+                                  value={phoneNumber}
+                                  onChange={validatePhoneNumber}
+                                  maxLength={10}
+                                  inputMode="numeric" />
+                                <label>Phone Number<span style={{ "color": "red" }}>*</span></label>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="row rowalign">
-                          <div className="col-12 form-group">
-                            <div className="material-textfield">
-                              <input type="date" className="form-control login_input" placeholder=""
-                                value={dob}     onChange={dateofBirth} required/>
-                              <label>Date of Birth<span style={{ "color": "red" }}>*</span></label>
+                          <div className="row rowalign">
+                            <div className="col-12 form-group">
+                              <div className="material-textfield">
+                                <input type="date" className="form-control login_input" placeholder=""
+                                  value={dob} onChange={dateofBirth} required />
+                                <label>Date of Birth<span style={{ "color": "red" }}>*</span></label>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="row rowalign">
-                          <div className="col-12 form-group">
-                            <div className="material-textfield">
-                              <input type="password" className="form-control login_input" placeholder=""
-                                value={password} onChange={(e) => setPassword(e.target.value)} />
-                              <label>Create Password<span style={{ "color": "red" }}>*</span></label>
+                          <div className="row rowalign">
+                            <div className="col-12 form-group">
+                              <div className="material-textfield">
+                                <input type="password" className="form-control login_input" placeholder=""
+                                  value={password} onChange={(e) => setPassword(e.target.value)} />
+                                <label>Create Password<span style={{ "color": "red" }}>*</span></label>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="row rowalign">
-                          <div className="col-12 form-group">
-                            <div className="material-textfield">
-                              <input type="password" className="form-control login_input" placeholder=""
-                                value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
-                              <label>Confirm Password<span style={{ "color": "red" }}>*</span></label>
+                          <div className="row rowalign">
+                            <div className="col-12 form-group">
+                              <div className="material-textfield">
+                                <input type="password" className="form-control login_input" placeholder=""
+                                  value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                                <label>Confirm Password<span style={{ "color": "red" }}>*</span></label>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="row rowalign">
-                          <div className="col-12 form-group">
-                            <button type="submit" className="btn btn-primary buttonstyle submitUser w-100"  >
-                              Submit
-                            </button>
+                          <div className="row rowalign">
+                            <div className="col-12 form-group">
+                              <button type="submit" className="btn btn-primary buttonstyle submitUser w-100"  >
+                                Submit
+                              </button>
+                            </div>
                           </div>
-                        </div>
-                        <div className="row mt-3">
-                          <div className="col-12 text-center">
-                            Already have an account?
-                            <span>
-                              <NavLink to="/">Login</NavLink>
-                            </span>
+                          <div className="row mt-3">
+                            <div className="col-12 text-center">
+                              Already have an account?
+                              <span>
+                                <NavLink to="/">Login</NavLink>
+                              </span>
+                            </div>
                           </div>
-                        </div>
-                      </form>
-                      {error && (
-                        <p className="text-danger text-center">{error}</p>
-                      )}
-                      {success && (
-                        <p className="text-success text-center">{success}</p>
-                      )}
+                        </form>
+                        {error && (
+                          <p className="text-danger text-center">{error}</p>
+                        )}
+                        {success && (
+                          <p className="text-success text-center">{success}</p>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -351,7 +370,6 @@ function Registration(props) {
           </div>
         </div>
       </div>
-    </div>
     </>
   )
 }
